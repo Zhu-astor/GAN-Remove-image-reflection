@@ -32,6 +32,8 @@ The layer and hypothesis class can fine tune.
 
 I will update loss value later...
 
+![image](https://github.com/user-attachments/assets/9c41ef90-5030-4f74-997a-e7eeb4238629)
+
 ## Will try...
 1.Location-aware Single Image Reflection Removal
 
@@ -41,5 +43,5 @@ I will update loss value later...
 
 This is the last epoch's information.
 
-![image](https://github.com/user-attachments/assets/9c41ef90-5030-4f74-997a-e7eeb4238629)
+
 
