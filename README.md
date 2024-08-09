@@ -32,6 +32,8 @@ The layer and hypothesis class can fine tune.
 
 I will update loss value later...
 
+This is the last epoch's information.
+
 ![image](https://github.com/user-attachments/assets/9c41ef90-5030-4f74-997a-e7eeb4238629)
 
 ## Will try...
@@ -41,7 +43,6 @@ I will update loss value later...
 
 2.V-DESIRR: Very Fast Deep Embedded Single Image Reflection Removal
 
-This is the last epoch's information.
 
 
 
