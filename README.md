@@ -27,3 +27,12 @@ The layer and hypothesis class can fine tune.
 ![image](https://github.com/user-attachments/assets/eb25d601-fc5a-4788-9c98-959898e4134e)
 
 ![image](https://github.com/user-attachments/assets/53253b46-6a4b-490b-b093-bba05c9be54f)
+
+### Loss
+
+I will update loss value later...
+
+This is the last epoch's information.
+
+![image](https://github.com/user-attachments/assets/9c41ef90-5030-4f74-997a-e7eeb4238629)
+
