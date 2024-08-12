@@ -15,6 +15,7 @@ from data_loader import DataLoader
 import sys
 import numpy as np
 import os
+import torch
 
 #https://github.com/eriklindernoren/Keras-GAN/tree/master keras-gan
 
@@ -37,7 +38,7 @@ class Pix2Pix():
         self.gf = 64
         self.df = 64
 
-        optimizer = adam_v2.Adam(0.0002, 0.5)
+        optimizer = adam_v2.Adam(0.00005, 0.5)
 
         # Build and compile the discriminator
         self.discriminator = self.build_discriminator()
@@ -65,6 +66,11 @@ class Pix2Pix():
 
         # Discriminators determines validity of translated images / condition pairs
         valid = self.discriminator([fake_A, img_B])
+
+        # Record loss value
+        self.d_losses = []
+        self.g_losses = []
+        self.acc = []
 
         self.combined = Model(inputs=[img_A, img_B], outputs=[valid, fake_A])
         self.combined.compile(loss=['mse', 'mae'],
@@ -151,17 +157,18 @@ class Pix2Pix():
         fake = np.zeros((batch_size,) + self.disc_patch)
 
         for epoch in range(epochs):
-            for batch_i, (imgs_A, imgs_B) in enumerate(self.data_loader.load_batch(batch_size,"False")):
+            for batch_i, (imgs_A, imgs_B) in enumerate(self.data_loader.load_batch(batch_size,is_testing=False)):
+                torch.cuda.empty_cache()
                 # ---------------------
                 #  Train Discriminator
                 # ---------------------
-
                 # Condition on B and generate a translated version
                 fake_A = self.generator.predict(imgs_B)
 
-                # Train the discriminators (original images = real / generated = Fake)
+                # Train the discriminators (original images = real / generated = Fake) 
                 d_loss_real = self.discriminator.train_on_batch([imgs_A, imgs_B], valid)
                 d_loss_fake = self.discriminator.train_on_batch([fake_A, imgs_B], fake)
+                
                 d_loss = 0.5 * np.add(d_loss_real, d_loss_fake)
 
                 # -----------------
@@ -179,25 +186,35 @@ class Pix2Pix():
                                                                         g_loss[0],
                                                                         elapsed_time))
 
+                # Record loss value
+                self.d_losses.append(d_loss[0])
+                self.g_losses.append(g_loss[0])
+                self.acc.append(100*d_loss[1])
+                
                 # If at save interval => save generated image samples
                 if batch_i % sample_interval == 0:
-                    self.sample_images(epoch, batch_i)
+                    self.sample_images1(epoch, batch_i)
+        
+            if epoch % 100 == 0:
+                self.save_generator(epoch)
+            if epoch % 20 == 0:
+                self.save_loss(epoch)
 
     def sample_images(self, epoch, batch_i):
         os.makedirs('images/Pix2pix', exist_ok=True)
-        r, c = 3, 3
+        r, c = 3, 5
 
-        imgs_A, imgs_B = self.data_loader.load_data(batch_size=3, is_testing=True)
+        imgs_A, imgs_B = self.data_loader.load_data(batch_size=5, is_testing=True)
         fake_A = self.generator.predict(imgs_B)
 
-        gen_imgs = np.concatenate([imgs_B, fake_A, imgs_A])
+        gen_imgs = np.concatenate([imgs_A,imgs_B,fake_A])
 
         # Rescale images 0 - 1
         gen_imgs = 0.5 * gen_imgs + 0.5
 
         #print(gen_imgs.shape)
 
-        titles = ['Condition', 'Generated', 'Original']
+        titles = [ 'Original','Condition', 'Generated']
         fig, axs = plt.subplots(r, c)
         cnt = 0
         for i in range(r):
@@ -208,12 +225,56 @@ class Pix2Pix():
                 cnt += 1
         fig.savefig("images/Pix2pix/%d_%d.png" % (epoch, batch_i))
         plt.close()
+        
+    def sample_images1(self, epoch, batch_i):
+        os.makedirs('images/Pix2pix', exist_ok=True)
+        r, c = 2, 5
+
+        imgs_A = self.data_loader.load_test_data(batch_size=5)
+        fake_A = self.generator.predict(imgs_A)
+
+        gen_imgs = np.concatenate([imgs_A,fake_A])
+
+        # Rescale images 0 - 1
+        gen_imgs = 0.5 * gen_imgs + 0.5
+
+        #print(gen_imgs.shape)
+
+        titles = [ 'Original','Generated']
+        fig, axs = plt.subplots(r, c)
+        cnt = 0
+        for i in range(r):
+            for j in range(c):
+                axs[i,j].imshow(gen_imgs[cnt])
+                axs[i, j].set_title(titles[i])
+                axs[i,j].axis('off')
+                cnt += 1
+        fig.savefig("images/Pix2pix/%d_%d.png" % (epoch, batch_i))
+        plt.close()
+        
+    def save_generator(self,epoch):
+        model_path = "saved_model/generator_%d.h5"%epoch
+        self.generator.save(model_path)
+        print("Saved generator model at epoch %d to %s" % (epoch, model_path))
+        
+    def save_loss(self,epoch):
+        plt.figure(figsize=(10, 5))
+        plt.plot(gan.g_losses, label="Generator Loss")
+        plt.plot(gan.d_losses, label="Discriminator Loss")
+        plt.title("Loss During Training")
+        plt.xlabel("Epochs")
+        plt.ylabel("Loss")
+        plt.legend()
+        plt.savefig("saved_model/loss_curve_epoch_%s.png"% epoch)
+        plt.close()
 
 
 if __name__ == '__main__':
     gan = Pix2Pix()
-    try:
-        gan.train(epochs=200, batch_size=1, sample_interval=200)
-    except:
-        traceback.print_exc(file=sys.stdout)
+    #try:
+    gan.train(epochs=501, batch_size=8, sample_interval=200)
+    #except:
+    #    traceback.print_exc(file=sys.stdout)
     
+    
+

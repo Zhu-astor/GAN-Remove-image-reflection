@@ -17,9 +17,9 @@ class DataLoader():
             class_type = "Test"
             
 
-        path = './Dataset/%s/Reflection/' % (class_type)
-        path1 = glob('./Dataset/%s/Reflection/*' % (class_type))
-        path2 = './Dataset/%s/NonReflection/' % (class_type)
+        path = './Dataset1/%s/Reflection/' % (class_type)
+        path1 = glob('./Dataset1/%s/Reflection/*' % (class_type))
+        path2 = './Dataset1/%s/NonReflection/' % (class_type)
 
         temp_len = len(path)
 
@@ -32,6 +32,7 @@ class DataLoader():
         imgs_B = []
         
         for img_path in batch_images:
+            #print(img_path + "--------------reflection")
             img = self.imread(img_path)
             batch_images1.append(path2 + img_path[temp_len:])
             img = np.array(Image.fromarray(np.uint8(img)).resize(self.img_res))
@@ -46,6 +47,7 @@ class DataLoader():
         imgs_A = np.array(imgs_A)/127.5 - 1.# normalize
             
         for img_path in batch_images1:
+            #print(img_path + "--------------nonreflection")
             img = self.imread(img_path)
             
             img = np.array(Image.fromarray(np.uint8(img)).resize(self.img_res))
@@ -58,8 +60,25 @@ class DataLoader():
 
         imgs_B = np.array(imgs_B)/127.5 - 1. # normalize
 
-        return imgs_A, imgs_B
+        return imgs_B, imgs_A
+    
+    def load_test_data(self, batch_size=1):
 
+        path1 = glob('./Dataset1/Test/Reflection/*' )
+        batch_images = np.random.choice(path1, size=batch_size)
+        imgs_A = []
+        
+        for img_path in batch_images:
+            #print(img_path + "--------------reflection")
+            img = self.imread(img_path)
+            img = np.array(Image.fromarray(np.uint8(img)).resize(self.img_res))
+    
+            imgs_A.append(img)
+
+        imgs_A = np.array(imgs_A)/127.5 - 1.# normalize
+
+        return imgs_A
+    
     def load_batch(self, batch_size=1, is_testing=False):
         
         if not is_testing:
@@ -68,9 +87,9 @@ class DataLoader():
             class_type = "Test"
             
 
-        path = './Dataset/%s/Reflection/' % (class_type)
-        path1 = glob('./Dataset/%s/Reflection/*' % (class_type))
-        path2 = './Dataset/%s/NonReflection/' % (class_type)
+        path = './Dataset1/%s/Reflection/' % (class_type)
+        path1 = glob('./Dataset1/%s/Reflection/*' % (class_type))
+        path2 = './Dataset1/%s/NonReflection/' % (class_type)
 
         self.n_batches = int(len(path1) / batch_size)
 
@@ -79,8 +98,9 @@ class DataLoader():
             batch = path1[i*batch_size:(i+1)*batch_size]
             imgs_A, imgs_B = [], []
             for path_A in batch:
-
+                #print(path_A + "--------------reflection")
                 path_B = path2 + path_A[temp_len:]
+                #print(path_B + "--------------nonreflection")
                 img_A = self.imread(path_A)
                 img_B = self.imread(path_B)
 
@@ -98,7 +118,7 @@ class DataLoader():
             imgs_B = np.array(imgs_B)/127.5 - 1.# normalize
 
 
-            yield imgs_A, imgs_B
+            yield imgs_B, imgs_A
 
 
     def imread(self, path):

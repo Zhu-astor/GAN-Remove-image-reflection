@@ -15,6 +15,14 @@ Refer to https://github.com/eriklindernoren/Keras-GAN/tree/master/pix2pix . I ch
 
 Basically i used Pix2pix model to run this mission.I will try more model for comparing accuracy later.
 
+### About
+Use generator to generate new picture with nonreflection. And discriminator will check authenticity.
+
+- Original(Real Reflection Picture)
+- Condition(Real NonReflectuon Picture)
+- Generated(Fake NonReflection Picture)
+  > producted by generator 
+
 ### Result
 If you use my code.You may get some result like this.
 
@@ -30,11 +38,14 @@ The layer and hypothesis class can fine tune.
 
 ### Loss
 
-I will update loss value later...
-
 This is the last epoch's information.
 
 ![image](https://github.com/user-attachments/assets/9c41ef90-5030-4f74-997a-e7eeb4238629)
+
+This is loss curve of epoch 100 * batch 200.
+
+![螢幕擷取畫面 2024-08-10 133233](https://github.com/user-attachments/assets/8e43ceef-5cc6-4147-a975-d0b7814e4249)
+
 
 ## Will try...
 1.Location-aware Single Image Reflection Removal
@@ -42,7 +53,3 @@ This is the last epoch's information.
 >https://github.com/zdlarr/Location-aware-SIRR
 
 2.V-DESIRR: Very Fast Deep Embedded Single Image Reflection Removal
-
-
-
-
