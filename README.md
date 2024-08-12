@@ -1,11 +1,21 @@
 # GAN : Remove image reflection
 
+## Equipment
+
+- NVIDIA Geforce RTX 4060 Laptop GPU 16GB
+
+- 12th Gen Intel(R) Core(TM) i5-12500H   2.50 GHz
+
+- RAM 16 GB 
+
 ## Dataset
-SIR dataset : https://sir2data.github.io/ to download SIR dataset. 
+SIR dataset : https://sir2data.github.io/ 
 
 IBCLN dataset : https://github.com/JHL-HUST/IBCLN
 
 ERRNET dataset : https://github.com/Vandermode/ERRNet
+
+I combined these three datasets and randomly selected some data to be the test datasets, while the rest were used for training.
 
 My Classify code is Classification_image.py and Data_preprocess.py. You can refer to build the dataset for two class.
 
@@ -25,12 +35,16 @@ Not only that, I'm going to try a lot of different models to compare.
 Use generator to generate new picture with nonreflection. And discriminator will check authenticity.
 
 - Original(Real NonReflection Picture)
-- Condition(Real Reflectuon Picture) (input of model predict)
+- Condition(Real Reflectuon Picture) 
 - Generated(Fake NonReflection Picture)
   > producted by generator 
 
+And we want to predict nonreflection picture from reflection picture,so the input of predict is reflection picture.(Important!)
+
+If you input a nonreflection picture, the training process you are doing is changing the nonreflection picture into a reflection picture.
+
 ### Result
-Result of combined other datasets
+Result of combined other datasets(epoch 300 batch 8 lr 0.00005)
 
 ![image](https://github.com/user-attachments/assets/07eb302b-077c-45b7-905e-04472376da13)
 
