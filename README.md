@@ -1,7 +1,11 @@
 # GAN : Remove image reflection
 
 ## Dataset
-The file is too big . I can't put on my github . You can go to https://sir2data.github.io/ to download SIR dataset. 
+SIR dataset : https://sir2data.github.io/ to download SIR dataset. 
+
+IBCLN dataset : https://github.com/JHL-HUST/IBCLN
+
+ERRNET dataset : https://github.com/Vandermode/ERRNet
 
 My Classify code is Classification_image.py and Data_preprocess.py. You can refer to build the dataset for two class.
 
@@ -13,38 +17,35 @@ My Classify code is Classification_image.py and Data_preprocess.py. You can refe
 ### Preface
 Refer to https://github.com/eriklindernoren/Keras-GAN/tree/master/pix2pix . I changed the datasets and some code.
 
-Basically i used Pix2pix model to run this mission.I will try more model for comparing accuracy later.
+Basically i used Pix2pix model to run this mission.I will try lots of hypothesis class to find out best accuracy.
+
+Not only that, I'm going to try a lot of different models to compare.
 
 ### About
 Use generator to generate new picture with nonreflection. And discriminator will check authenticity.
 
-- Original(Real Reflection Picture)
-- Condition(Real NonReflectuon Picture)
+- Original(Real NonReflection Picture)
+- Condition(Real Reflectuon Picture) (input of model predict)
 - Generated(Fake NonReflection Picture)
   > producted by generator 
 
 ### Result
-If you use my code.You may get some result like this.
+Result of combined other datasets
 
-The layer and hypothesis class can fine tune.
+![image](https://github.com/user-attachments/assets/07eb302b-077c-45b7-905e-04472376da13)
 
-![image](https://github.com/user-attachments/assets/4bdbe444-b6da-4a29-b4e1-c32342dbe5e8)
+![image](https://github.com/user-attachments/assets/dfa22c0e-4641-41ea-b7d3-fe0c05d924d8)
 
-![image](https://github.com/user-attachments/assets/eb4d779a-9c23-4ae2-a3fd-e87c770e3fbd)
 
-![image](https://github.com/user-attachments/assets/eb25d601-fc5a-4788-9c98-959898e4134e)
-
-![image](https://github.com/user-attachments/assets/53253b46-6a4b-490b-b093-bba05c9be54f)
 
 ### Loss
 
-This is the last epoch's information.
+This is the part of loss curve from (epoch 300 batch 8 lr 0.00005)
 
-![image](https://github.com/user-attachments/assets/9c41ef90-5030-4f74-997a-e7eeb4238629)
+![image](https://github.com/user-attachments/assets/6b1e3525-6e94-4e57-a421-8cee290ca642)
 
-This is loss curve of epoch 100 * batch 200.
+![image](https://github.com/user-attachments/assets/5982fa3a-7346-4a61-a3a4-eb9093e10c38)
 
-![螢幕擷取畫面 2024-08-10 133233](https://github.com/user-attachments/assets/8e43ceef-5cc6-4147-a975-d0b7814e4249)
 
 
 ## Will try...
