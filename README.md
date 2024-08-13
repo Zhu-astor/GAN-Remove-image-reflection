@@ -15,6 +15,8 @@ IBCLN dataset : https://github.com/JHL-HUST/IBCLN
 
 ERRNET dataset : https://github.com/Vandermode/ERRNet
 
+RFC dataset : https://github.com/ChenyangLEI/flash-reflection-removal?tab=readme-ov-file
+
 I combined these three datasets and randomly selected some data to be the test datasets, while the rest were used for training.
 
 My Classify code is Classification_image.py and Data_preprocess.py. You can refer to build the dataset for two class.
