@@ -16,9 +16,10 @@ import sys
 import numpy as np
 import os
 import torch
+import matplotlib
 
 #https://github.com/eriklindernoren/Keras-GAN/tree/master keras-gan
-
+matplotlib.use("Agg")
 class Pix2Pix():
     def __init__(self):
         # Input shape

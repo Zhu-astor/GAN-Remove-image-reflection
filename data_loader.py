@@ -17,9 +17,9 @@ class DataLoader():
             class_type = "Test"
             
 
-        path = './Dataset1/%s/Reflection/' % (class_type)
-        path1 = glob('./Dataset1/%s/Reflection/*' % (class_type))
-        path2 = './Dataset1/%s/NonReflection/' % (class_type)
+        path = './Dataset2/%s/Reflection/' % (class_type)
+        path1 = glob('./Dataset2/%s/Reflection/*' % (class_type))
+        path2 = './Dataset2/%s/NonReflection/' % (class_type)
 
         temp_len = len(path)
 
@@ -64,7 +64,7 @@ class DataLoader():
     
     def load_test_data(self, batch_size=1):
 
-        path1 = glob('./Dataset1/Test/Reflection/*' )
+        path1 = glob('./Dataset2/Test/Reflection/*' )
         batch_images = np.random.choice(path1, size=batch_size)
         imgs_A = []
         
@@ -87,9 +87,9 @@ class DataLoader():
             class_type = "Test"
             
 
-        path = './Dataset1/%s/Reflection/' % (class_type)
-        path1 = glob('./Dataset1/%s/Reflection/*' % (class_type))
-        path2 = './Dataset1/%s/NonReflection/' % (class_type)
+        path = './Dataset2/%s/Reflection/' % (class_type)
+        path1 = glob('./Dataset2/%s/Reflection/*' % (class_type))
+        path2 = './Dataset2/%s/NonReflection/' % (class_type)
 
         self.n_batches = int(len(path1) / batch_size)
 
