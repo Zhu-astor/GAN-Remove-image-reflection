@@ -49,14 +49,12 @@ If you input a nonreflection picture, the training process you are doing is chan
 Result of combined other datasets(epoch 300 batch 8 lr 0.00005)
 
 ![image](https://github.com/user-attachments/assets/a240425d-cb0f-4733-8dd4-18e900c6e77b)
-
 ![image](https://github.com/user-attachments/assets/47df0ff9-945c-44fe-83d2-60bf3ce07630)
-
 ![image](https://github.com/user-attachments/assets/502bb303-2c5f-4887-9e63-3f6f1c0fa301)
 
 ![image](https://github.com/user-attachments/assets/e5daf8bf-54c2-401d-9775-df9cdef2e71c)
-
 ![image](https://github.com/user-attachments/assets/6dd79388-4a6f-4f95-81b8-47ae0fb6665b)
+![image](https://github.com/user-attachments/assets/a77ec678-1d91-43a5-8225-dc50246f8e00)
 
 
 
