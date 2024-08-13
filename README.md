@@ -53,7 +53,7 @@ Result of combined other datasets(epoch 300 batch 8 lr 0.00005)
 ![image](https://github.com/user-attachments/assets/502bb303-2c5f-4887-9e63-3f6f1c0fa301)
 
 ![image](https://github.com/user-attachments/assets/e5daf8bf-54c2-401d-9775-df9cdef2e71c)
-![image](https://github.com/user-attachments/assets/6dd79388-4a6f-4f95-81b8-47ae0fb6665b)
+![image](https://github.com/user-attachments/assets/d2fe6f51-af9d-4670-aad9-e759a144371d)
 ![image](https://github.com/user-attachments/assets/a77ec678-1d91-43a5-8225-dc50246f8e00)
 
 
