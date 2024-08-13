@@ -46,15 +46,16 @@ If you input a nonreflection picture, the training process you are doing is chan
 ### Result
 Result of combined other datasets(epoch 300 batch 8 lr 0.00005)
 
-![image](https://github.com/user-attachments/assets/07eb302b-077c-45b7-905e-04472376da13)
+![image](https://github.com/user-attachments/assets/a240425d-cb0f-4733-8dd4-18e900c6e77b)
 
-![image](https://github.com/user-attachments/assets/dfa22c0e-4641-41ea-b7d3-fe0c05d924d8)
+![image](https://github.com/user-attachments/assets/47df0ff9-945c-44fe-83d2-60bf3ce07630)
 
-![image](https://github.com/user-attachments/assets/1923cf97-a681-41de-bf16-68e8cf6800ea)
+![image](https://github.com/user-attachments/assets/502bb303-2c5f-4887-9e63-3f6f1c0fa301)
 
-![image](https://github.com/user-attachments/assets/fc9189b6-ac96-4d79-b70c-fdfb85df9156)
+![image](https://github.com/user-attachments/assets/e5daf8bf-54c2-401d-9775-df9cdef2e71c)
 
-![image](https://github.com/user-attachments/assets/47e254fd-a2d8-4e2c-b955-9440e849e781)
+![image](https://github.com/user-attachments/assets/6dd79388-4a6f-4f95-81b8-47ae0fb6665b)
+
 
 
 ### Loss
