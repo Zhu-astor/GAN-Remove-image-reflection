@@ -186,11 +186,37 @@ Last updated: 2026-06-06（量化評估完成 + citation_verification_record.md 
 
 ---
 
+## 2026-06-06 下游評估腳本建立
+
+### eval_downstream.py（新增）
+- 路徑：`D:\Contest\AI GO\paper\eval_downstream.py`
+- 執行環境：`python389`（TF 2.6.0 + ultralytics 8.2.94）
+- 功能：4 個 phase 完整評估所有組合
+  - Phase 1：GAN 預處理（Baseline + SGA × Test/Reflection + Test/jpg → 暫存資料夾）
+  - Phase 2：有標籤 val split mAP50/precision/recall（CLASS 模型 × config.yaml，DATASETS 模型 × museum_data.yaml）
+  - Phase 3：無標籤 predict（detection_rate + avg_top1_conf）
+  - Phase 4：配對類別一致率（Test/Reflection vs Test/NonReflection 作為偽標籤）
+- 輸出：`eval_downstream_results.csv`、`eval_downstream_per_image.csv`、`eval_downstream_summary.txt`
+- 執行指令：
+  ```
+  cd "D:\Contest\AI GO\paper"
+  C:\Users\bubbl\Desktop\Virtualenv\python389\Scripts\python.exe eval_downstream.py
+  ```
+
+### 評估架構說明
+- 699 張：未找到確切對應資料夾，測試集涵蓋範圍如下：
+  - `Test/Reflection`（198）：配對下游評估主力（Phase 4 一致率 ≈ 92.7%/94.5% 的最接近代理）
+  - `Test/jpg`（651）：SSIM 評估用測試集，也跑一遍
+  - `val_split`（374 for CLASS，139 for DATASETS）：有標籤 mAP50 評估
+- 使用 NonReflection 預測作為偽 ground-truth 計算一致率，無法用真實 label 計算 accuracy 的原因：Test/Reflection 無 YOLO 格式 label 檔
+
+---
+
 ## 下一步行動（優先順序）
 
 1. ~~修正 §3.6 解析度說明（512→256）~~ ✅ 完成
 2. ~~加入 [Blau18]/[Ledig17] 引用到論文 §4.3 + references~~ ✅ 完成
-3. **最優先** — 跑 Baseline Pix2Pix + YOLOv8 準確率（博物館 699 張，MUST-3）
+3. **最優先** — 執行 `eval_downstream.py` 取得 MUST-3 數據（Phase 4 paired agreement for raw vs SGA_GAN）
 4. 確認是否有 CA only / SA only checkpoint
 5. 製作 FIG-3（Before/After）和 FIG-4（Attention Map）—— 視覺說服力最強
 6. 從訓練 log 製作 FIG-5（Loss 曲線）
