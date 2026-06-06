@@ -1,0 +1,14 @@
+CVGIP 2025 — SIRR Quantitative Evaluation
+Test set : Dataset2/Test  (491 pairs total scanned)
+Resolution: 256×256
+Metrics  : PSNR (dB) ↑  |  SSIM ↑  |  LPIPS ↓ (AlexNet)
+=================================================================
+Model                                N     PSNR     SSIM    LPIPS
+─────────────────────────────────────────────────────────────────
+Pix2Pix+SGA (Ours)                 491   22.682   0.8192   0.2178
+Baseline Pix2Pix                   491   23.896   0.8706   0.1630
+=================================================================
+
+Copy the numbers above into Table 1 of cvgip2025_chinese.py:
+  MUST-1 = Baseline Pix2Pix  PSNR / SSIM / LPIPS
+  MUST-2 = Pix2Pix+SGA       PSNR / SSIM / LPIPS
