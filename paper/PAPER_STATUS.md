@@ -1,6 +1,6 @@
 # PAPER_STATUS.md — AI GO CVGIP 論文狀態追蹤
 
-Last updated: 2026-06-06（量化評估完成 + citation_verification_record.md 全量建立）
+Last updated: 2026-06-13（92.7/94.5 方案 A 逆轉，恢復沿用；§4.6 改為視覺證據優先敘事，詳見本文件最新章節與 `SECTION_4_6_REWRITE_PROPOSAL_2026-06-13.md`）
 
 ---
 
@@ -35,8 +35,8 @@ Last updated: 2026-06-06（量化評估完成 + citation_verification_record.md 
   - ERRNET：github.com/Vandermode/ERRNet（[ERRNET] 引用需確認，見 references）
   - RFC：github.com/ChenyangLEI/flash-reflection-removal（閃光燈輔助配對）
   - 訓練集：810 對，測試集：248 對（隨機抽樣，非按資料集劃分）
-- **博物館評估**：699 張影像（下游辨識用，跨 domain 設計，**未用於訓練**）
-- **下游驗證**：YOLOv8n，7 類展品，92.7% → 94.5%（+1.8pp）
+- **博物館評估**：699 張影像（下游辨識用，跨 domain 設計，**未用於訓練**）——現存最接近的資料夾為 `GAN_Test/Dataset/Test/jpg`（651 張），原 699 張證據可能在另一台電腦（使用者確認不需追查）
+- **下游驗證**：92.7% → 94.5%（+1.8pp）✅ **確認沿用**（2026-06-13 逆轉方案 A）。來源：`反光處理論文準備.pdf` §6（699 張測試集，原始 92.7%，40 張失敗中 10 張在去反光版成功 → 94.5%，人工計數，權威版本）+ `FY113-機器學習了沒實證成果簡報v2.pptx` slide 11（514/554→524/554，同組數字另一呈現，不寫入正文）
 - **訓練設定**：RTX 4090，**256×256**（§3.6 誤寫為 512×512，待修正），batch 8，epoch 500，Adam lr=5e-5，epoch 400 checkpoint
 
 ---
@@ -80,7 +80,7 @@ Last updated: 2026-06-06（量化評估完成 + citation_verification_record.md 
 |------|------|------|------|
 | MUST-1 | 表 1 | Baseline Pix2Pix 的 PSNR / SSIM / LPIPS（公開 SIRR 測試集，491 對） | ✅ 23.896 / 0.8706 / 0.1630 |
 | MUST-2 | 表 1 | Pix2Pix+SGA 的 PSNR / SSIM / LPIPS（公開 SIRR 測試集，491 對） | ✅ 22.682 / 0.8192 / 0.2178 |
-| MUST-3 | 表 2 | Baseline Pix2Pix + YOLOv8 準確率（博物館 699 張） | ❌ |
+| MUST-3 | 表 2 | ~~下游驗證數據（Baseline Pix2Pix 列）~~ | ✅ 已解除（2026-06-13）：新敘事將 Table 2 簡化為「原始影像 92.7%」與「Pix2Pix+SGA 94.5%」兩列，不再需要 Baseline Pix2Pix 下游數值 |
 | OPT-1 | 表 1 | CA only 的 PSNR/SSIM/LPIPS（有 checkpoint 才填，沒有刪整行） | ❓ |
 | OPT-2 | 表 1 | SA only 的 PSNR/SSIM/LPIPS（有 checkpoint 才填，沒有刪整行） | ❓ |
 
@@ -88,14 +88,14 @@ Last updated: 2026-06-06（量化評估完成 + citation_verification_record.md 
 
 ## ❌ 待製圖表（共 6 張）
 
-| 標記 | 檔名 | 內容 | 製作方式 |
+| 標記 | 檔名 | 內容 | 狀態（2026-06-10 更新） |
 |------|------|------|------|
-| FIG-1 | overall_architecture.png | 整體架構圖（輸入→SGA→UNet→輸出+PatchGAN） | 手動繪製（draw.io / PPT） |
-| FIG-2 | sga_module.png | SGA 模組詳細結構（Sobel萃取→CA+SA雙分支） | 手動繪製 |
-| FIG-3 | visual_comparison.png | Before/After 博物館視覺比較（3~4組） | 跑推論截圖：含反光原圖\|Baseline\|SGA |
-| FIG-4 | attention_map.png | Sobel Attention Map 視覺化 | `GAN_Test/Pic_process_sobel.py` 生成 |
-| FIG-5 | training_loss.png | G loss / D loss 訓練曲線（500 epoch） | 從訓練 print log 提取 d_losses/g_losses |
-| FIG-6 | downstream_accuracy.png | 下游準確率 bar chart（3 組） | matplotlib 畫（資料已有） |
+| FIG-1 | overall_architecture.png | 整體架構圖（輸入→SGA→UNet→輸出+PatchGAN） | ⚠️ `matherial/GAN_architecture.png` 可用但僅畫 GAN 訓練迴圈，未含 SGA |
+| FIG-2 | sga_module.png | SGA 模組詳細結構 | ✅ `matherial/sga_module_architecture.png`（2026-06-10，依程式碼繪製，300dpi；腳本 `matherial/draw_sga_architecture.py`） |
+| FIG-3 | visual_comparison.png | Before/After 博物館視覺比較 | ✅ `matherial/visual_comparison.png`（5 組 Original/Generated）。2026-06-13：規劃作為新 §4.6 開場視覺證據的引用對象（不變更圖檔本身） |
+| FIG-4 | attention_map.png | Sobel Attention Map 視覺化 | ⚠️ `matherial/reflection_sobel_feature.png` + `nonreflection_sobel_feature.png` 可用（Sobel 梯度圖，非 attention map 本體） |
+| FIG-5 | training_loss.png | G loss / D loss 訓練曲線 | ✅ `matherial/loss_function.png`（G/D loss，x 軸為 iteration 0~70000+） |
+| FIG-6 | （改為偵測信心值對比圖，檔名待定） | ~~下游準確率 bar chart~~ → YOLOv8 偵測信心值對比圖（原始 vs SGA 處理後，bbox+confidence） | ⏳ 待使用者提供素材（候選：`消跑原7.jpg`/`原跑原7.jpg`，信心值 0.76→0.93, 0.48→0.85, 0.64→0.81 全升），詳見 `SECTION_4_6_REWRITE_PROPOSAL_2026-06-13.md` §2 |
 
 ---
 
@@ -212,13 +212,90 @@ Last updated: 2026-06-06（量化評估完成 + citation_verification_record.md 
 
 ---
 
-## 下一步行動（優先順序）
+## 2026-06-08 eval_downstream.py 執行結果（先前未記錄）
 
-1. ~~修正 §3.6 解析度說明（512→256）~~ ✅ 完成
-2. ~~加入 [Blau18]/[Ledig17] 引用到論文 §4.3 + references~~ ✅ 完成
-3. **最優先** — 執行 `eval_downstream.py` 取得 MUST-3 數據（Phase 4 paired agreement for raw vs SGA_GAN）
-4. 確認是否有 CA only / SA only checkpoint
-5. 製作 FIG-3（Before/After）和 FIG-4（Attention Map）—— 視覺說服力最強
-6. 從訓練 log 製作 FIG-5（Loss 曲線）
-7. 製作 FIG-6（bar chart，matplotlib，資料已有）
-8. 手動繪製 FIG-1、FIG-2（架構圖）
+執行於 2026-06-08 11:18，輸出三檔皆在 paper/ 下。重點數據：
+
+**Phase 2（有標籤 val mAP50）**：CLASS_train3 = 0.0021（**已壞，不可用**）、CLASS_train8 = 0.9950、DATASETS_train2 = 0.9030、DATASETS_train3 = 0.9542
+
+**Phase 3（Test_Reflection 198 張，DetRate raw→Baseline→SGA）**：
+- CLASS_train8：0.9596 → 0.9697 → **0.9848（SGA 為正向）**
+- DATASETS_train2：0.0657 → 0.1212 → 0.1566（正向但基數過低）
+- DATASETS_train3：0.1667 → 0.1667 → 0.1414（負向；domain mismatch，見下）
+
+**Phase 4（配對一致率，NonReflection 為偽 GT，raw→Baseline→SGA）**：四個模型全部負向（CLASS_train8: 0.7486→0.6175→0.5137；DATASETS_train3: 0.7333→0.5333→0.3333）
+
+⚠️ summary 檔尾註 "raw≈92.7%, SGA_GAN≈94.5%" 與任何實跑結果**皆不符**，該註解為撰寫腳本時的錯誤預期，不可引用。
+
+---
+
+## 2026-06-10 工作記錄（本次 session）
+
+### 92.7%/94.5% 來源調查 — 已結案
+- **出處**：競賽簡報 `FY113-機器學習了沒實證成果簡報v2.pptx` slide 11（514/554=92.7%，+10 張救回 → 524/554=94.5%）+ 使用者 PDF `反光處理論文準備.pdf` §6（權威版本：同一辨識模型、699 張測試集、raw 92.7%，40 張失敗中 10 張在去反光版成功 → 94.5%，**人工計數**）
+- **結論**：無任何現存程式碼/輸出可重現此數字；原始證據可能在另一台電腦，使用者確認不需追查
+- **決策（使用者核准方案 A，2026-06-10）**：論文以新的可重現數據**完全取代** 92.7/94.5，不保留舊數字
+- **⚠️ 2026-06-13 更新：此決策已逆轉**——使用者確認 92.7/94.5 為人工篩選的真實數據，明確指示沿用；詳見下方「2026-06-13 工作記錄」
+
+### CLASS_train8 vs DATASETS_train3 深度比較 — 已完成
+- CLASS_train8（`Classification/runs/detect/train8`）：訓練資料為**黑底裁切展品圖**（datasets/datasets，train 2560 / valid 374，nc=8 含 other），300 epochs，val mAP50=0.995（同質性高，泛化未真正檢驗）；診斷檔不全（無 confusion matrix / PR curve）；**但在 651/198 張真實測試集上 DetRate ≥ 0.95，是唯一可用模型**
+- DATASETS_train3（`museum_data_annotation.v9i.yolov8/runs/detect/train3`）：訓練資料為**真實博物館場景照**（train 415 / valid 139 / test 210，nc=7），1200 epochs（~220 收斂），mAP50=0.954，診斷檔完整（混淆矩陣對角線強，主要錯誤 obj3↔背景 11 次）；**但對 Test_Reflection DetRate 僅 0.17 — 測試集 domain 對不上，不適合當主要證據**
+- 數量對應：PDF 的「2000 訓練 / 699 測試」較接近 CLASS 系列（2560/651）而非 museum 系列（415/210）→ 當年競賽模型較可能是 CLASS 系列
+
+### 下游驗證新方案 — 已定案並建腳本
+**⚠️ 2026-06-13 更新：此方案（CLASS_train8 × 651 張 → 98.62%/98.77%）已依使用者指示棄用，不用於論文** —— 使用者確認「之前98.62 98.77都是從錯誤的模型判斷閾值、條件 錯誤模型出來的」，請丟棄。以下為原始記錄，僅供歷史參考：
+- **腳本**：`paper/eval_class_train8_651.py`（v1.0.0，2026-06-10）
+- **組合**：CLASS_train8 × `GAN_Test/Dataset/Test/jpg`（651 張）× {raw, Baseline_GAN, SGA_GAN}
+- GAN 處理影像直接重用 `paper/_downstream_temp/{baseline_jpg,sga_jpg}`（各 651 張，2026-06-08 產生），**不需 TensorFlow**
+- 主指標：DetRate + ObjRate（top-1 非 other）+ AvgConf；另輸出「救回案例」清單（raw 失敗→GAN 成功），對齊 PDF §6 原始方法論但全自動可重現
+- 執行：`C:\Users\bubbl\Desktop\Virtualenv\python389\Scripts\python.exe eval_class_train8_651.py`
+- 輸出：`eval_class_train8_651_per_image.csv` + `eval_class_train8_651_summary.txt`
+
+### 誠實呈現原則（寫入 §4.6 時必守）
+**⚠️ 2026-06-13 更新：新敘事（視覺證據優先 + 92.7/94.5）不使用 eval_downstream.py 的 Phase 3/4 數據，以下原則暫不適用，僅供歷史參考**：
+- Phase 3 DetRate/AvgConf 對 SGA 正向，Phase 4 配對一致率對 SGA 負向——兩者都要呈現，負向結果沿用 §4.3 的 Perception-Distortion Tradeoff [Blau18] 框架解釋
+- 訓練 domain 證據（`compare_original1.jpg`/`compare_generate1.jpg`、`show.png`，皆為公開 SIRR 資料）可證明「訓練時完全未見博物館資料」的跨 domain 敘事
+
+---
+
+## 2026-06-13 工作記錄（本次 session）
+
+### 「漏判」超集資料夾 / 反光消除訓練辨識模型調查 — 已告一段落
+- 依使用者指示，建立 `paper/_rescue_check/run_reflex_models.py` 與 `identify_missed_annotator.py`，測試 reflex2000.pt / no_reflex2000.pt 及其他 8 個 checkpoint 對 `Classification/Compare/` 10 組「漏判」影像的偵測結果
+- **關鍵發現**：`GAN_Test/reflex2000.pt` 在 `Compare/img-N.jpg`（"rescued" 版本）上的偵測結果幾乎精確重現該圖上已標註的信心值（例如 img-100 obj3=0.54、img-283 obj7=0.84、img-316 obj3=0.82），但對全部 10 張 `漏判objX-img-N.jpg` 均輸出 `(none)`
+- 視覺檢查發現先前假設方向錯誤：`漏判objX-img-N.jpg`（較模糊）並非乾淨原圖，`img-N.jpg`（較清晰，已有標註框）視覺上更接近 `Test_Data` 的 raw699
+- 未找到更大的「漏判」超集資料夾。使用者表示「我不確定 不過這邊先告一段落」——本調查暫停，不影響 §4.6 改寫工作
+
+### 92.7/94.5 方案 A — 逆轉，恢復沿用
+- 使用者明確指示（2026-06-12）：「92.7/94.5 我沒有放棄...請使用該組」「之前98.62 98.77...請丟棄這部分」
+- **Task #1 完成**：重新讀取 `反光處理論文準備.pdf`（pages 1-10），verified §6 原文：
+  > 「我使用國立歷史博物館的展品數據集(七個展品，2000 張訓練集，699 張測試試集)，訓練一個展品辨識模型，透過對比原照片與反光去除後照片的辨識率來做下游驗證。其中原始測試集的辨識率是 92.7%，其中 40 張沒有成功辨識的照片在去反光測試集中有 10 張成功辨識。去反光測試集的辨識率是 94.5%，辨識率提升了 1.8%。」
+- **重要發現**：檢查 `cvgip2025_chinese.py` 現況後，發現 92.7%/94.5%/699 張的寫法**從未被方案 A 實際取代**——8 處引用（行 182, 209, 249, 499, 514, 591-592, 689）目前皆已是正確數字。**因此這 8 處不需要任何數字改動**，方案 A 的逆轉純粹是「取消一個尚未執行的計畫」，無需回滾程式碼
+
+### §4.6 新敘事：視覺證據優先 + 量化結果脈絡化
+- 依使用者指示（「我們不跟pix2pix(without sga)的數值、下游辨識率做比較，而是秀出最直接證據：圖片比較...然後最後數據只有92.7->94.5 但是有很多說明、引用論證...」），完成 §4.6 與 §5.4 改寫草案
+- **草案位置**：`D:\Contest\AI GO\paper\SECTION_4_6_REWRITE_PROPOSAL_2026-06-13.md`（狀態：待使用者審閱，尚未套用）
+- **核心變更**：
+  1. §4.6 開場改為引用圖 3（視覺比較）+ 新增 FIG-6（YOLO 偵測信心值對比圖，取代原 bar chart 設計）
+  2. 92.7%→94.5%（+1.8pp）維持，新增「40 張失敗中 10 張（25%）救回」描述（直接衍生自已驗證的 PDF §6 原文，純算術）
+  3. 新增脈絡化討論段落：以「92.7%+5.7pp理論上限=100%」與「699張/7類評估集規模」解釋提升幅度有限的原因，不依賴未驗證外部主張
+  4. Table 2 移除「Baseline Pix2Pix」列與 `[MUST-3]` 佔位符（不再需要 `eval_class_train8_651.py` 或任何額外評估）
+- **Task #4（引用研究）結論**：草案論點均可由「已驗證的 PDF §6 數字」+「純算術」+「常識性規模比較」支撐，**無需新增外部引用**；若使用者要為「高基準準確率限制可量測增益」之一般化現象補充文獻，可另行透過 `/cite-papers` 搜尋
+
+### Task #2 — FIG 素材需求已提出，待使用者提供
+- 詳見 `SECTION_4_6_REWRITE_PROPOSAL_2026-06-13.md` §2
+- 候選素材：`消跑原7.jpg`（未經 SGA）/ `原跑原7.jpg`（經 SGA），信心值 0.76→0.93, 0.48→0.85, 0.64→0.81 全升——**需使用者確認完整路徑**，並告知是否有「未偵測→成功偵測」的更佳範例
+
+---
+
+## 下一步行動（優先順序，2026-06-13 更新）
+
+1. ~~執行 eval_downstream.py~~ ✅ 完成（2026-06-08）
+2. ~~調查 92.7/94.5 來源並定案處理方案~~ ✅ 完成（2026-06-13：方案 A 逆轉，恢復沿用 92.7/94.5）
+3. ~~FIG-2 SGA 架構圖~~ ✅ 完成（sga_module_architecture.png）
+4. **等待使用者** — 提供 FIG-6 素材（`消跑原7.jpg`/`原跑原7.jpg` 完整路徑，或更佳的「未偵測→成功偵測」範例）
+5. **等待使用者審閱** — `SECTION_4_6_REWRITE_PROPOSAL_2026-06-13.md` 中 §4.6 / §5.4 草案文字
+6. 待 4、5 完成後：套用草案至 `cvgip2025_chinese.py`（§4.6 行 585-605、§5.4 行 651-661 後新增段落）、插入新 FIG-6、重新生成 docx
+7. 推 GitHub 並回連結（依 feedback 規則）
+8. 確認是否有 CA only / SA only checkpoint（OPT-1/2）
+9. FIG-1 整體架構圖補 SGA 位置（GAN_architecture.png 目前僅 GAN 迴圈）
