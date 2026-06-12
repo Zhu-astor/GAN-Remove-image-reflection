@@ -1,6 +1,6 @@
 # PAPER_STATUS.md — AI GO CVGIP 論文狀態追蹤
 
-Last updated: 2026-06-13（92.7/94.5 方案 A 逆轉，恢復沿用；§4.6 改為視覺證據優先敘事，詳見本文件最新章節與 `SECTION_4_6_REWRITE_PROPOSAL_2026-06-13.md`）
+Last updated: 2026-06-13（v2 完成：§4.1.1/§4.3 新增訓練集對比圖、§4.6 視覺證據優先敘事改寫＋FIG-6、§5.4 新增第四點限制；docx+pdf 已產出，詳見本文件最新章節）
 
 ---
 
@@ -92,10 +92,14 @@ Last updated: 2026-06-13（92.7/94.5 方案 A 逆轉，恢復沿用；§4.6 改�
 |------|------|------|------|
 | FIG-1 | overall_architecture.png | 整體架構圖（輸入→SGA→UNet→輸出+PatchGAN） | ⚠️ `matherial/GAN_architecture.png` 可用但僅畫 GAN 訓練迴圈，未含 SGA |
 | FIG-2 | sga_module.png | SGA 模組詳細結構 | ✅ `matherial/sga_module_architecture.png`（2026-06-10，依程式碼繪製，300dpi；腳本 `matherial/draw_sga_architecture.py`） |
-| FIG-3 | visual_comparison.png | Before/After 博物館視覺比較 | ✅ `matherial/visual_comparison.png`（5 組 Original/Generated）。2026-06-13：規劃作為新 §4.6 開場視覺證據的引用對象（不變更圖檔本身） |
+| FIG-3 | visual_comparison.png | Before/After 博物館視覺比較 | ✅ `matherial/visual_comparison.png`（5 組 Original/Generated）。2026-06-13：作為 §4.6 開場視覺證據的引用對象（不變更圖檔本身） |
 | FIG-4 | attention_map.png | Sobel Attention Map 視覺化 | ⚠️ `matherial/reflection_sobel_feature.png` + `nonreflection_sobel_feature.png` 可用（Sobel 梯度圖，非 attention map 本體） |
 | FIG-5 | training_loss.png | G loss / D loss 訓練曲線 | ✅ `matherial/loss_function.png`（G/D loss，x 軸為 iteration 0~70000+） |
-| FIG-6 | （改為偵測信心值對比圖，檔名待定） | ~~下游準確率 bar chart~~ → YOLOv8 偵測信心值對比圖（原始 vs SGA 處理後，bbox+confidence） | ⏳ 待使用者提供素材（候選：`消跑原7.jpg`/`原跑原7.jpg`，信心值 0.76→0.93, 0.48→0.85, 0.64→0.81 全升），詳見 `SECTION_4_6_REWRITE_PROPOSAL_2026-06-13.md` §2 |
+| FIG-6 | `原跑原7.jpg`（上）/ `消跑原7.jpg`（下） | YOLOv8 偵測信心值對比圖（原始 vs SGA 處理後，bbox+confidence） | ✅ 已插入 §4.6（2026-06-13）。⚠️ **方向未經使用者逐一確認**——詳見下方「2026-06-13 v2 完成記錄」 |
+
+> 另外 2026-06-13 v2 新增兩張補充圖（非編號 FIG-1~6 系列，皆來自 `matherial/`，皆已插入）：
+> - `compare_original1.jpg` / `compare_generate1.jpg`（§4.1.1，訓練資料集樣本，證明與博物館 domain 無重疊）
+> - `show.png`（§4.3 末，訓練 domain 上反光消除效果範例，3 組 Original/Generated）
 
 ---
 
@@ -282,20 +286,50 @@ Last updated: 2026-06-13（92.7/94.5 方案 A 逆轉，恢復沿用；§4.6 改�
   4. Table 2 移除「Baseline Pix2Pix」列與 `[MUST-3]` 佔位符（不再需要 `eval_class_train8_651.py` 或任何額外評估）
 - **Task #4（引用研究）結論**：草案論點均可由「已驗證的 PDF §6 數字」+「純算術」+「常識性規模比較」支撐，**無需新增外部引用**；若使用者要為「高基準準確率限制可量測增益」之一般化現象補充文獻，可另行透過 `/cite-papers` 搜尋
 
-### Task #2 — FIG 素材需求已提出，待使用者提供
-- 詳見 `SECTION_4_6_REWRITE_PROPOSAL_2026-06-13.md` §2
-- 候選素材：`消跑原7.jpg`（未經 SGA）/ `原跑原7.jpg`（經 SGA），信心值 0.76→0.93, 0.48→0.85, 0.64→0.81 全升——**需使用者確認完整路徑**，並告知是否有「未偵測→成功偵測」的更佳範例
+### Task #2 — FIG 素材需求 ✅ 使用者已提供（2026-06-13），已套用
 
 ---
 
-## 下一步行動（優先順序，2026-06-13 更新）
+## 2026-06-13 v2 完成記錄
 
-1. ~~執行 eval_downstream.py~~ ✅ 完成（2026-06-08）
-2. ~~調查 92.7/94.5 來源並定案處理方案~~ ✅ 完成（2026-06-13：方案 A 逆轉，恢復沿用 92.7/94.5）
-3. ~~FIG-2 SGA 架構圖~~ ✅ 完成（sga_module_architecture.png）
-4. **等待使用者** — 提供 FIG-6 素材（`消跑原7.jpg`/`原跑原7.jpg` 完整路徑，或更佳的「未偵測→成功偵測」範例）
-5. **等待使用者審閱** — `SECTION_4_6_REWRITE_PROPOSAL_2026-06-13.md` 中 §4.6 / §5.4 草案文字
-6. 待 4、5 完成後：套用草案至 `cvgip2025_chinese.py`（§4.6 行 585-605、§5.4 行 651-661 後新增段落）、插入新 FIG-6、重新生成 docx
-7. 推 GitHub 並回連結（依 feedback 規則）
-8. 確認是否有 CA only / SA only checkpoint（OPT-1/2）
-9. FIG-1 整體架構圖補 SGA 位置（GAN_architecture.png 目前僅 GAN 迴圈）
+使用者提供 `matherial/` 新素材並指示「可以開始更新 新版本的論文了 v2」，已完成以下變更於 `cvgip2025_chinese.py`：
+
+1. **§4.1.1 新增**：`compare_original1.jpg` + `compare_generate1.jpg`（訓練資料集樣本，建築+植栽場景，證明訓練資料與博物館評估場景無 domain 重疊）。
+2. **§4.3 末新增**：`show.png`（訓練 domain 上 3 組 Original/Generated 反光消除效果範例，呼應 Perception-Distortion Tradeoff 討論）。
+3. **§4.6 全面改寫**（依 `SECTION_4_6_REWRITE_PROPOSAL_2026-06-13.md`）：
+   - 標題改為「4.6. 跨場景下游效益：視覺證據與辨識準確率」
+   - 開場引用圖 3（§4.4）視覺證據，再以 FIG-6 呈現 YOLOv8 信心值對比
+   - 量化段落：92.7%→94.5%（+1.8pp），699 張中 40 張失敗、10 張（25%）救回
+   - 新增脈絡化討論段（算術上界 5.7pp、高基準準確率、699張/7類規模偏小）
+   - 表 2 簡化為 2 列（原始影像 92.7% / Pix2Pix+SGA 94.5%），移除 `[MUST-3]` 與 Baseline Pix2Pix 列 → **MUST-3 已解除**
+   - FIG-6 = `原跑原7.jpg`（上）+ `消跑原7.jpg`（下）
+4. **§5.4 新增第四點限制**：說明 +1.8pp 幅度受評估集規模（699張/7類，僅40張原始失敗）與辨識模型高基準準確率（92.7%）共同制約，呼應未來工作方向。
+5. 更新檔頭 TODO 清單（MUST-3/FIG-2~6 標記為已完成）。
+6. 執行 `cvgip2025_chinese.py` → `cvgip2025_SGA_chinese.docx`；新增 `docx_to_pdf.py`（Word COM 自動化）→ `cvgip2025_SGA_chinese.pdf`（8 頁）。已逐頁檢查 PDF，所有新圖均正確渲染，無 `[fig] missing` 警告。
+
+### ⚠️ 待使用者確認：FIG-6（`原跑原7.jpg` / `消跑原7.jpg`）方向
+
+上一 session 的記錄（`SECTION_4_6_REWRITE_PROPOSAL_2026-06-13.md` §2、本檔案 Task #2 舊版）寫的是「`消跑原7.jpg`（未經 SGA，信心值較低）/ `原跑原7.jpg`（經 SGA，信心值較高）」。
+
+**本次直接開啟兩張圖片重新檢視後，發現實際內容方向相反**：
+- `消跑原7.jpg`：畫面較清晰，信心值 **0.93 / 0.85 / 0.81**（較高）
+- `原跑原7.jpg`：畫面略帶反光/霧感，信心值 **0.76 / 0.48 / 0.64**（較低）
+
+本次 v2 採用的方向判斷依據（**非使用者逐一確認，為本次推論**）：
+1. 檔名語意：「消跑原7」=「消[反光]+跑+原7」→ SGA 處理後輸出；「原跑原7」=「原[始]+跑+原7」→ 原始輸入
+2. 視覺：`消跑原7.jpg` 反光/霧感明顯較少，與「反光消除後」的敘事一致
+3. 信心值方向與全文 92.7%→94.5%（反光消除提升辨識）的敘事一致
+
+因此 v2 docx/pdf 中 FIG-6 為：**上＝`原跑原7.jpg`（原始含反光，信心值 0.76/0.48/0.64）／下＝`消跑原7.jpg`（SGA處理後，信心值 0.93/0.85/0.81）**。
+
+**若此方向判斷錯誤**（即兩檔案的「原始/SGA後」標籤與本文相反），只需在 `cvgip2025_chinese.py` 的 §4.6 對調 `fig(doc, '原跑原7.jpg')` 與 `fig(doc, '消跑原7.jpg')` 兩行的順序、並同步修改正文敘述中 0.76→0.93 等數字的方向即可，其餘內容不受影響。
+
+---
+
+## 下一步行動（優先順序，2026-06-13 v2 更新）
+
+1. ~~v2 編輯 + docx/pdf 產出~~ ✅ 完成（2026-06-13，見上）
+2. **等待使用者確認** — FIG-6 `原跑原7.jpg`/`消跑原7.jpg` 方向是否正確（見上方說明）
+3. 推 GitHub 並回連結（依 feedback 規則）
+4. 確認是否有 CA only / SA only checkpoint（OPT-1/2）
+5. FIG-1 整體架構圖補 SGA 位置（GAN_architecture.png 目前僅 GAN 迴圈）
