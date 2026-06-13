@@ -30,9 +30,10 @@ TODO LIST — 提交前必須填入的數字與圖片
 import os
 
 from docx import Document
-from docx.shared import Pt, Mm, Cm, Inches
+from docx.shared import Pt, Mm, Inches, Emu
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.table import WD_TABLE_ALIGNMENT
+from docx.enum.section import WD_SECTION_START
 from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
 
@@ -41,11 +42,12 @@ MATERIAL_DIR = r"D:\Contest\AI GO\matherial"
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
-def set_two_col(section, spacing_mm=8):
+def set_two_col(section, spacing_mm=8.01):
     sectPr = section._sectPr
     cols = OxmlElement('w:cols')
     cols.set(qn('w:num'), '2')
-    cols.set(qn('w:space'), str(int(spacing_mm * 914400 / 25.4 / 1000)))
+    # w:space is in twentieths of a point (twips), not EMU: mm -> pt -> twips.
+    cols.set(qn('w:space'), str(round(spacing_mm * 72 / 25.4 * 20)))
     cols.set(qn('w:equalWidth'), '1')
     existing = sectPr.find(qn('w:cols'))
     if existing is not None:
@@ -61,7 +63,7 @@ def p(doc, text='', align=WD_ALIGN_PARAGRAPH.JUSTIFY, bold=False,
     pf.space_before = Pt(before)
     pf.space_after  = Pt(after)
     if indent:
-        pf.first_line_indent = Cm(0.5)
+        pf.first_line_indent = Inches(0.25)
     if text:
         run = para.add_run(text)
         run.font.name = 'Times New Roman'
@@ -73,7 +75,7 @@ def p(doc, text='', align=WD_ALIGN_PARAGRAPH.JUSTIFY, bold=False,
 
 
 def mixed(doc, parts, align=WD_ALIGN_PARAGRAPH.JUSTIFY,
-          size=10, indent=False, before=0, after=3):
+          size=10, indent=False, before=0, after=3, font_name='Times New Roman'):
     """parts = list of (text, bold, italic)"""
     para = doc.add_paragraph()
     para.alignment = align
@@ -81,10 +83,10 @@ def mixed(doc, parts, align=WD_ALIGN_PARAGRAPH.JUSTIFY,
     pf.space_before = Pt(before)
     pf.space_after  = Pt(after)
     if indent:
-        pf.first_line_indent = Cm(0.5)
+        pf.first_line_indent = Inches(0.25)
     for text, bold, italic in parts:
         run = para.add_run(text)
-        run.font.name = 'Times New Roman'
+        run.font.name = font_name
         run.font.size = Pt(size)
         run.bold   = bold
         run.italic = italic
@@ -97,12 +99,17 @@ def h1(doc, text, before=6, after=3):
 
 
 def h2(doc, text, before=4, after=2):
-    return p(doc, text, align=WD_ALIGN_PARAGRAPH.LEFT,
+    return p(doc, text, align=WD_ALIGN_PARAGRAPH.JUSTIFY,
              bold=True, size=10, before=before, after=after)
 
 
+def h3(doc, text, before=4, after=2):
+    return p(doc, text, align=WD_ALIGN_PARAGRAPH.JUSTIFY,
+             italic=True, size=10, before=before, after=after)
+
+
 def caption(doc, text):
-    return p(doc, text, align=WD_ALIGN_PARAGRAPH.CENTER, size=9, before=2, after=4)
+    return p(doc, text, align=WD_ALIGN_PARAGRAPH.CENTER, size=10, before=2, after=4)
 
 
 def _set_cell_border(cell, **kwargs):
@@ -146,7 +153,7 @@ def add_table(doc, caption_text, headers, rows, col_widths_in=None):
         headers       : list[str], column headers (bold, centered).
         rows          : list[list[str]], data rows (centered).
         col_widths_in : optional list[float], per-column width in inches;
-                        defaults to an equal split of the 3.2in column width.
+                        defaults to an equal split of the 3.1in column width.
     Returns:
         The created docx.table.Table.
     """
@@ -159,7 +166,7 @@ def add_table(doc, caption_text, headers, rows, col_widths_in=None):
     table.autofit = False
 
     if col_widths_in is None:
-        col_widths_in = [3.2 / n_cols] * n_cols
+        col_widths_in = [3.1 / n_cols] * n_cols
 
     for r in range(n_rows):
         row_data = headers if r == 0 else rows[r - 1]
@@ -188,13 +195,13 @@ def add_table(doc, caption_text, headers, rows, col_widths_in=None):
     return table
 
 
-def fig(doc, filename, width_in=3.2):
+def fig(doc, filename, width_in=3.1):
     """Insert a centered figure image sized for the two-column layout.
 
     Args:
         doc      : python-docx Document.
         filename : image file name inside MATERIAL_DIR.
-        width_in : display width in inches (3.2 fits one column).
+        width_in : display width in inches (3.1 fits one column).
     Notes:
         Silently skips when the file is missing so the [FIG-X] placeholder
         caption still marks the spot for manual insertion.
@@ -214,8 +221,8 @@ def ref(doc, text):
     para = doc.add_paragraph()
     para.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
     pf = para.paragraph_format
-    pf.left_indent        = Cm(0.5)
-    pf.first_line_indent  = Cm(-0.5)
+    pf.left_indent        = Emu(168275)
+    pf.first_line_indent  = Emu(-168275)
     pf.space_after        = Pt(2)
     run = para.add_run(text)
     run.font.name = 'Times New Roman'
@@ -223,22 +230,44 @@ def ref(doc, text):
     return para
 
 
+def author_run(para, text, italic=False, superscript=False):
+    """Add a 12pt Times New Roman run to the author/affiliation block.
+
+    Args:
+        para        : the paragraph to append to.
+        text        : run text.
+        italic      : True for author names (template: italic English names).
+        superscript : True for affiliation-marker digits/footnote symbols.
+    Returns:
+        The created docx.text.run.Run.
+    """
+    run = para.add_run(text)
+    run.font.name = 'Times New Roman'
+    run.font.size = Pt(12)
+    run.italic = italic
+    run.font.superscript = superscript
+    return run
+
+
+# Template 'email' style: <w:ind w:firstLine="227"/> (twentieths-pt) -> pt.
+AFFIL_INDENT = Pt(227 / 20)
+
+
 # ── Build Document ─────────────────────────────────────────────────────────────
 
+# Section 0: title block — single column, full page width (template: 35/30/19/19mm)
 doc = Document()
-sec = doc.sections[0]
-sec.page_height    = Mm(297)
-sec.page_width     = Mm(210)
-sec.top_margin     = Mm(25)
-sec.bottom_margin  = Mm(20)
-sec.left_margin    = Mm(19)
-sec.right_margin   = Mm(16)
-set_two_col(sec, spacing_mm=8)
+sec0 = doc.sections[0]
+sec0.page_height    = Mm(297)
+sec0.page_width     = Mm(210)
+sec0.top_margin     = Mm(35)
+sec0.bottom_margin  = Mm(30)
+sec0.left_margin    = Mm(19)
+sec0.right_margin   = Mm(19)
 
 # ════════════════════════════ TITLE ═══════════════════════════════════════════
 para = doc.add_paragraph()
 para.alignment = WD_ALIGN_PARAGRAPH.CENTER
-para.paragraph_format.space_before = Mm(10)
 para.paragraph_format.space_after  = Pt(6)
 r = para.add_run(
     '基於 Sobel 引導注意力機制之 Pix2Pix 跨場景單張影像反光消除\n'
@@ -248,10 +277,38 @@ r.font.name = 'Times New Roman'
 r.font.size = Pt(14)
 r.bold = True
 
-p(doc, '1學生姓名（中文名），以及 1,*指導教授姓名（中文名）\n'
-       '1 [系所名稱]，[學校名稱]，[城市]，臺灣\n'
-       'E-mail：[email@university.edu.tw]',
-  align=WD_ALIGN_PARAGRAPH.CENTER, size=10, after=6)
+# ════════════════════════════ AUTHORS / AFFILIATION ═══════════════════════════
+author_para = doc.add_paragraph()
+author_para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+author_para.paragraph_format.space_after = Pt(12)
+author_run(author_para, '1', superscript=True)
+author_run(author_para, 'Zi-Xian Zhuang', italic=True)
+author_run(author_para, ' (莊子賢), ')
+author_run(author_para, '1,*', superscript=True)
+author_run(author_para, 'Jiann-Shu Lee', italic=True)
+author_run(author_para, ' (李建樹)')
+
+affil_para = doc.add_paragraph()
+affil_para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+affil_para.paragraph_format.first_line_indent = AFFIL_INDENT
+affil_para.paragraph_format.space_after = Pt(0)
+author_run(affil_para, '1', superscript=True)
+author_run(affil_para, ' Department of Computer Science and Information Engineering, '
+                       'National University of Tainan, Tainan City, Taiwan')
+
+email_para = doc.add_paragraph()
+email_para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+email_para.paragraph_format.first_line_indent = AFFIL_INDENT
+email_para.paragraph_format.space_after = Pt(6)
+author_run(email_para, 'E-mail: s11159030@gm2.nutn.edu.tw')
+
+# Section 1: body — continuous break, two columns, 8.01mm gap (template: 25/30/19/22.9mm)
+sec1 = doc.add_section(WD_SECTION_START.CONTINUOUS)
+sec1.top_margin    = Mm(25)
+sec1.bottom_margin = Mm(30)
+sec1.left_margin   = Mm(19)
+sec1.right_margin  = Mm(22.9)
+set_two_col(sec1, spacing_mm=8.01)
 
 # ════════════════════════════ ABSTRACT ═══════════════════════════════════════
 h1(doc, 'Abstract')
@@ -268,9 +325,9 @@ p(doc,
   '典型真實場景。實驗顯示，SGA 使模型成功跨場景泛化至博物館藏品，'
   '下游 YOLOv8 展品辨識準確率由 92.7% 提升至 94.5%，驗證跨場景反光消除的實用效益。',
   size=10)
-mixed(doc, [('Keywords：', True, False),
+mixed(doc, [('Keywords: ', True, False),
             ('單張影像反光消除、跨場景泛化、Sobel 結構先驗、條件生成對抗網路、'
-             'Pix2Pix、博物館文物辨識。', False, False)], size=10)
+             'Pix2Pix、博物館文物辨識。', False, False)], size=10, font_name='Times')
 
 # ════════════════════════════ §1 INTRODUCTION ════════════════════════════════
 h1(doc, '1. Introduction')
@@ -452,7 +509,7 @@ p(doc,
   'SGA 的全部計算均基於固定參數，不引入任何額外可訓練參數，'
   '確保注意力引導信號的 domain-agnostic 特性不因訓練動態而退化。')
 
-h2(doc, '3.2.1. Sobel 特徵萃取')
+h3(doc, '3.2.1. Sobel 特徵萃取')
 p(doc,
   '對輸入影像的三個通道（R、G、B）分別應用固定的 3×3 Sobel 水平卷積核 '
   'Kx 與垂直卷積核 Ky 計算梯度分量：')
@@ -475,7 +532,7 @@ p(doc,
   '這正是 SGA 實現跨場景泛化的根本機制。',
   indent=True)
 
-h2(doc, '3.2.2. 通道注意力分支')
+h3(doc, '3.2.2. 通道注意力分支')
 p(doc,
   '對 Sobel 特徵圖 S 執行全局平均池化（GAP）得到通道描述符 v ∈ R^3。'
   '再以 1×1 卷積與 Sigmoid 激活函數生成通道注意力權重：')
@@ -487,7 +544,7 @@ p(doc,
   '對邊緣資訊豐富的通道給予更高權重。',
   indent=True)
 
-h2(doc, '3.2.3. 空間注意力分支')
+h3(doc, '3.2.3. 空間注意力分支')
 p(doc,
   '對通道重校準特徵圖 Xc 沿通道維度分別執行平均池化（AvgPool）與最大池化'
   '（MaxPool），拼接後以 7×7 卷積與 Sigmoid 激活函數生成空間注意力圖：')
@@ -558,7 +615,7 @@ p(doc,
   '此設計刻意複現了真實應用情境中「目標場景配對資料不可得」的困境，'
   '以驗證 SGA 固定結構先驗的跨場景泛化能力。')
 
-h2(doc, '4.1.1. 訓練資料集（公開 SIRR 資料集）')
+h3(doc, '4.1.1. 訓練資料集（公開 SIRR 資料集）')
 p(doc,
   '訓練資料整合四個公開單張影像反光消除資料集，各資料集涵蓋不同的反光來源'
   '與場景多樣性：')
@@ -592,7 +649,7 @@ caption(doc,
   '對應之模型生成輸出）。場景為一般建築與植栽，與博物館展品完全無關，'
   '直觀呈現訓練資料與評估場景之間不存在 domain 重疊。')
 
-h2(doc, '4.1.2. 案例驗證：博物館藏品評估集')
+h3(doc, '4.1.2. 案例驗證：博物館藏品評估集')
 p(doc,
   '博物館藏品反光消除是本文選定的跨場景案例：展品因文物保護需求不可移動，'
   '玻璃防護罩難以拆裝，環境燈光由展陳設計決定，'

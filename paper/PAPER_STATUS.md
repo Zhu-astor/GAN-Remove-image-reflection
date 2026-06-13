@@ -1,14 +1,14 @@
 # PAPER_STATUS.md — AI GO CVGIP 論文狀態追蹤
 
-Last updated: 2026-06-13（v2 完成 + 全面審查 + 引用全文覆盤驗證已完成（30/30 個 reference 條目），結果見
-`PAPER_AUDIT_2026-06-13.md` 與 `CITATION_FULLTEXT_VERIFICATION_2026-06-13.md`，
-共 11+5=16 項待使用者決策事項，詳見本文件最新章節）
+Last updated: 2026-06-14（依官方 CVGIP-2026 Word 範本完成全面格式重排：雙 section 版面、
+set_two_col() 欄間距 bug 修正、真實作者/單位/Email 資訊、新增 h3() 子標題樣式，
+PDF 10 頁逐頁視覺驗證通過，詳見本文件最新章節）
 
 ---
 
 ## 基本資訊
 
-- **論文標題**：基於 Sobel 引導注意力機制之 Pix2Pix 博物館文物反光消除與辨識
+- **論文標題**：基於 Sobel 引導注意力機制之 Pix2Pix 跨場景單張影像反光消除：以博物館文物辨識為案例
 - **投稿目標**：CVGIP 2025（台灣國內研討會）
 - **主要語言**：中文版（主線）
 - **主要成果**：AI GO 2024 競賽最佳實作獎
@@ -20,8 +20,8 @@ Last updated: 2026-06-13（v2 完成 + 全面審查 + 引用全文覆盤驗證�
 
 | 檔案 | 說明 | 狀態 |
 |------|------|------|
-| `cvgip2025_chinese.py` | 中文版 docx 生成腳本（主線） | ✅ v3 敘事重構（2026-06-02） |
-| `cvgip2025_SGA_chinese.docx` | 上述腳本生成的 docx | ✅ 已生成，有 [MUST-X] 佔位符待填 |
+| `cvgip2025_chinese.py` | 中文版 docx 生成腳本（主線） | ✅ v4 官方範本格式重排（2026-06-14） |
+| `cvgip2025_SGA_chinese.docx` | 上述腳本生成的 docx | ✅ 已生成，10 頁，符合官方範本版面規格 |
 | `cvgip2025_reflection_removal.py` | 英文版腳本 | ⚠️ 舊版，尚未同步 v2 修改 |
 | `cvgip2025_SGA_reflection_removal.docx` | 英文版 docx | ⚠️ 舊版 |
 
@@ -448,16 +448,71 @@ Last updated: 2026-06-13（v2 完成 + 全面審查 + 引用全文覆盤驗證�
 
 ---
 
-## 下一步行動（優先順序，2026-06-13 更新）
+## 下一步行動（優先順序，2026-06-14 更新）
 
 1. ~~v2 編輯 + docx/pdf 產出~~ ✅ 完成（2026-06-13）
 2. ~~全面不足盤點 + 引用複核（摘要層級）~~ ✅ 完成（2026-06-13，結果見 `PAPER_AUDIT_2026-06-13.md`）
 3. ~~引用全文覆盤驗證（28 bibkey，30/30 涵蓋率）~~ ✅ 完成（2026-06-13，結果見 `CITATION_FULLTEXT_VERIFICATION_2026-06-13.md`，見上）
 4. ~~引用措辭修正提案共 5 項（[2][3][9][23][4]）~~ ✅ 已套用（2026-06-13，使用者核准，見上）
 5. ~~FIG-6 `原跑原7.jpg`/`消跑原7.jpg` 方向確認~~ ✅ 完成（2026-06-13，使用者確認方向正確，見上方說明）
-6. **等待使用者決策** — `PAPER_AUDIT_2026-06-13.md` §4 的其餘待決事項（標題頁資訊、
-   致謝、810/248→1951/491、line 202【9】措辭、line 417【13, B】括號格式）
-7. 推 GitHub 並回連結（依 feedback 規則）
+6. ~~官方範本格式重排（雙section版面/欄距bug修正/真實作者單位Email/h3樣式）~~ ✅ 完成（2026-06-14，見下方新章節）。
+   `標題頁資訊` 已解決；**剩餘待使用者決策** — `PAPER_AUDIT_2026-06-13.md` §4 其餘事項
+   （致謝、810/248→1951/491、line 202【9】措辭、line 417【13, B】括號格式）
+7. 推 GitHub 並回連結（依 feedback 規則）— 本次重排完成後待推送
 8. ~~確認是否有 CA only / SA only checkpoint（OPT-1/2）~~ ✅ 完成（2026-06-13，使用者確認不需要，無對應 checkpoint，表1維持2列）
 9. ~~FIG-1 整體架構圖補 SGA 位置（GAN_architecture.png 目前僅 GAN 迴圈）~~ ✅ 完成（2026-06-13，見下方記錄）
 10. ~~圖號全面重新編號（圖3/圖4 原無編號）~~ ✅ 完成（2026-06-13，圖1~圖8 依出現順序連續編號，見上方圖表清單）
+
+---
+
+## 2026-06-14 官方範本格式重排 — 已完成
+
+使用者提供 CVGIP-2026 官方 Word 範本（`.doc`），指示「目前請根據該篇格式套用一篇新的格式論文出來，
+之前格式是錯誤的」。透過 `convert_template.py`（Word COM）轉出 `template_src.docx`/`.pdf`，
+再以 `inspect_template.py`/`inspect_template2.py` 讀取 raw section XML 與樣式定義取得精確規格，
+對 `cvgip2025_chinese.py` 完成下列重排，重新產出 `cvgip2025_SGA_chinese.docx`/`.pdf`（10 頁），
+並逐頁視覺驗證通過。
+
+### 版面架構改為雙 section
+- **Section 0（標題區）**：單欄，margins top/bottom/left/right = 35/30/19/19mm
+- **Section 1（正文）**：`add_section(WD_SECTION_START.CONTINUOUS)` 連續分節，雙欄，
+  margins = 25/30/19/22.9mm，欄間距 8.01mm（`w:space="454"`，與範本一致）
+
+### `set_two_col()` 欄間距單位換算 bug 修正
+- **根因**：舊公式 `int(spacing_mm * 914400 / 25.4 / 1000)` 算出 EMU/1000（≈36×mm），但
+  OOXML `<w:cols w:space>` 單位實為「二十分之一點」（twips，≈56.69×mm）——`spacing_mm=8`
+  舊公式只產出 `w:space="288"`（≈5.08mm）。**先前所有版本（含 commit 617b0ca）的雙欄間距
+  皆比設計值窄約 3mm**
+- **修正**：`round(spacing_mm * 72 / 25.4 * 20)`，預設 `spacing_mm=8.01` 精確對應範本
+  `w:space="454"`
+
+### 作者/單位/Email — 真實資訊已填入（解決 PAPER_AUDIT 項目1：標題頁資訊）
+標題頁佔位符已替換為：
+- `¹Zi-Xian Zhuang (莊子賢), ¹,*Jiann-Shu Lee (李建樹)`（上標單位編號；英文姓名斜體、
+  中文名非斜體，依範本規格）
+- `¹ Department of Computer Science and Information Engineering, National University of
+  Tainan, Tainan City, Taiwan`
+- `E-mail: s11159030@gm2.nutn.edu.tw`
+
+⚠️ **待使用者確認（CLAUDE.md §2.3）**：「Department of Computer Science and Information
+Engineering」「National University of Tainan」為翻譯推斷，非官方英文名稱查證結果——
+投稿前請核對國立台南大學資訊工程學系的官方英文系名/校名是否一致。
+
+### 新增 `h3()` 樣式，套用至 5 個 sub-subheading
+範本 H3（如「5.1.1. Sub-subheadings」）規格為：兩端對齊、不粗體、**斜體**、10pt。
+新增 `h3()` helper 並套用至：3.2.1 Sobel 特徵萃取、3.2.2 通道注意力分支、
+3.2.3 空間注意力分支、4.1.1 訓練資料集（公開 SIRR 資料集）、4.1.2 案例驗證：博物館藏品評估集。
+
+### 其他範本對齊細項（使用者核准「一併套用」）
+- `caption()`：9pt → 10pt（範本 Body Text Indent 3 規格）
+- `fig()`/`add_table()`：圖/表寬度 3.2in → 3.1in（配合新欄寬與 8.01mm 欄間距）
+- `h2()`：對齊 LEFT → JUSTIFY（範本 H2 為兩端對齊）
+- 一般段落首行縮排：`Cm(0.5)` → `Inches(0.25)`（範本 body indent = 228600 EMU = 0.25in）
+- `ref()`：改為懸掛縮排 `Emu(168275)`/`Emu(-168275)`，字級 9pt（範本 References 規格）
+- Keywords 行：`Keywords：`（全角冒號）→ `Keywords: `（半角冒號+空格），字型改為 `Times`
+
+### 結果
+- `cvgip2025_SGA_chinese.docx`/`.pdf` 已重新產出，**PDF 由 9 頁變為 10 頁**（原因：標題區
+  獨立 section 佔用空間 + 欄間距修正為正確的 8.01mm 後文字重排；第10頁僅為 References 溢頁）
+- PDF 10 頁逐頁視覺確認：標題頁（單欄置中）、作者/單位/Email 區塊、Abstract 起雙欄、
+  Keywords 半角冒號+Times 字體、H1/H2/H3 三層標題樣式、表1/表2三線表、圖1-8 全部正確渲染
