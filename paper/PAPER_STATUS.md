@@ -83,8 +83,8 @@ Last updated: 2026-06-13（v2 完成 + 全面審查 + 引用全文覆盤驗證�
 | MUST-1 | 表 1 | Baseline Pix2Pix 的 PSNR / SSIM / LPIPS（公開 SIRR 測試集，491 對） | ✅ 23.896 / 0.8706 / 0.1630 |
 | MUST-2 | 表 1 | Pix2Pix+SGA 的 PSNR / SSIM / LPIPS（公開 SIRR 測試集，491 對） | ✅ 22.682 / 0.8192 / 0.2178 |
 | MUST-3 | 表 2 | ~~下游驗證數據（Baseline Pix2Pix 列）~~ | ✅ 已解除（2026-06-13）：新敘事將 Table 2 簡化為「原始影像 92.7%」與「Pix2Pix+SGA 94.5%」兩列，不再需要 Baseline Pix2Pix 下游數值 |
-| OPT-1 | 表 1 | CA only 的 PSNR/SSIM/LPIPS（有 checkpoint 才填，沒有刪整行） | ❓ |
-| OPT-2 | 表 1 | SA only 的 PSNR/SSIM/LPIPS（有 checkpoint 才填，沒有刪整行） | ❓ |
+| OPT-1 | 表 1 | CA only 的 PSNR/SSIM/LPIPS（有 checkpoint 才填，沒有刪整行） | ✅ 使用者確認不需要（2026-06-13，無對應 checkpoint，表1維持2列） |
+| OPT-2 | 表 1 | SA only 的 PSNR/SSIM/LPIPS（有 checkpoint 才填，沒有刪整行） | ✅ 使用者確認不需要（2026-06-13，無對應 checkpoint，表1維持2列） |
 
 ---
 
@@ -97,7 +97,7 @@ Last updated: 2026-06-13（v2 完成 + 全面審查 + 引用全文覆盤驗證�
 | FIG-3 | visual_comparison.png | Before/After 博物館視覺比較 | ✅ `matherial/visual_comparison.png`（5 組 Original/Generated）。2026-06-13：作為 §4.6 開場視覺證據的引用對象（不變更圖檔本身） |
 | FIG-4 | attention_map.png | Sobel Attention Map 視覺化 | ⚠️ `matherial/reflection_sobel_feature.png` + `nonreflection_sobel_feature.png` 可用（Sobel 梯度圖，非 attention map 本體） |
 | FIG-5 | training_loss.png | G loss / D loss 訓練曲線 | ✅ `matherial/loss_function.png`（G/D loss，x 軸為 iteration 0~70000+） |
-| FIG-6 | `原跑原7.jpg`（上）/ `消跑原7.jpg`（下） | YOLOv8 偵測信心值對比圖（原始 vs SGA 處理後，bbox+confidence） | ✅ 已插入 §4.6（2026-06-13）。⚠️ **方向未經使用者逐一確認**——詳見下方「2026-06-13 v2 完成記錄」 |
+| FIG-6 | `原跑原7.jpg`（上）/ `消跑原7.jpg`（下） | YOLOv8 偵測信心值對比圖（原始 vs SGA 處理後，bbox+confidence） | ✅ 已插入 §4.6（2026-06-13），**方向已確認正確**（2026-06-13，直接開圖比對：`原跑原7.jpg`=0.76/0.48/0.64 與畫面較霧；`消跑原7.jpg`=0.93/0.85/0.81 與畫面較清晰，與 caption 數字及敘事完全吻合） |
 
 > 另外 2026-06-13 v2 新增兩張補充圖（非編號 FIG-1~6 系列，皆來自 `matherial/`，皆已插入）：
 > - `compare_original1.jpg` / `compare_generate1.jpg`（§4.1.1，訓練資料集樣本，證明與博物館 domain 無重疊）
@@ -309,7 +309,7 @@ Last updated: 2026-06-13（v2 完成 + 全面審查 + 引用全文覆盤驗證�
 5. 更新檔頭 TODO 清單（MUST-3/FIG-2~6 標記為已完成）。
 6. 執行 `cvgip2025_chinese.py` → `cvgip2025_SGA_chinese.docx`；新增 `docx_to_pdf.py`（Word COM 自動化）→ `cvgip2025_SGA_chinese.pdf`（8 頁）。已逐頁檢查 PDF，所有新圖均正確渲染，無 `[fig] missing` 警告。
 
-### ⚠️ 待使用者確認：FIG-6（`原跑原7.jpg` / `消跑原7.jpg`）方向
+### ✅ FIG-6（`原跑原7.jpg` / `消跑原7.jpg`）方向已確認
 
 上一 session 的記錄（`SECTION_4_6_REWRITE_PROPOSAL_2026-06-13.md` §2、本檔案 Task #2 舊版）寫的是「`消跑原7.jpg`（未經 SGA，信心值較低）/ `原跑原7.jpg`（經 SGA，信心值較高）」。
 
@@ -325,6 +325,8 @@ Last updated: 2026-06-13（v2 完成 + 全面審查 + 引用全文覆盤驗證�
 因此 v2 docx/pdf 中 FIG-6 為：**上＝`原跑原7.jpg`（原始含反光，信心值 0.76/0.48/0.64）／下＝`消跑原7.jpg`（SGA處理後，信心值 0.93/0.85/0.81）**。
 
 **若此方向判斷錯誤**（即兩檔案的「原始/SGA後」標籤與本文相反），只需在 `cvgip2025_chinese.py` 的 §4.6 對調 `fig(doc, '原跑原7.jpg')` 與 `fig(doc, '消跑原7.jpg')` 兩行的順序、並同步修改正文敘述中 0.76→0.93 等數字的方向即可，其餘內容不受影響。
+
+**結論（2026-06-13，使用者確認）**：上述方向判斷正確，FIG-6 不需調整。`原跑原7.jpg`=0.76/0.48/0.64（畫面較霧）對應上方「原始」、`消跑原7.jpg`=0.93/0.85/0.81（畫面較清晰）對應下方「SGA處理後」，與 caption 數字及全文 92.7%→94.5% 敘事完全吻合。
 
 ---
 
@@ -445,9 +447,9 @@ Last updated: 2026-06-13（v2 完成 + 全面審查 + 引用全文覆盤驗證�
 2. ~~全面不足盤點 + 引用複核（摘要層級）~~ ✅ 完成（2026-06-13，結果見 `PAPER_AUDIT_2026-06-13.md`）
 3. ~~引用全文覆盤驗證（28 bibkey，30/30 涵蓋率）~~ ✅ 完成（2026-06-13，結果見 `CITATION_FULLTEXT_VERIFICATION_2026-06-13.md`，見上）
 4. ~~引用措辭修正提案共 5 項（[2][3][9][23][4]）~~ ✅ 已套用（2026-06-13，使用者核准，見上）
-5. **等待使用者決策** — FIG-6 `原跑原7.jpg`/`消跑原7.jpg` 方向是否正確（見上方說明）
+5. ~~FIG-6 `原跑原7.jpg`/`消跑原7.jpg` 方向確認~~ ✅ 完成（2026-06-13，使用者確認方向正確，見上方說明）
 6. **等待使用者決策** — `PAPER_AUDIT_2026-06-13.md` §4 的其餘待決事項（標題頁資訊、
-   致謝、810/248→1951/491）
+   致謝、810/248→1951/491、line 202【9】措辭、line 417【13, B】括號格式）
 7. 推 GitHub 並回連結（依 feedback 規則）
-8. 確認是否有 CA only / SA only checkpoint（OPT-1/2）
+8. ~~確認是否有 CA only / SA only checkpoint（OPT-1/2）~~ ✅ 完成（2026-06-13，使用者確認不需要，無對應 checkpoint，表1維持2列）
 9. ~~FIG-1 整體架構圖補 SGA 位置（GAN_architecture.png 目前僅 GAN 迴圈）~~ ✅ 完成（2026-06-13，見下方記錄）

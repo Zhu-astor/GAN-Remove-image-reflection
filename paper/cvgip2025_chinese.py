@@ -11,8 +11,7 @@ TODO LIST — 提交前必須填入的數字與圖片
   MUST-1  表 1：Baseline Pix2Pix 的 PSNR / SSIM / LPIPS（公開 SIRR 測試集 491 對）✅ 23.896 / 0.8706 / 0.1630
   MUST-2  表 1：Pix2Pix+SGA 的 PSNR / SSIM / LPIPS（公開 SIRR 測試集 491 對）✅ 22.682 / 0.8192 / 0.2178
   MUST-3  ✅ 已解除（2026-06-13）：§4.6 改為僅比較原始影像 vs Pix2Pix+SGA，不再需要 Baseline Pix2Pix 下游準確率
-  OPT-1   表 1：CA only 的 PSNR / SSIM / LPIPS（若有 checkpoint 才填，沒有刪整行）
-  OPT-2   表 1：SA only 的 PSNR / SSIM / LPIPS（若有 checkpoint 才填，沒有刪整行）
+  OPT-1/2 ✅ 已決定不需要（2026-06-13，使用者確認：無 CA-only/SA-only checkpoint，表1維持2列）
 
 【圖片（共 6 張）】
   FIG-1   overall_architecture.png  — ✅ 已插入（2026-06-13，整體架構圖，§3.1）
@@ -20,8 +19,8 @@ TODO LIST — 提交前必須填入的數字與圖片
   FIG-3   visual_comparison.png     — ✅ 已插入（Before/After 博物館視覺比較，§4.4）
   FIG-4   attention_map.png         — ✅ 已插入（reflection/nonreflection_sobel_feature.png，§4.4）
   FIG-5   training_loss.png         — ✅ 已插入（loss_function.png，§4.5）
-  FIG-6   ✅ 已插入（2026-06-13）：原跑原7.jpg（含反光，上）/ 消跑原7.jpg（SGA處理後，下）
-          — YOLOv8 偵測信心值對比（§4.6）。⚠️ 方向依檔名語意＋信心值＋視覺清晰度推斷，未經使用者逐一確認
+  FIG-6   ✅ 已插入且方向已確認（2026-06-13）：原跑原7.jpg（含反光，上，信心值0.76/0.48/0.64）/
+          消跑原7.jpg（SGA處理後，下，信心值0.93/0.85/0.81）— YOLOv8 偵測信心值對比（§4.6）
 ============================================================
 """
 
@@ -913,11 +912,11 @@ print('待補充清單：')
 print('  MUST-1  表1 Baseline Pix2Pix: DONE 23.896 / 0.8706 / 0.1630')
 print('  MUST-2  表1 Pix2Pix+SGA:    DONE 22.682 / 0.8192 / 0.2178')
 print('  MUST-3  DONE 已解除（§4.6 不再需要 Baseline Pix2Pix 下游準確率）')
-print('  OPT-1/2 表1 CA only / SA only（有checkpoint才填）')
+print('  OPT-1/2 不需要（無CA-only/SA-only checkpoint，使用者已確認，2026-06-13）')
 print()
 print('  FIG-1   overall_architecture.png  DONE')
 print('  FIG-2   sga_module_architecture.png  DONE')
 print('  FIG-3   visual_comparison.png  DONE')
 print('  FIG-4   attention_map.png  DONE')
 print('  FIG-5   training_loss.png  DONE')
-print('  FIG-6   原跑原7.jpg(上,含反光) / 消跑原7.jpg(下,SGA後)  DONE -- 方向待使用者確認')
+print('  FIG-6   原跑原7.jpg(上,含反光,0.76/0.48/0.64) / 消跑原7.jpg(下,SGA後,0.93/0.85/0.81)  DONE -- 方向已確認')
