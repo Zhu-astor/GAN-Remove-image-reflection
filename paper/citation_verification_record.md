@@ -277,7 +277,7 @@ GAN-based 方法在感知品質（perceptual quality）較好時，PSNR/SSIM 往
 
 **紙面宣稱用途：** §3.2 方法架構基礎，§4.3 消融表格 Baseline 標注
 
-**附注：** L1 loss 的 overly-smooth 效應應引用【Ledig17】原文，不應直接宣稱 Isola et al. 批評 L1 loss（其論文重點不在此批評）。
+**附注（2026-06-13 更新）：** 全文覆盤（讀取 pp.2-5，§3.2 Markovian discriminator 章節）證實 Isola et al. 原論文本身已明確討論並以 Fig.4 圖示展示 L1 loss 的 blur/over-smooth 現象——「It is well known that the L2 loss – and L1, see Figure 4 – produces blurry results on image generation problems」。先前「不應直接宣稱 Isola et al. 批評 L1 loss」的保留意見已**解除**（該保留基於僅讀摘要的不完整資訊）。【Ledig17】仍可作為互補佐證，兩者不互斥。詳見 `CITATION_FULLTEXT_VERIFICATION_2026-06-13.md` [13] 條目。
 
 ---
 
@@ -290,7 +290,7 @@ GAN-based 方法在感知品質（perceptual quality）較好時，PSNR/SSIM 往
 | **標題** | Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks |
 | **發表** | Proc. IEEE ICCV, 2017 |
 | **arXiv** | 1703.10593 |
-| **驗證狀態** | ⚠️ PARTIAL（arXiv 摘要已讀） |
+| **驗證狀態** | ✅ CONFIRMED（2026-06-13 全文覆盤，已讀 pp.6-8 §5.1-5.2，含 Table 2/3 數據比對，見 `CITATION_FULLTEXT_VERIFICATION_2026-06-13.md` [14] 條目） |
 
 **論文在本文中的角色：** GAN-based 影像轉換的代表性工作；引用說明 GAN 在影像轉換任務的廣泛應用。
 
@@ -312,7 +312,7 @@ GAN-based 方法在感知品質（perceptual quality）較好時，PSNR/SSIM 往
 | **標題** | Conditional Generative Adversarial Nets |
 | **發表** | arXiv:1411.1784, 2014 |
 | **arXiv** | 1411.1784 |
-| **驗證狀態** | ⚠️ PARTIAL（arXiv 摘要已讀） |
+| **驗證狀態** | ✅ CONFIRMED（基礎性引用，2026-06-13 覆盤確認摘要層級足夠，符合 CLAUDE.md §5.0b 例外，見 `CITATION_FULLTEXT_VERIFICATION_2026-06-13.md` [15] 條目） |
 
 **論文在本文中的角色：** 條件 GAN 的原始提出；本文使用條件 GAN 架構（Pix2Pix 是 cGAN 的影像翻譯變體）。
 
@@ -334,7 +334,7 @@ GAN-based 方法在感知品質（perceptual quality）較好時，PSNR/SSIM 往
 | **標題** | Generative Adversarial Networks for Image and Video Synthesis: Algorithms and Applications |
 | **發表** | Proc. IEEE, vol. 109, no. 5, pp. 839–862, 2021 |
 | **arXiv** | 2008.02793 |
-| **驗證狀態** | ⚠️ PARTIAL（arXiv 摘要已讀） |
+| **驗證狀態** | ✅ CONFIRMED（基礎性綜述引用，2026-06-13 覆盤確認摘要層級足夠，符合 CLAUDE.md §5.0b 例外，見 `CITATION_FULLTEXT_VERIFICATION_2026-06-13.md` [17] 條目） |
 
 **論文在本文中的角色：** GAN 綜述，涵蓋訓練穩定化技術、影像轉換、影像處理、視訊合成、神經渲染；引用為 GAN 技術廣泛應用的背景支撐。
 
@@ -356,7 +356,7 @@ GAN-based 方法在感知品質（perceptual quality）較好時，PSNR/SSIM 往
 | **標題** | Generative Adversarial Nets |
 | **發表** | Adv. Neural Inf. Process. Syst. (NeurIPS), 2014, pp. 2672–2680 |
 | **arXiv** | 1406.2661 |
-| **驗證狀態** | ⚠️ PARTIAL（arXiv 摘要已讀） |
+| **驗證狀態** | ✅ CONFIRMED（GAN 開創性論文，2026-06-13 覆盤確認屬 CLAUDE.md §5.0b「廣為人知技術事實」例外，無需進一步查證，見 `CITATION_FULLTEXT_VERIFICATION_2026-06-13.md` [19] 條目） |
 
 **論文在本文中的角色：** GAN 的原始提出；生成器-判別器對抗訓練框架的理論基礎。
 
