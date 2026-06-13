@@ -130,7 +130,7 @@ GAN-based 方法在感知品質（perceptual quality）較好時，PSNR/SSIM 往
 | **標題** | Single Image Reflection Removal through Cascaded Refinement |
 | **發表** | Proc. IEEE/CVF CVPR, 2020 |
 | **arXiv** | 1911.06634 |
-| **驗證狀態** | ⚠️ PARTIAL（arXiv 摘要已讀） |
+| **驗證狀態** | ✅ CONFIRMED（2026-06-13 全文覆盤確認 IBCLN 架構描述正確；原 SIR² 資料集歸屬錯誤已於 cvgip2025_chinese.py 第 263-264 行修正為「具密集標註 ground truth 的真實場景配對資料集」，見 `CITATION_FULLTEXT_VERIFICATION_2026-06-13.md` [2] 條目） |
 
 **論文在本文中的角色：** 迭代精化 SIRR 方法，使用 ConvLSTM 跨步驟傳遞資訊；引用為採用遞迴精化策略的代表性方法。
 
@@ -153,7 +153,7 @@ GAN-based 方法在感知品質（perceptual quality）較好時，PSNR/SSIM 往
 | **標題** | Single Image Reflection Removal Using Deep Encoder-Decoder Network |
 | **發表** | arXiv:1802.00094, 2018 |
 | **arXiv** | 1802.00094 |
-| **驗證狀態** | ⚠️ PARTIAL（arXiv 摘要已讀） |
+| **驗證狀態** | ✅ CONFIRMED（2026-06-13 全文覆盤後，cvgip2025_chinese.py 第 265-267 行與第 348 行已改為保守措辭——移除「深入分析」「不可逆」「高頻邊緣響應」等原文未支持之用語，改為「下採樣操作所帶來的資訊損失會增加解碼器復原難度」，與原文 p.6 §4.2 及其自身的 skip connection 設計一致，見 `CITATION_FULLTEXT_VERIFICATION_2026-06-13.md` [3] 條目） |
 
 **論文在本文中的角色：** 以 encoder-decoder 架構學習反光/無反光影像對的映射；使用合成資料集訓練、遷移至真實影像。
 
@@ -175,7 +175,7 @@ GAN-based 方法在感知品質（perceptual quality）較好時，PSNR/SSIM 往
 | **標題** | Location-aware Single Image Reflection Removal |
 | **發表** | arXiv:2012.07131, 2020 (revised 2021) |
 | **arXiv** | 2012.07131 |
-| **驗證狀態** | ⚠️ PARTIAL（arXiv 摘要已讀） |
+| **驗證狀態** | ✅ CONFIRMED（2026-06-13 全文覆盤後，cvgip2025_chinese.py 第 267-269 行已將「證明空間注意力在 SIRR 任務中的有效性」改為「以顯式的反光位置偵測模組（reflection confidence map）回歸反光機率圖以引導特徵流，證明『顯式空間位置線索』在 SIRR 任務中的有效性」，避免與 [21]/[22] 的 spatial attention 技術名詞混淆，見 `CITATION_FULLTEXT_VERIFICATION_2026-06-13.md` [4] 條目） |
 
 **論文在本文中的角色：** 生成「反光信心圖」定位反光區域，以多尺度 Laplacian 特徵識別反光邊界；引用為利用空間位置資訊的 SIRR 進階方法。
 
@@ -243,7 +243,7 @@ GAN-based 方法在感知品質（perceptual quality）較好時，PSNR/SSIM 往
 | **標題** | Survey on Single-Image Reflection Removal using Deep Learning Techniques |
 | **發表** | arXiv:2502.08836, 2025 |
 | **arXiv** | 2502.08836 |
-| **驗證狀態** | ⚠️ PARTIAL（arXiv 摘要已讀） |
+| **驗證狀態** | ✅ CONFIRMED（第 202 行用法與原文 §6.1 Challenges 吻合；第 692 行的【9】標記為自身限制聲明的錯置引用，2026-06-13 已從 cvgip2025_chinese.py 第 692 行移除，見 `CITATION_FULLTEXT_VERIFICATION_2026-06-13.md` [9] 條目） |
 
 **論文在本文中的角色：** 最新 SIRR 深度學習方法綜述；引用為「反光問題廣泛存在」的背景性宣稱支撐。
 
@@ -424,7 +424,7 @@ GAN-based 方法在感知品質（perceptual quality）較好時，PSNR/SSIM 往
 | **發表** | Sensors, vol. 23, no. 5, p. 2546, 2023. DOI: 10.3390/s23052546 |
 | **arXiv** | 無（MDPI 開放取用） |
 | **來源** | https://www.mdpi.com/1424-8220/23/5/2546 |
-| **驗證狀態** | ⚠️ PARTIAL（搜尋結果確認標題/作者/摘要方向） |
+| **驗證狀態** | ✅ CONFIRMED（2026-06-13 全文（PMC）覆盤確認第 230 行用法成立；第 312-316 行原宣稱「驗證了固定 Sobel 梯度在跨場景設定下的穩定性」不實（[23] 為單一 COVID-19 CT domain、無跨場景測試），已改寫為「啟發本文進一步將此設計思路延伸至跨場景情境進行驗證，[23] 本身並未測試跨資料集/跨場景表現，本文跨場景驗證屬本文新貢獻」，見 `CITATION_FULLTEXT_VERIFICATION_2026-06-13.md` [23] 條目） |
 
 **論文在本文中的角色：** 直接支撐「Sobel 運算子結合注意力機制」這一設計思路；本文 SGA 模組以固定 Sobel 核提取邊緣特徵後導入 CBAM-style 注意力，與此論文精神相同。
 

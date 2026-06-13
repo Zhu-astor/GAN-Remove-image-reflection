@@ -388,12 +388,14 @@ Last updated: 2026-06-13（v2 完成 + 全面審查 + 引用全文覆盤驗證�
 
 ### 結果總表（28 個 bibkey，含補充項 [36]）
 - **23 個 ✅ CONFIRMED**（含新增 [36] LPIPS），無需修改。
-- **5 個項目有「建議修正」提案**（均為提案，待使用者核准後才寫入 `cvgip2025_chinese.py`，依 §5.2）：
-  1. **[2] IBCLN**（line 263-264）：SIR² 資料集歸屬錯置（SIR² 實際出自 [GAP-E] Wan et al. 2017，非 [2]）→ 建議移除「SIR²」字樣
-  2. **[3] Encoder-Decoder**（lines 265-267, 348）：「深入分析...不可逆地削弱高頻邊緣響應」過度引申（原文僅一句話且引用另一篇 [25]，且 [3] 自身用 skip connection 緩解此問題）→ 建議改為保守措辭
-  3. **[9] SIRR Survey**（line 692）：「本文尚未驗證...【9】」屬自身限制聲明，邏輯上不需外部引用 → 建議移除【9】標記
-  4. **[23] SMA-Net**（lines 312-316）：「驗證了固定 Sobel 梯度在跨場景設定下的穩定性」——[23] 全文（PMC）證實為單一 COVID-19 CT domain、無任何跨資料集/跨場景測試 → 建議改寫，明確劃清「[23]已驗證」vs「本文自行驗證（§4.4-4.6）」的界線
-  5. **[4] Location-aware SIRR**（line 267-269，低優先級）：「證明空間注意力在 SIRR 任務中的有效性」——原文用語是「reflection detection module / reflection confidence map」而非「spatial attention」（CBAM 式 spatial attention 是該論文 Stage 2 的另一獨立模組）→ 建議改為「顯式空間位置線索」
+- **5 個項目的「建議修正」提案，已於 2026-06-13 經使用者核准並套用至 `cvgip2025_chinese.py`**（依 §5.2 流程：提案 → 核准 → 套用）：
+  1. **[2] IBCLN**（line 263-264）：SIR² 資料集歸屬錯置（SIR² 實際出自 [GAP-E] Wan et al. 2017，非 [2]）→ ✅ 已改為「具密集標註 ground truth 的真實場景配對資料集」
+  2. **[3] Encoder-Decoder**（lines 265-267, 348）：「深入分析...不可逆地削弱高頻邊緣響應」過度引申 → ✅ 已改為保守措辭（「下採樣操作所帶來的資訊損失會增加解碼器復原難度」，呼應 [3] 自身的 skip connection 設計）
+  3. **[9] SIRR Survey**（line 692）：「本文尚未驗證...【9】」屬自身限制聲明 → ✅ 已移除【9】標記
+  4. **[23] SMA-Net**（lines 312-316）：「驗證了固定 Sobel 梯度在跨場景設定下的穩定性」——[23] 全文（PMC）證實為單一 COVID-19 CT domain、無任何跨資料集/跨場景測試 → ✅ 已改寫，明確劃清「[23]已驗證」vs「本文自行驗證（§4.4-4.6）」的界線
+  5. **[4] Location-aware SIRR**（line 267-269）：「證明空間注意力在 SIRR 任務中的有效性」——原文用語是「reflection detection module / reflection confidence map」而非「spatial attention」→ ✅ 已改為「顯式空間位置線索」
+
+  套用後已重新執行 `C:\Users\bubbl\anaconda3\python.exe cvgip2025_chinese.py` 產出 `cvgip2025_SGA_chinese.docx`，無錯誤。`citation_verification_record.md` 中 [2][3][4][9][23] 狀態同步更新為 ✅ CONFIRMED。
 
 - **0 個項目為「空穴來風」**（捏造/無內容支持）——上述 5 項均屬「措辭過度引申/技術名詞誤用/引用位置誤掛」，非引用內容完全捏造。
 
@@ -410,9 +412,9 @@ Last updated: 2026-06-13（v2 完成 + 全面審查 + 引用全文覆盤驗證�
 
 1. ~~v2 編輯 + docx/pdf 產出~~ ✅ 完成（2026-06-13）
 2. ~~全面不足盤點 + 引用複核（摘要層級）~~ ✅ 完成（2026-06-13，結果見 `PAPER_AUDIT_2026-06-13.md`）
-3. ~~引用全文覆盤驗證（26 bibkey）~~ ✅ 完成（2026-06-13，結果見 `CITATION_FULLTEXT_VERIFICATION_2026-06-13.md`，見上）
-4. **等待使用者決策** — FIG-6 `原跑原7.jpg`/`消跑原7.jpg` 方向是否正確（見上方說明）
-5. **等待使用者決策** — 引用措辭修正提案共 5 項（[2][3][9][23][4]，見上「2026-06-13 引用全文覆盤驗證」）
+3. ~~引用全文覆盤驗證（28 bibkey，30/30 涵蓋率）~~ ✅ 完成（2026-06-13，結果見 `CITATION_FULLTEXT_VERIFICATION_2026-06-13.md`，見上）
+4. ~~引用措辭修正提案共 5 項（[2][3][9][23][4]）~~ ✅ 已套用（2026-06-13，使用者核准，見上）
+5. **等待使用者決策** — FIG-6 `原跑原7.jpg`/`消跑原7.jpg` 方向是否正確（見上方說明）
 6. **等待使用者決策** — `PAPER_AUDIT_2026-06-13.md` §4 的其餘待決事項（標題頁資訊、
    FIG-1、致謝、810/248→1951/491）
 7. 推 GitHub 並回連結（依 feedback 規則）
