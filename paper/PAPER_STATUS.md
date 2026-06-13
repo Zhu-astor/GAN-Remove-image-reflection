@@ -88,11 +88,11 @@ Last updated: 2026-06-13（v2 完成 + 全面審查 + 引用全文覆盤驗證�
 
 ---
 
-## ❌ 待製圖表（共 6 張）
+## ✅ 圖表清單（共 6 張，全部已插入；FIG-4/FIG-6 細節見下方備註）
 
-| 標記 | 檔名 | 內容 | 狀態（2026-06-10 更新） |
+| 標記 | 檔名 | 內容 | 狀態（2026-06-13 更新） |
 |------|------|------|------|
-| FIG-1 | overall_architecture.png | 整體架構圖（輸入→SGA→UNet→輸出+PatchGAN） | ⚠️ `matherial/GAN_architecture.png` 可用但僅畫 GAN 訓練迴圈，未含 SGA |
+| FIG-1 | overall_architecture.png | 整體架構圖（輸入→SGA→U-Net→輸出+PatchGAN+Loss） | ✅ `matherial/overall_architecture.png`（2026-06-13，依程式碼與 §3.1/3.5 公式繪製，300dpi；腳本 `matherial/draw_overall_architecture.py`；已插入 §3.1，PDF 第 3 頁視覺驗證通過） |
 | FIG-2 | sga_module.png | SGA 模組詳細結構 | ✅ `matherial/sga_module_architecture.png`（2026-06-10，依程式碼繪製，300dpi；腳本 `matherial/draw_sga_architecture.py`） |
 | FIG-3 | visual_comparison.png | Before/After 博物館視覺比較 | ✅ `matherial/visual_comparison.png`（5 組 Original/Generated）。2026-06-13：作為 §4.6 開場視覺證據的引用對象（不變更圖檔本身） |
 | FIG-4 | attention_map.png | Sobel Attention Map 視覺化 | ⚠️ `matherial/reflection_sobel_feature.png` + `nonreflection_sobel_feature.png` 可用（Sobel 梯度圖，非 attention map 本體） |
@@ -408,6 +408,37 @@ Last updated: 2026-06-13（v2 完成 + 全面審查 + 引用全文覆盤驗證�
 
 ---
 
+## 2026-06-13 三線表修正 + FIG-1 整體架構圖 — 已完成
+
+使用者指示「表格怪怪的 請製作專業論文表格」，再指示「fig1幫我製作」。
+
+### 三線表（professional three-line table）修正
+- **根因**：原表 1/表 2 以純文字字串（`|`、`─` 字元 + 空白對齊）放入 `caption()` 段落，
+  Times New Roman 為比例字型，空白填充無法對齊欄位，呈現「怪怪的」錯位外觀。
+- **修正**：在 `cvgip2025_chinese.py` 新增 `_set_cell_border()`（透過 raw OOXML `w:tcBorders`
+  設定每格邊框，python-docx 無高階 API）與 `add_table(doc, caption_text, headers, rows,
+  col_widths_in=None)`，實作標準三線表樣式（粗上線、細表頭分隔線、粗下線、無垂直線、
+  表頭粗體置中）。表 1（§4.2，491對消融結果）、表 2（§4.6，跨場景辨識準確率）均改為
+  真正的 `doc.add_table()` 物件。已重新產生 PDF，逐頁檢視確認表格渲染正確、置中、
+  三線邊框正常，無錯位。
+
+### FIG-1 整體架構圖
+- 新增腳本 `matherial/draw_overall_architecture.py`（matplotlib，與 `draw_sga_architecture.py`
+  同色票/同風格），繪製整體訓練/推論流程：
+  `Input x → SGA Module(→x', 詳見圖2) → U-Net Generator G(Encoder×7/Decoder×7, skip, tanh)
+  → Output T̂`（推論路徑，上排）；訓練專用虛線框內含 `Ground Truth y`、
+  `PatchGAN Discriminator D`、`L_L1 (MAE, λ=100)`、`L_adv (MSE)`、
+  `L_total = L_adv + λ·L_L1`，notation 對應 §3.1/§3.5。
+- 輸出 `matherial/overall_architecture.png`（2617×2046px, 300dpi，aspect≈1.28:1）。
+- `cvgip2025_chinese.py` line ~437：以 `fig(doc, 'overall_architecture.png')` +
+  正式中文圖說取代原本的 `[FIG-1 — 請插入...]` 佔位文字；檔頭 TODO 清單與結尾
+  `print()` 摘要均已標記 FIG-1 為 DONE。
+- 已重新執行產生 `cvgip2025_SGA_chinese.docx`/`.pdf`，PDF 第 3 頁視覺確認：
+  FIG-1 位於 §3.1 段落後、FIG-2 之前，圖內文字（含 LaTeX 風格數學符號）清晰可讀，
+  圖說無 placeholder 殘留。
+
+---
+
 ## 下一步行動（優先順序，2026-06-13 更新）
 
 1. ~~v2 編輯 + docx/pdf 產出~~ ✅ 完成（2026-06-13）
@@ -416,7 +447,7 @@ Last updated: 2026-06-13（v2 完成 + 全面審查 + 引用全文覆盤驗證�
 4. ~~引用措辭修正提案共 5 項（[2][3][9][23][4]）~~ ✅ 已套用（2026-06-13，使用者核准，見上）
 5. **等待使用者決策** — FIG-6 `原跑原7.jpg`/`消跑原7.jpg` 方向是否正確（見上方說明）
 6. **等待使用者決策** — `PAPER_AUDIT_2026-06-13.md` §4 的其餘待決事項（標題頁資訊、
-   FIG-1、致謝、810/248→1951/491）
+   致謝、810/248→1951/491）
 7. 推 GitHub 並回連結（依 feedback 規則）
 8. 確認是否有 CA only / SA only checkpoint（OPT-1/2）
-9. FIG-1 整體架構圖補 SGA 位置（GAN_architecture.png 目前僅 GAN 迴圈）
+9. ~~FIG-1 整體架構圖補 SGA 位置（GAN_architecture.png 目前僅 GAN 迴圈）~~ ✅ 完成（2026-06-13，見下方記錄）

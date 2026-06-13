@@ -15,7 +15,7 @@ TODO LIST — 提交前必須填入的數字與圖片
   OPT-2   表 1：SA only 的 PSNR / SSIM / LPIPS（若有 checkpoint 才填，沒有刪整行）
 
 【圖片（共 6 張）】
-  FIG-1   overall_architecture.png  — 整體架構圖（需繪製）
+  FIG-1   overall_architecture.png  — ✅ 已插入（2026-06-13，整體架構圖，§3.1）
   FIG-2   sga_module_architecture.png — ✅ 已插入（SGA 模組詳細結構圖，§3.2）
   FIG-3   visual_comparison.png     — ✅ 已插入（Before/After 博物館視覺比較，§4.4）
   FIG-4   attention_map.png         — ✅ 已插入（reflection/nonreflection_sobel_feature.png，§4.4）
@@ -30,6 +30,7 @@ import os
 from docx import Document
 from docx.shared import Pt, Mm, Cm, Inches
 from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.enum.table import WD_TABLE_ALIGNMENT
 from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
 
@@ -100,6 +101,89 @@ def h2(doc, text, before=4, after=2):
 
 def caption(doc, text):
     return p(doc, text, align=WD_ALIGN_PARAGRAPH.CENTER, size=9, before=2, after=4)
+
+
+def _set_cell_border(cell, **kwargs):
+    """Set per-edge borders on a table cell via raw OOXML.
+
+    python-docx has no high-level API for individual cell borders; this
+    writes <w:tcBorders> directly. kwargs keys are 'top'/'bottom'/'left'/
+    'right', each a dict of XML attributes, e.g. {'sz': 8, 'val': 'single',
+    'color': '000000'} ('sz' is in eighths of a point).
+    """
+    tcPr = cell._tc.get_or_add_tcPr()
+    tcBorders = tcPr.find(qn('w:tcBorders'))
+    if tcBorders is None:
+        tcBorders = OxmlElement('w:tcBorders')
+        tcPr.append(tcBorders)
+    for edge in ('top', 'bottom', 'left', 'right'):
+        if edge in kwargs:
+            tag = f'w:{edge}'
+            element = tcBorders.find(qn(tag))
+            if element is None:
+                element = OxmlElement(tag)
+                tcBorders.append(element)
+            for key, value in kwargs[edge].items():
+                element.set(qn(f'w:{key}'), str(value))
+
+
+# Border weights for the 三線表 (three-line table) convention standard in
+# Chinese-language academic papers: a heavier rule above the header and
+# below the last row, a lighter rule separating header from data, and no
+# vertical or inter-row rules.
+_TABLE_RULE_THICK = {'sz': 8, 'val': 'single', 'color': '000000'}
+_TABLE_RULE_THIN  = {'sz': 4, 'val': 'single', 'color': '000000'}
+
+
+def add_table(doc, caption_text, headers, rows, col_widths_in=None):
+    """Insert a 三線表-style table (caption above, header + top/bottom rules only).
+
+    Args:
+        doc           : python-docx Document.
+        caption_text  : caption string, e.g. '表 1. ...'. Placed above the table.
+        headers       : list[str], column headers (bold, centered).
+        rows          : list[list[str]], data rows (centered).
+        col_widths_in : optional list[float], per-column width in inches;
+                        defaults to an equal split of the 3.2in column width.
+    Returns:
+        The created docx.table.Table.
+    """
+    caption(doc, caption_text)
+
+    n_cols = len(headers)
+    n_rows = 1 + len(rows)
+    table = doc.add_table(rows=n_rows, cols=n_cols)
+    table.alignment = WD_TABLE_ALIGNMENT.CENTER
+    table.autofit = False
+
+    if col_widths_in is None:
+        col_widths_in = [3.2 / n_cols] * n_cols
+
+    for r in range(n_rows):
+        row_data = headers if r == 0 else rows[r - 1]
+        for c in range(n_cols):
+            cell = table.cell(r, c)
+            cell.width = Inches(col_widths_in[c])
+            para = cell.paragraphs[0]
+            para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            pf = para.paragraph_format
+            pf.space_before = Pt(2)
+            pf.space_after  = Pt(2)
+            run = para.add_run(row_data[c])
+            run.font.name = 'Times New Roman'
+            run.font.size = Pt(9)
+            run.bold = (r == 0)
+
+            borders = {}
+            if r == 0:
+                borders['top'] = _TABLE_RULE_THICK
+                borders['bottom'] = _TABLE_RULE_THIN
+            if r == n_rows - 1:
+                borders['bottom'] = _TABLE_RULE_THICK
+            if borders:
+                _set_cell_border(cell, **borders)
+
+    return table
 
 
 def fig(doc, filename, width_in=3.2):
@@ -350,7 +434,14 @@ p(doc,
   '原因在於反光干擾在像素層面即已存在，若讓網路先執行下採樣再補救，'
   '結構細節資訊可能在下採樣過程中流失【3】，且中間層特徵已摻雜 domain-specific 的語義信息，'
   '不利於跨場景遷移。')
-caption(doc, '圖 1. 整體架構示意圖。[FIG-1 — 請插入 overall_architecture.png]')
+fig(doc, 'overall_architecture.png')
+caption(doc,
+        '圖 1. 整體架構示意圖。輸入影像 x（含反光）經 SGA 模組（結構詳見圖 2）'
+        '重校準為 x\'，再由 U-Net 生成器 G（Encoder×7 / Decoder×7，含 skip '
+        'connection，tanh 輸出）映射為去反光輸出 T^。訓練階段另以 PatchGAN '
+        '判別器 D 比較 (x, T^) 與 (x, y) 計算對抗損失 L_adv，並將 T^ 與 '
+        'ground truth y 比較計算 L_L1，合併為 L_total = L_adv + λ·L_L1'
+        '（λ = 100）；推論階段僅需生成器 G。')
 
 h2(doc, '3.2. Sobel 引導注意力模組（SGA）')
 p(doc,
@@ -533,13 +624,14 @@ p(doc,
   '（a）基準 Pix2Pix：標準 Pix2Pix，不含任何注意力模組；'
   '（b）Pix2Pix+SGA（本文）：加入完整雙分支 Sobel 引導注意力模組。'
   '量化結果如表 1 所示。')
-caption(doc,
-  '表 1. 公開 SIRR 測試集（491 對）消融實驗結果。\n'
-  '\n'
-  '方法                      | PSNR (dB) ↑  | SSIM ↑    | LPIPS ↓\n'
-  '──────────────────────────|──────────────|───────────|─────────\n'
-  'Baseline Pix2Pix [13]    | 23.896       | 0.8706    | 0.1630\n'
-  'Pix2Pix + SGA（本文）    | 22.682       | 0.8192    | 0.2178')
+add_table(doc,
+  caption_text='表 1. 公開 SIRR 測試集（491 對）消融實驗結果。',
+  headers=['方法', 'PSNR (dB) ↑', 'SSIM ↑', 'LPIPS ↓'],
+  rows=[
+      ['Baseline Pix2Pix [13]', '23.896', '0.8706', '0.1630'],
+      ['Pix2Pix + SGA（本文）', '22.682', '0.8192', '0.2178'],
+  ],
+  col_widths_in=[1.5, 0.6, 0.55, 0.55])
 p(doc,
   '表 1 顯示，加入 SGA 後 PSNR（22.682 dB）與 SSIM（0.8192）略低於基準 Pix2Pix'
   '（23.896 dB / 0.8706），LPIPS（0.2178）亦高於基準（0.1630）。'
@@ -625,13 +717,14 @@ p(doc,
   '敏感度較高。這些限制將於 §5.4 進一步討論，並列為未來工作方向'
   '（更大規模、更多類別、原始準確率較低之跨場景下游評估）。',
   indent=True)
-caption(doc,
-  '表 2. 跨場景下游辨識準確率（博物館評估集，699 張，7 類展品）。\n'
-  '\n'
-  '條件                          | 準確率 (%) | 說明\n'
-  '──────────────────────────────|────────────|──────────────────────────\n'
-  '原始影像（含反光）             | 92.7       | 699 張中 40 張未能成功辨識\n'
-  'Pix2Pix + SGA（本文）         | 94.5       | +1.8 pp；40 張中 10 張（25%）救回')
+add_table(doc,
+  caption_text='表 2. 跨場景下游辨識準確率（博物館評估集，699 張，7 類展品）。',
+  headers=['條件', '準確率 (%)', '說明'],
+  rows=[
+      ['原始影像（含反光）', '92.7', '699 張中 40 張未能成功辨識'],
+      ['Pix2Pix + SGA（本文）', '94.5', '+1.8 pp；40 張中 10 張（25%）救回'],
+  ],
+  col_widths_in=[1.1, 0.7, 1.4])
 fig(doc, '原跑原7.jpg')
 fig(doc, '消跑原7.jpg')
 caption(doc,
@@ -822,7 +915,7 @@ print('  MUST-2  表1 Pix2Pix+SGA:    DONE 22.682 / 0.8192 / 0.2178')
 print('  MUST-3  DONE 已解除（§4.6 不再需要 Baseline Pix2Pix 下游準確率）')
 print('  OPT-1/2 表1 CA only / SA only（有checkpoint才填）')
 print()
-print('  FIG-1   overall_architecture.png  (尚缺)')
+print('  FIG-1   overall_architecture.png  DONE')
 print('  FIG-2   sga_module_architecture.png  DONE')
 print('  FIG-3   visual_comparison.png  DONE')
 print('  FIG-4   attention_map.png  DONE')
