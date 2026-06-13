@@ -88,20 +88,27 @@ Last updated: 2026-06-13（v2 完成 + 全面審查 + 引用全文覆盤驗證�
 
 ---
 
-## ✅ 圖表清單（共 6 張，全部已插入；FIG-4/FIG-6 細節見下方備註）
+## ✅ 圖表清單（共 8 張，全部已插入；2026-06-13 依文件出現順序全面重新編號為圖1~圖8）
 
-| 標記 | 檔名 | 內容 | 狀態（2026-06-13 更新） |
+> 重新編號原因：原「圖3」（visual_comparison.png）之前還有 §4.1.1（compare_original1/generate1.jpg）
+> 與 §4.3（show.png）兩組圖，但當時未編號，導致編號順序錯亂。本次依出現順序連續編號，
+> 原圖3→圖5、圖4→圖6、圖5→圖7、圖6→圖8，並為前述兩組圖新增圖3、圖4。
+> 對應的 caption 與正文引用已於 `cvgip2025_chinese.py` 全部同步修改並重新產出 docx/pdf，
+> PDF 逐頁檢查 9 頁，圖號與引用一致。
+
+| 編號 | 檔名 | 內容 | 狀態（2026-06-13 更新） |
 |------|------|------|------|
-| FIG-1 | overall_architecture.png | 整體架構圖（輸入→SGA→U-Net→輸出+PatchGAN+Loss） | ✅ `matherial/overall_architecture.png`（2026-06-13，依程式碼與 §3.1/3.5 公式繪製，300dpi；腳本 `matherial/draw_overall_architecture.py`；已插入 §3.1，PDF 第 3 頁視覺驗證通過） |
-| FIG-2 | sga_module.png | SGA 模組詳細結構 | ✅ `matherial/sga_module_architecture.png`（2026-06-10，依程式碼繪製，300dpi；腳本 `matherial/draw_sga_architecture.py`） |
-| FIG-3 | visual_comparison.png | Before/After 博物館視覺比較 | ✅ `matherial/visual_comparison.png`（5 組 Original/Generated）。2026-06-13：作為 §4.6 開場視覺證據的引用對象（不變更圖檔本身） |
-| FIG-4 | attention_map.png | Sobel Attention Map 視覺化 | ⚠️ `matherial/reflection_sobel_feature.png` + `nonreflection_sobel_feature.png` 可用（Sobel 梯度圖，非 attention map 本體） |
-| FIG-5 | training_loss.png | G loss / D loss 訓練曲線 | ✅ `matherial/loss_function.png`（G/D loss，x 軸為 iteration 0~70000+） |
-| FIG-6 | `原跑原7.jpg`（上）/ `消跑原7.jpg`（下） | YOLOv8 偵測信心值對比圖（原始 vs SGA 處理後，bbox+confidence） | ✅ 已插入 §4.6（2026-06-13），**方向已確認正確**（2026-06-13，直接開圖比對：`原跑原7.jpg`=0.76/0.48/0.64 與畫面較霧；`消跑原7.jpg`=0.93/0.85/0.81 與畫面較清晰，與 caption 數字及敘事完全吻合） |
+| 圖1 | overall_architecture.png | 整體架構圖（輸入→SGA→U-Net→輸出+PatchGAN+Loss） | ✅ `matherial/overall_architecture.png`（依程式碼與 §3.1/3.5 公式繪製，300dpi；腳本 `matherial/draw_overall_architecture.py`；已插入 §3.1，PDF 第 3 頁視覺驗證通過） |
+| 圖2 | sga_module_architecture.png | SGA 模組詳細結構 | ✅ `matherial/sga_module_architecture.png`（依程式碼繪製，300dpi；腳本 `matherial/draw_sga_architecture.py`） |
+| 圖3 | compare_original1.jpg + compare_generate1.jpg | 訓練資料集樣本範例（§4.1.1，上：Original，下：Generated） | ✅ 已插入，本次新增「圖3.」編號（原無編號） |
+| 圖4 | show.png | 訓練 domain 反光消除效果範例（§4.3，3 組 Original/Generated 對比） | ✅ 已插入，本次新增「圖4.」編號（原無編號） |
+| 圖5 | visual_comparison.png | Before/After 博物館視覺比較（5 組展品，§4.4） | ✅ `matherial/visual_comparison.png`（原圖3，編號改為圖5；圖檔本身未變更） |
+| 圖6 | reflection_sobel_feature.png + nonreflection_sobel_feature.png | Sobel 梯度幅度視覺化（§4.4） | ✅ `matherial/reflection_sobel_feature.png` + `nonreflection_sobel_feature.png`（原圖4，編號改為圖6） |
+| 圖7 | loss_function.png | G loss / D loss 訓練曲線（§4.5） | ✅ `matherial/loss_function.png`（原圖5，編號改為圖7；G/D loss，x 軸為 iteration 0~70000+） |
+| 圖8 | `原跑原7.jpg`（上）/ `消跑原7.jpg`（下） | YOLOv8 偵測信心值對比圖（原始 vs SGA 處理後，bbox+confidence，§4.6） | ✅ 已插入（原圖6，編號改為圖8），方向已確認正確：`原跑原7.jpg`=0.76/0.48/0.64 與畫面較霧；`消跑原7.jpg`=0.93/0.85/0.81 與畫面較清晰，與 caption 數字及敘事完全吻合 |
 
-> 另外 2026-06-13 v2 新增兩張補充圖（非編號 FIG-1~6 系列，皆來自 `matherial/`，皆已插入）：
-> - `compare_original1.jpg` / `compare_generate1.jpg`（§4.1.1，訓練資料集樣本，證明與博物館 domain 無重疊）
-> - `show.png`（§4.3 末，訓練 domain 上反光消除效果範例，3 組 Original/Generated）
+> `compare_original1.jpg`/`compare_generate1.jpg`（§4.1.1）與 `show.png`（§4.3）為 2026-06-13 v2 新增
+> 之補充圖，當時未編號；本次重新編號後已分別納入圖3、圖4（見上表）。
 
 ---
 
@@ -453,3 +460,4 @@ Last updated: 2026-06-13（v2 完成 + 全面審查 + 引用全文覆盤驗證�
 7. 推 GitHub 並回連結（依 feedback 規則）
 8. ~~確認是否有 CA only / SA only checkpoint（OPT-1/2）~~ ✅ 完成（2026-06-13，使用者確認不需要，無對應 checkpoint，表1維持2列）
 9. ~~FIG-1 整體架構圖補 SGA 位置（GAN_architecture.png 目前僅 GAN 迴圈）~~ ✅ 完成（2026-06-13，見下方記錄）
+10. ~~圖號全面重新編號（圖3/圖4 原無編號）~~ ✅ 完成（2026-06-13，圖1~圖8 依出現順序連續編號，見上方圖表清單）

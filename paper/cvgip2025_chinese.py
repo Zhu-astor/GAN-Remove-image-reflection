@@ -13,14 +13,17 @@ TODO LIST — 提交前必須填入的數字與圖片
   MUST-3  ✅ 已解除（2026-06-13）：§4.6 改為僅比較原始影像 vs Pix2Pix+SGA，不再需要 Baseline Pix2Pix 下游準確率
   OPT-1/2 ✅ 已決定不需要（2026-06-13，使用者確認：無 CA-only/SA-only checkpoint，表1維持2列）
 
-【圖片（共 6 張）】
-  FIG-1   overall_architecture.png  — ✅ 已插入（2026-06-13，整體架構圖，§3.1）
-  FIG-2   sga_module_architecture.png — ✅ 已插入（SGA 模組詳細結構圖，§3.2）
-  FIG-3   visual_comparison.png     — ✅ 已插入（Before/After 博物館視覺比較，§4.4）
-  FIG-4   attention_map.png         — ✅ 已插入（reflection/nonreflection_sobel_feature.png，§4.4）
-  FIG-5   training_loss.png         — ✅ 已插入（loss_function.png，§4.5）
-  FIG-6   ✅ 已插入且方向已確認（2026-06-13）：原跑原7.jpg（含反光，上，信心值0.76/0.48/0.64）/
-          消跑原7.jpg（SGA處理後，下，信心值0.93/0.85/0.81）— YOLOv8 偵測信心值對比（§4.6）
+【圖片（共 8 張，編號 2026-06-13 全面重整為依文件出現順序連續編號）】
+  圖1   overall_architecture.png        — ✅ 已插入（整體架構圖，§3.1）
+  圖2   sga_module_architecture.png     — ✅ 已插入（SGA 模組詳細結構圖，§3.2）
+  圖3   compare_original1/generate1.jpg — ✅ 已插入（訓練資料集樣本範例，§4.1.1）
+  圖4   show.png                        — ✅ 已插入（訓練 domain 反光消除效果範例，§4.3）
+  圖5   visual_comparison.png           — ✅ 已插入（Before/After 博物館視覺比較，§4.4）
+  圖6   reflection/nonreflection_sobel_feature.png — ✅ 已插入（Sobel 梯度幅度視覺化，§4.4）
+  圖7   loss_function.png               — ✅ 已插入（訓練 Loss 曲線，§4.5）
+  圖8   原跑原7.jpg / 消跑原7.jpg        — ✅ 已插入且方向已確認：原跑原7.jpg（含反光，上，信心值
+          0.76/0.48/0.64）/ 消跑原7.jpg（SGA處理後，下，信心值0.93/0.85/0.81）
+          — YOLOv8 偵測信心值對比（§4.6）
 ============================================================
 """
 
@@ -585,7 +588,7 @@ p(doc,
 fig(doc, 'compare_original1.jpg')
 fig(doc, 'compare_generate1.jpg')
 caption(doc,
-  '訓練資料集樣本範例（上：Original，含反光原圖；下：Generated，'
+  '圖 3. 訓練資料集樣本範例（上：Original，含反光原圖；下：Generated，'
   '對應之模型生成輸出）。場景為一般建築與植栽，與博物館展品完全無關，'
   '直觀呈現訓練資料與評估場景之間不存在 domain 重疊。')
 
@@ -646,39 +649,39 @@ p(doc,
   indent=True)
 fig(doc, 'show.png')
 caption(doc,
-  '訓練資料集上的反光消除效果範例（3 組 Original/Generated 對比）。'
+  '圖 4. 訓練資料集上的反光消除效果範例（3 組 Original/Generated 對比）。'
   '可見反光區域在視覺上明顯減弱，佐證模型在其訓練 domain 上具備'
   '真實的反光消除能力，與表 1 之量化指標應合併解讀（見上文'
   'Perception-Distortion Tradeoff 說明）。')
 
 h2(doc, '4.4. 視覺比較與 Attention Map 分析')
 p(doc,
-  '圖 3 呈現模型在博物館藏品上的跨場景質性結果。'
+  '圖 5 呈現模型在博物館藏品上的跨場景質性結果。'
   '此為模型從未在訓練中見過的 domain：基準 Pix2Pix 雖能消除部分大面積低頻反光，'
   '但在展品邊緣處殘留虛化偽影，陶瓷器釉面紋路及金屬文物高光細節恢復不完整。'
   '加入 SGA 後，展品表面材質紋理的復原品質明顯提升，反光殘跡減少，'
   '說明固定 Sobel 先驗確實使邊緣感知注意力能有效遷移至博物館場景。')
 p(doc,
-  '圖 4 呈現 Sobel Attention Map 視覺化：注意力高度集中於展品邊緣與材質細節區域，'
+  '圖 6 呈現 Sobel Attention Map 視覺化：注意力高度集中於展品邊緣與材質細節區域，'
   '反光擴散區域的注意力權重明顯偏低，直觀驗證 SGA '
   '在博物館 domain 中仍能正確識別「物件結構」與「反光干擾」的空間分佈。',
   indent=True)
 fig(doc, 'visual_comparison.png')
 caption(doc,
-  '圖 3. 博物館藏品跨場景視覺比較（5 組展品）。'
+  '圖 5. 博物館藏品跨場景視覺比較（5 組展品）。'
   '上排：含反光原始影像（Original）；'
   '下排：Pix2Pix+SGA 反光消除結果（Generated）。')
 fig(doc, 'reflection_sobel_feature.png')
 fig(doc, 'nonreflection_sobel_feature.png')
 caption(doc,
-  '圖 4. Sobel 梯度幅度視覺化（左：原始影像；右：梯度幅度圖）。'
+  '圖 6. Sobel 梯度幅度視覺化（左：原始影像；右：梯度幅度圖）。'
   '上：含反光場景——反光區僅在邊界產生高梯度、內部梯度低；'
   '下：無反光場景——梯度集中於物件結構邊緣。'
   '此對比即 SGA 注意力引導信號的 domain-agnostic 物理基礎。')
 
 h2(doc, '4.5. 訓練動態')
 p(doc,
-  '圖 5 呈現模型在公開 SIRR 資料集上的訓練動態。'
+  '圖 7 呈現模型在公開 SIRR 資料集上的訓練動態。'
   'D loss 與 G loss 均收斂穩定，無明顯模式崩潰現象，'
   '顯示 SGA 模組的加入未影響對抗訓練的穩定性。'
   '此訓練過程完全在公開 SIRR 資料集（自然場景）上進行，'
@@ -686,15 +689,15 @@ p(doc,
   '而非任何形式的域適應訓練。')
 fig(doc, 'loss_function.png')
 caption(doc,
-  '圖 5. 訓練 Loss 曲線。藍線為 Generator loss，橘線為 Discriminator loss，'
+  '圖 7. 訓練 Loss 曲線。藍線為 Generator loss，橘線為 Discriminator loss，'
   '橫軸為訓練迭代次數。')
 
 h2(doc, '4.6. 跨場景下游效益：視覺證據與辨識準確率')
 p(doc,
-  '圖 3（§4.4）已呈現博物館藏品在 Pix2Pix+SGA 處理前後的視覺比較：'
+  '圖 5（§4.4）已呈現博物館藏品在 Pix2Pix+SGA 處理前後的視覺比較：'
   '反光區域明顯減弱，展品表面材質紋理與邊緣細節的可辨識度提升，'
   '此差異對人眼而言相當直觀，是本文最直接的效果證據。'
-  '圖 6 進一步以 YOLOv8 辨識結果為例，呈現同一展品影像在反光消除前後的'
+  '圖 8 進一步以 YOLOv8 辨識結果為例，呈現同一展品影像在反光消除前後的'
   '偵測框與信心值變化：三個物件的辨識信心值分別由 0.76、0.48、0.64 '
   '提升至 0.93、0.85、0.81，顯示反光消除對下游辨識任務的直接增益。')
 p(doc,
@@ -727,7 +730,7 @@ add_table(doc,
 fig(doc, '原跑原7.jpg')
 fig(doc, '消跑原7.jpg')
 caption(doc,
-  '圖 6. YOLOv8 辨識結果範例：原始含反光影像（上）與 Pix2Pix+SGA 處理後'
+  '圖 8. YOLOv8 辨識結果範例：原始含反光影像（上）與 Pix2Pix+SGA 處理後'
   '影像（下）之偵測框與信心值比較。三個物件的辨識信心值分別由'
   '0.76、0.48、0.64 提升至 0.93、0.85、0.81。')
 
@@ -914,9 +917,11 @@ print('  MUST-2  表1 Pix2Pix+SGA:    DONE 22.682 / 0.8192 / 0.2178')
 print('  MUST-3  DONE 已解除（§4.6 不再需要 Baseline Pix2Pix 下游準確率）')
 print('  OPT-1/2 不需要（無CA-only/SA-only checkpoint，使用者已確認，2026-06-13）')
 print()
-print('  FIG-1   overall_architecture.png  DONE')
-print('  FIG-2   sga_module_architecture.png  DONE')
-print('  FIG-3   visual_comparison.png  DONE')
-print('  FIG-4   attention_map.png  DONE')
-print('  FIG-5   training_loss.png  DONE')
-print('  FIG-6   原跑原7.jpg(上,含反光,0.76/0.48/0.64) / 消跑原7.jpg(下,SGA後,0.93/0.85/0.81)  DONE -- 方向已確認')
+print('  圖1  overall_architecture.png  DONE')
+print('  圖2  sga_module_architecture.png  DONE')
+print('  圖3  compare_original1/generate1.jpg  DONE')
+print('  圖4  show.png  DONE')
+print('  圖5  visual_comparison.png  DONE')
+print('  圖6  reflection/nonreflection_sobel_feature.png  DONE')
+print('  圖7  loss_function.png  DONE')
+print('  圖8  原跑原7.jpg(上,含反光,0.76/0.48/0.64) / 消跑原7.jpg(下,SGA後,0.93/0.85/0.81)  DONE -- 方向已確認')
