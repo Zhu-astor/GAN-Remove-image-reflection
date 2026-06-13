@@ -1,6 +1,6 @@
 # PAPER_STATUS.md — AI GO CVGIP 論文狀態追蹤
 
-Last updated: 2026-06-13（v2 完成 + 全面審查 + 引用全文覆盤驗證已完成，結果見
+Last updated: 2026-06-13（v2 完成 + 全面審查 + 引用全文覆盤驗證已完成（30/30 個 reference 條目），結果見
 `PAPER_AUDIT_2026-06-13.md` 與 `CITATION_FULLTEXT_VERIFICATION_2026-06-13.md`，
 共 11+5=16 項待使用者決策事項，詳見本文件最新章節）
 
@@ -376,15 +376,18 @@ Last updated: 2026-06-13（v2 完成 + 全面審查 + 引用全文覆盤驗證�
 全面覆盤與嚴格檢查，記得整理所有引用的來源、引用內容等成一份檔案，
 務必確保所有引用不是空穴來風而是真有內容引用」。
 
-**完整報告：** `D:\Contest\AI GO\paper\CITATION_FULLTEXT_VERIFICATION_2026-06-13.md`（全新檔案，兩批共 26 項）
+**完整報告：** `D:\Contest\AI GO\paper\CITATION_FULLTEXT_VERIFICATION_2026-06-13.md`（全新檔案，兩批 + 補充項，共 28 個 bibkey / 27 個表格列）
 
 ### 範圍與方法
-- 針對 `PAPER_AUDIT_2026-06-13.md` §3 列出的 6 項高/中風險問題（第一批）+ 其餘 20 個 bibkey（第二批），
+- 針對 `PAPER_AUDIT_2026-06-13.md` §3 列出的 6 項高/中風險問題（第一批）+ 其餘 20 個 bibkey（第二批）+ 補充項 [36] LPIPS，
   實際讀取本地 PDF 多個章節（非僅摘要）或 WebFetch 全文（[23] 經 PMC 全文）。
-- 基礎性引用（[15][17][19][A][B] 等）依 CLAUDE.md §5.0b 例外條款，確認摘要層級已足夠。
+- 基礎性引用（[15][17][19][36][A][B] 等）依 CLAUDE.md §5.0b 例外條款，確認摘要層級已足夠。
+- **覆蓋率**：`cvgip2025_chinese.py` 全部 30 個 reference 條目中，本檔案涵蓋 28 個；
+  餘 2 個（[Blau18]、[Ledig17]）已於 2026-06-06 session 以 ar5iv 全文驗證過（程式碼第 801-804 行註解），不重複驗證。
+  **至此 30/30 個 reference 條目皆已完成全文層級驗證**。
 
-### 結果總表（26 個 bibkey）
-- **21 個 ✅ CONFIRMED**，無需修改。
+### 結果總表（28 個 bibkey，含補充項 [36]）
+- **23 個 ✅ CONFIRMED**（含新增 [36] LPIPS），無需修改。
 - **5 個項目有「建議修正」提案**（均為提案，待使用者核准後才寫入 `cvgip2025_chinese.py`，依 §5.2）：
   1. **[2] IBCLN**（line 263-264）：SIR² 資料集歸屬錯置（SIR² 實際出自 [GAP-E] Wan et al. 2017，非 [2]）→ 建議移除「SIR²」字樣
   2. **[3] Encoder-Decoder**（lines 265-267, 348）：「深入分析...不可逆地削弱高頻邊緣響應」過度引申（原文僅一句話且引用另一篇 [25]，且 [3] 自身用 skip connection 緩解此問題）→ 建議改為保守措辭

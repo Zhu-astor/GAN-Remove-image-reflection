@@ -579,7 +579,25 @@ References 列表已分別標註：
 
 ---
 
-# 總結：第一批 + 第二批 全部 26 項引用驗證總表
+### [36] Zhang, Isola, Efros, Shechtman, Wang, "The Unreasonable Effectiveness of Deep Features as a Perceptual Metric" (LPIPS), CVPR 2018, pp. 586-595 (arXiv:1801.03924)
+
+**本地 PDF**：`D:\Contest\AI GO\matherial\papers\36_lpips_zhang2018.pdf`（已讀 pp.1-3：Abstract, §1 Motivation, Fig.1/2, Table 1 BAPPS dataset）
+
+**論文原文位置**：第 520 行：
+> 「LPIPS【36】（學習感知距離，以預訓練 VGG 特徵計算，越低越好）」
+
+**驗證結果**：✅ CONFIRMED
+
+論文標題本身（"The Unreasonable Effectiveness of Deep Features as a Perceptual Metric"）即為 LPIPS（Learned Perceptual Image Patch Similarity）指標的原始提出論文。
+
+原文摘要：
+> 「...the deep learning community has found that features of the VGG network trained on ImageNet classification have been remarkably useful as a training loss for image synthesis... We find that deep features outperform all previous metrics by large margins on our dataset.」
+
+「學習感知距離」對應論文核心貢獻——以深度網路特徵（經人類感知判斷資料校準）取代傳統 metric 作為「perceptual distance」；「以預訓練 VGG 特徵計算」對應論文中反覆討論的 VGG 特徵作為感知度量基礎（Fig.1 將 VGG 列為比較架構之一，且論文明確指出此現象「not restricted to ImageNet-trained VGG features」，VGG 為其中一種標準 backbone）；「越低越好」是「距離（distance）」指標的標準語義，與論文將 LPIPS 定位為「perceptual distance」一致。此引用屬與 [A] SSIM、[B] U-Net 同類的「基礎指標定義」引用，本應與 [A][B] 同批處理但先前清單遺漏，本次補齊。**無需修改**。
+
+---
+
+# 總結：第一批 + 第二批（含補充項 [36]）全部 28 項引用驗證總表
 
 | Bibkey | 驗證結果 | 是否有建議修正 |
 |---|---|---|
@@ -609,9 +627,12 @@ References 列表已分別標註：
 | [A] SSIM | ✅ CONFIRMED | 無 |
 | [B] U-Net | ✅ CONFIRMED | 無 |
 | [RFC]/[ERRNET] | ✅ CONFIRMED | 無 |
+| [36] LPIPS（補充項） | ✅ CONFIRMED | 無 |
 
 ## 統計
-- 26 個 bibkey 中，**21 個 ✅ CONFIRMED**（無需任何修改）。
+- 本檔案共覆蓋 **28 個 bibkey**（含本次補充項 [36]）；因 [RFC]/[ERRNET] 為同類資料集書目引用合併為一個條目，上表共 27 行。
+- `cvgip2025_chinese.py` 全部 30 個 reference 條目中，僅 **[Blau18]、[Ledig17]** 未列入本檔案——這兩項已於 2026-06-06 session 以 ar5iv 全文驗證並標註「✅ CONFIRMED from ar5iv full text」（見程式碼第 801-804 行註解），故本次不重複驗證。**至此 30/30 個 reference 條目皆已完成全文層級驗證**。
+- 28 個 bibkey 中，**23 個 ✅ CONFIRMED**（無需任何修改）。
 - **5 個項目有「建議修正」提案**（均為**提案**，依 CLAUDE.md §5.2 待使用者核准後才能寫入 `cvgip2025_chinese.py`）：
   1. **[2]**（第一批）：第 263-264 行 SIR² 資料集歸屬錯誤 → 建議移除「SIR²」字樣
   2. **[3]**（第一批）：第 265-267, 348 行「深入分析...不可逆」措辭過度引申 → 建議改為保守措辭
