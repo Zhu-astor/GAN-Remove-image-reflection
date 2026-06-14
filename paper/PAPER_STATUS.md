@@ -1,8 +1,9 @@
 # PAPER_STATUS.md — AI GO CVGIP 論文狀態追蹤
 
-Last updated: 2026-06-14（整合使用者手動編輯版本 `(4).docx` 之 6 處差異（Fig.4/5/8 圖片與
-caption、AI GO 2024 獎項提及全面移除、Acknowledgement 刪除）+ 引用全面重新編號
-[1]-[42]+命名引用 → 連續 [1]-[30]，PDF 由 10 頁變為 9 頁，逐頁視覺驗證通過，詳見本文件最新章節）
+Last updated: 2026-06-14（§4.6 body 文字補上「以圖8第5組範例為例」說明（解決前次 flag）；
+完成「邊緣=高梯度」真實引用查證（新增 [31] RINDNet, ICCV 2021），修正 §1/§3.2.1 過度絕對化的
+「物理性質、與場景domain無關」措辭與「根本機制」因果宣稱，citation_verification_record.md §6
+同步修正「三者一致」過度推論；PDF 仍為 9 頁，逐頁視覺驗證通過，詳見本文件最新章節）
 
 ---
 
@@ -583,14 +584,58 @@ bibkey 欄位、§6 討論）維持舊編號不變**——任務「edge=high-gra
   刪除 + 文字精簡 + 圖版面變化所致）
 - `Read(pdf, pages="1-10")` 逐頁視覺確認 9 頁全部正確：A-F 全部變更均正確渲染，圖1-8 完整
 
-### ⚠️ 發現但未修改（超出本次「僅整合使用者編輯」範圍，flag 待決）
-§4.6 body 文字仍寫：「三個物件的辨識信心值分別由 0.76、0.48、0.64 提升至 0.93、0.85、0.81」。
-此句在原 1+1 圖版面下對應單一範例；圖8 現已改為每排 5 張範例（`原跑原7_1~5.jpg`/`消跑原7_1~5.jpg`），
-`_5` 兩檔與舊版 byte-identical（最可能是該數字的原始來源），但 body 文字未指明對應哪一組。
-caption 本身已移除該數字句（見上 E），僅 body 段落殘留此句。**建議**：若保留此句，可加註
-「以下方第 5 組範例為例」；本次未動，因不在使用者本次 docx 編輯範圍內，需使用者後續核准。
+### ✅ 已解決：§4.6 數字範例對應說明（2026-06-14）
+§4.6 body 文字補上「以圖 8 中第 5 組範例為例」，使「三個物件的辨識信心值分別由 0.76、0.48、0.64
+提升至 0.93、0.85、0.81」明確對應圖8現行 5+5 圖版面中的第5組（`原跑原7_5.jpg`/`消跑原7_5.jpg`）。
+已重新產出 docx/pdf 並用 `Read(pdf, pages="7-8")` 視覺確認正確渲染。
 
 ### 待辦
 - `renumber_citations.py` + `cvgip2025_chinese.py.bak_before_renumber`：一次性腳本/備份，
   確認無誤後可刪除
 - 推送至 GitHub（`github/paper/`）並回連結
+
+---
+
+## 2026-06-14（續）任務 #13/#14：核心物理宣稱引用補強 — 已完成
+
+### 背景
+§1（第385-394行）與 §3.2.1（第553-559行）的核心物理假設原文：
+「反光因光線擴散呈現低頻、低梯度特性，物件邊緣因材質突變呈現高頻、高梯度響應；
+這兩項區別特性是物理性質，與場景 domain 無關。」
+經 `citation_verification_record.md` §6 查證，現有引用（[6]CEILNet/[8]Location-aware SIRR/
+新查Li&Brown2014）僅支持「反光=低梯度」為 **SIRR 文獻中的先驗假設/一般趨勢**（非絕對定律），
+且「邊緣=高梯度」半句原僅靠 CLAUDE.md §5.0b「教科書事實」例外（已被使用者駁回，要求真實引用）。
+
+### Task #13：找到「邊緣=高梯度」真實引用 — RINDNet (Pu et al., ICCV 2021)
+- WebSearch → 下載 PDF (`matherial/papers/45_rindnet_pu2021.pdf`) → `Read` pp.1-3 直接讀取原文
+- 關鍵驗證引文："Reflectance Edges (REs) usually are caused by the changes in material
+  appearance (e.g., texture and color) of smooth surfaces."（p.3）；追溯至 Marr (1980)
+  四種基本邊緣分類，稱為 "a fundamental building block in computer vision"（p.1）
+- 屬通用邊緣偵測文獻（非SIRR），可佐證「材質不連續→邊緣響應」的跨場景普遍性，
+  但未涉及「反光=低梯度」半句（IE的highlight框架與SIRR的玻璃反射疊加層是不同物理設定）
+- 已記錄於 `citation_verification_record.md` §6 新 D 項
+
+### Task #14：修正過度推論措辭
+- `citation_verification_record.md` §6「總結」重寫：原「三個來源一致...」改為說明
+  Li&Brown2014 是原始出處、[6]/[8] 是沿用並各自附加但書的後續工作（引用脈絡而非三方共識）；
+  整合 RINDNet 發現後，結論維持「兩個半句各有支持但無單一文獻將其並列陳述為domain-independent
+  絕對定律」
+- §1（385-394行）與 §3.2.1（553-559行）改寫為分別引用 [6][8]（反光=先驗假設）與
+  [31] RINDNet（邊緣=電腦視覺公認基本邊緣成因之一），移除「物理性質、與場景domain無關」
+  絕對化措辭；§3.2.1 第558行「這正是 SGA 實現跨場景泛化的根本機制」改為
+  「為 SGA 的注意力設計提供了依據」（移除未經消融驗證的因果宣稱，符合 CLAUDE.md §5.2）
+- 新增 bib entry [31]：M. Pu, Y. Huang, Q. Guan, and H. Ling, "RINDNet: Edge Detection for
+  Discontinuity in Reflectance, Illumination, Normal and Depth," in Proc. IEEE/CVF ICCV,
+  2021, pp. 6879-6888.（30→31篇參考文獻，已驗證頁碼）
+
+### 重新產出 + 視覺驗證
+- `cvgip2025_chinese.py` → docx → pdf，仍為 9 頁
+- `Read(pdf, pages="1-3")` 確認 §1/§3.2.1 改寫正確渲染；`Read(pdf, pages="9")` 確認 [31] 正確顯示於參考文獻列表
+
+### ⚠️ 未處理（超出本次範圍，flag 待決）
+原文中「光線擴散」(light diffusion) 一詞在其他多處仍存在（grep 第349/399/412/479/517/536/606/
+743/761/763/771/828/848/867/902行），這些位置未檢視，措辭可能與新版 §1/§3.2.1 不一致，
+需使用者後續決定是否一併檢視。
+
+### 待辦
+- 同步本次變更（§4.6修正 + Task#13/14改寫 + 新增[31]）至 `github/paper/`，commit + push 並回連結

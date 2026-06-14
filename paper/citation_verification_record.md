@@ -892,20 +892,63 @@ GAN-based 方法在感知品質（perceptual quality）較好時，PSNR/SSIM 往
 
 ---
 
-### D. 物件邊緣 = 高頻/高梯度 半句 — 結論
+### D. 物件邊緣 = 高頻/高梯度 半句 — 新文獻 RINDNet (Pu et al. 2021，2026-06-14 更新)
 
-物件邊緣因材質/反射率不連續而產生強梯度響應，是梯度型邊緣偵測（Sobel/Canny 等）的**教科書級基礎事實**——本文 §3.2.1 自己定義的 Sobel 核 Kx/Ky 即是直接利用此原理。依 CLAUDE.md §5.0b「眾所周知的數學/技術事實」例外條款，此半句**不需外部文獻佐證**。本次未額外搜尋此半句的獨立引用。
+> **更新說明：** 原 D 項結論依賴 CLAUDE.md §5.0b「眾所周知的數學/技術事實」例外條款（Sobel/Canny 教科書基礎），使用者已明確駁回此例外，要求提供真實引用。以下為新查證結果。
+
+| 欄位 | 內容 |
+|------|------|
+| **作者** | Mengyang Pu, Yaping Huang, Qingji Guan, Haibin Ling |
+| **標題** | RINDNet: Edge Detection for Discontinuity in Reflectance, Illumination, Normal and Depth |
+| **發表** | Proc. IEEE/CVF ICCV 2021；arXiv:2108.00616 |
+| **本地 PDF** | `matherial/papers/45_rindnet_pu2021.pdf`，已讀 pp.1-3（原始 PDF，非 WebFetch 摘要） |
+| **驗證狀態** | ✅ CONFIRMED（材質不連續 → 邊緣 半句）／⚠️ 不涉及反光半句 |
+
+**驗證原文（直接引述）：**
+> Abstract / p.1: "As a fundamental building block in computer vision, edges can be categorised into four types according to the discontinuity in surface-Reflectance, Illumination, surface-Normal or Depth."
+
+> p.1: "In his seminal work [27], David Marr summarized four basic ways edges can arise: (1) surface-reflectance discontinuity, (2) illumination discontinuity, (3) surface-normal discontinuity, and (4) depth discontinuity."
+
+> p.2 (Related Works): "REs and IEs are mainly related to photometric reasons – REs are caused by changes in material appearance (e.g., texture and color), while IEs are produced by changes in illumination (e.g., shadows, light sources and highlights)."
+
+> p.3 (§3.2 Edge Definitions): "Reflectance Edges (REs) usually are caused by the changes in material appearance (e.g., texture and color) of smooth surfaces."
+
+**結論：**
+- ✅ 直接支持「物件邊緣因材質突變產生響應」——RINDNet 將「材質/質地/顏色變化造成的邊緣」(Reflectance Edge) 列為電腦視覺中（追溯至 Marr 1980）四種基本邊緣成因之一，並稱其為 "a fundamental building block in computer vision"。這是來自**通用邊緣偵測文獻、獨立於 SIRR 領域**的真實引用，可佐證「材質不連續 → 邊緣響應」具有跨場景的普遍性基礎。
+- ⚠️ RINDNet 未使用「高頻/高梯度」之頻域措辭描述 RE，僅以「edge」（邊緣偵測定義上即為梯度局部響應）描述，論文未展開頻域論述。
+- ⚠️ RINDNet 完全不涉及「反光=低頻/低梯度（光線擴散）」半句——RINDNet 的 Illumination Edges (IEs) 指**同一影像內**因陰影/光源/highlight造成的邊緣，與 SIRR「玻璃反射疊加圖層」是不同的物理設定（單層影像內的光照邊緣 vs. 雙層疊加的反射層模糊）。本文獻**不能**、也**不需要**用來支持「反光」半句。
+
+**注意：** 此論文目前不在本文 30 篇參考文獻中，若採用需新增 bib entry（建議 key: `pu2021rindnet`）。
 
 ---
 
-### 總結 — 三個來源的共同模式
+### 總結 — 證據總覽與綜合判斷（2026-06-14 修訂）
 
-| 來源 | 是否支持「反光=低梯度」 | 框架 | 是否支持「絕對物理定律、與domain無關」 |
-|------|----------------------|------|--------------------------------|
-| [1] CEILNet | ✅ 一般趨勢 | "mild assumption"，**有強光反光大梯度的反例** | ❌ |
-| [4] Location-aware | ✅ 一般趨勢 | "prior"，歸功第三方，整篇論文在處理違反此 prior 的案例 | ❌ |
-| Li & Brown 2014 | ✅ 原始來源 | "prior"／regularization assumption，物理機制=景深失焦模糊 | ❌（未討論 domain-independence） |
+**反光 = 低頻/低梯度半句（A/B/C項）：**
 
-**核心發現：** 三個來源一致將「反光較平滑/低梯度」描述為 SIRR 文獻中廣泛使用的**先驗假設／一般趨勢**，但**沒有一篇**將其陳述為無條件成立、與場景 domain 無關的絕對物理定律——[1] 甚至明確給出反例（強光反光梯度可以很大）。因此 cvgip2025_chinese.py 第 364-366 / 528-532 行目前的**絕對化措辭**（「這兩項區別特性是物理性質，與場景 domain 無關」當作既定事實陳述）超出了現有文獻（含三篇已核實來源）所能直接支持的範圍。
+| 來源 | 角色 | 框架 | 是否支持「絕對物理定律、與domain無關」 |
+|------|------|------|--------------------------------|
+| Li & Brown 2014 | **原始出處**（relative smoothness prior 的提出者） | regularization prior，物理機制 = 景深失焦模糊（defocus/Gaussian blur kernel） | ❌（未討論 domain-independence） |
+| [1] CEILNet | 沿用該 prior，並指出其失效情況 | "mild...assumption"，**明確給出強光反光產生大梯度的反例** | ❌ |
+| [4] Location-aware SIRR | 沿用該 prior（歸功 Li & Brown [24]），論文主旨即處理違反此 prior 的案例 | "prior" | ❌ |
 
-**建議：** 改為「先驗/趨勢」型措辭（如「往往」、「在 SIRR 文獻中已被廣泛作為先驗假設」），並引用 [1][4]（已在 bib 中，零成本）；若要更扎實，可額外新增 Li & Brown 2014 作為原始出處引用。詳細措辭提案見對話紀錄（待使用者核可後寫入 .py）。
+**物件邊緣 = 高頻/高梯度半句（D項，新增）：**
+
+| 來源 | 角色 | 框架 | 是否支持「絕對物理定律、與domain無關」 |
+|------|------|------|--------------------------------|
+| RINDNet (Pu et al. 2021，追溯 Marr 1980) | 通用邊緣偵測文獻中的標準分類 | 「材質變化 → Reflectance Edge」是電腦視覺中公認的基本邊緣成因之一 | ⚠️ 部分支持——是「材質不連續會產生邊緣」此一般原理的 domain-independent 來源，但未使用「高頻/高梯度」頻域語言，亦未與「反光」半句做直接對比 |
+
+**綜合判斷（修正原「三個來源一致」的措辭）：**
+
+原文「三個來源一致將...」一句容易被誤讀為三篇論文**各自獨立**得出相同結論、互相驗證（三方共識）。但實際上 Li & Brown 2014 是該 prior 的**原始出處**，[1]/[4] 是**沿用該 prior 並各自附加但書**的後續工作——這是一條「原始來源 → 應用/修正」的**引用脈絡**，而非三方獨立共識。修正後的陳述：
+
+> 「反光較平滑/低梯度」這一描述，其原始出處（Li & Brown 2014）將其定位為用於正則化病態反問題的**建模假設（prior）**；後續沿用此假設的 [1] CEILNet、[4] Location-aware SIRR 均明確指出此假設在強反光情境下會失效。三者均未將其陳述為無條件成立、與場景 domain 無關的絕對物理定律。
+
+「物件邊緣因材質突變產生強響應」這一描述，在通用邊緣偵測文獻（RINDNet，追溯至 Marr 1980 的經典邊緣分類）中被列為電腦視覺中四種基本邊緣成因之一，具有跨場景的普遍性基礎；但該文獻未使用「高頻/高梯度」頻域語言，亦未與「反光」做直接對比。
+
+**因此：** cvgip2025_chinese.py 第 385-394 行（§1）與第 553-559 行（§3.2.1）目前將兩項特性並列陳述為「物理性質，與場景 domain 無關」的**絕對化措辭**，仍超出現有文獻所能直接支持的範圍——兩個半句各有不同程度、不同性質的文獻支持（前者＝SIRR 領域內被廣泛採用但有但書的 prior；後者＝通用邊緣偵測領域的基本邊緣成因分類），但都不是「無條件成立的絕對物理定律」，也沒有任何單一文獻把兩者**並列對比**陳述為一組 domain-independent 定律。
+
+**建議（具體措辭提案見對話紀錄，待使用者核可後寫入 .py）：**
+1. 反光半句改為「先驗/趨勢」型措辭（如「在 SIRR 文獻中已被廣泛作為先驗假設」），引用 [1][4]（已在 bib，零成本）；可選擇性新增 Li & Brown 2014 作為原始出處引用。
+2. 邊緣半句改為引用 RINDNet/Marr 的「材質不連續是電腦視覺中基本邊緣成因之一」框架（需新增 bib entry：`pu2021rindnet`）。
+3. 「與場景 domain 無關」整體措辭軟化，避免「絕對物理定律」式並列宣稱；§3.2.1 第 558 行「這正是 SGA 實現跨場景泛化的根本機制」改為設計動機/依據型措辭，避免未經消融實驗驗證的因果宣稱（CLAUDE.md §5.2）。

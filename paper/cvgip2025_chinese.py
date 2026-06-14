@@ -388,9 +388,11 @@ p(doc,
   '什麼樣的架構設計能支撐這種跨場景遷移？'
   '此問題的關鍵在於：若模型所依賴的特徵表示具有場景無關性，'
   '則在任意場景上學習到的反光消除能力便可自然遷移。'
-  'SIRR 任務恰好具備這樣的物理基礎——反光因光線擴散呈現低頻、低梯度特性，'
-  '物件邊緣因材質突變呈現高頻、高梯度響應；'
-  '這兩項區別特性是物理性質，與場景 domain 無關。',
+  'SIRR 文獻普遍將反光層的低梯度特性視為一項廣泛使用的先驗假設【6】【8】，'
+  '而物件邊緣因材質不連續產生高梯度響應，'
+  '則是電腦視覺邊緣偵測文獻中公認的基本邊緣成因之一【31】；'
+  '本文以這兩項在各自文獻脈絡中已有相當普遍性的觀察為出發點，'
+  '設計能反映此梯度差異的特徵表示。',
   indent=True)
 
 p(doc,
@@ -552,10 +554,12 @@ p(doc, '    Mc = sqrt( Gx,c^2 + Gy,c^2 )',
   align=WD_ALIGN_PARAGRAPH.CENTER, italic=True)
 p(doc,
   '從而得到 Sobel 特徵圖 S ∈ R^(H×W×3)，捕捉各通道的邊緣強度分佈。'
-  '反光區域因光線擴散呈現低頻、低梯度特性；展品邊緣因材質突變產生強梯度響應。'
-  '此兩項區別在物理層面與場景 domain 無關，'
-  '使 S 能在任意場景中自然區分「物件結構」與「反光干擾」——'
-  '這正是 SGA 實現跨場景泛化的根本機制。',
+  '反光區域因模糊/失焦等成因常呈現較低梯度的特性，'
+  '此為 SIRR 文獻中廣泛採用的先驗假設【6】【8】；'
+  '展品邊緣則因材質不連續產生強梯度響應，'
+  '此為電腦視覺邊緣偵測文獻中公認的基本邊緣成因之一【31】。'
+  'S 因此得以同時反映「物件結構」與「反光干擾」在梯度強度上的差異，'
+  '為 SGA 的注意力設計提供了依據。',
   indent=True)
 
 h3(doc, '3.2.2. 通道注意力分支')
@@ -781,8 +785,9 @@ p(doc,
   '反光區域明顯減弱，展品表面材質紋理與邊緣細節的可辨識度提升，'
   '此差異對人眼而言相當直觀，是本文最直接的效果證據。'
   '圖 8 進一步以 YOLOv8 辨識結果為例，呈現同一展品影像在反光消除前後的'
-  '偵測框與信心值變化：三個物件的辨識信心值分別由 0.76、0.48、0.64 '
-  '提升至 0.93、0.85、0.81，顯示反光消除對下游辨識任務的直接增益。')
+  '偵測框與信心值變化：以圖 8 中第 5 組範例為例，三個物件的辨識信心值'
+  '分別由 0.76、0.48、0.64 提升至 0.93、0.85、0.81，顯示反光消除對'
+  '下游辨識任務的直接增益。')
 p(doc,
   '在量化層面，本文以博物館評估集（699 張，涵蓋陶瓷器、書法畫作、'
   '金屬文物及立體雕塑等 7 類展品）測試 YOLOv8 辨識結果：'
@@ -973,6 +978,8 @@ references = [
     '[29] Y. Blau and T. Michaeli, "The Perception-Distortion Tradeoff," in Proc. IEEE/CVF CVPR, 2018, pp. 6228-6237.',
     # [30] NEW: arXiv:1609.04802; CONFIRMED from ar5iv full text — MSE/overly-smooth + GAN perceptual quality
     '[30] C. Ledig et al., "Photo-Realistic Single Image Super-Resolution Using a Generative Adversarial Network," in Proc. IEEE/CVF CVPR, 2017, pp. 4681-4690.',
+    # [31] NEW: arXiv:2108.00616; CONFIRMED from local PDF pp.1-3 — Marr's reflectance-edge/material-discontinuity classification
+    '[31] M. Pu, Y. Huang, Q. Guan, and H. Ling, "RINDNet: Edge Detection for Discontinuity in Reflectance, Illumination, Normal and Depth," in Proc. IEEE/CVF ICCV, 2021, pp. 6879-6888.',
 ]
 
 for r_text in references:
@@ -993,8 +1000,9 @@ print()
 print('  圖1  overall_architecture.png  DONE')
 print('  圖2  sga_module_architecture.png  DONE')
 print('  圖3  compare_original1/generate1.jpg  DONE')
-print('  圖4  show.png  DONE')
+print('  圖4  show1-5.png x7 (fig_row, 2026-06-14 使用者編排版)  DONE')
 print('  圖5  visual_comparison.png  DONE')
 print('  圖6  reflection/nonreflection_sobel_feature.png  DONE')
 print('  圖7  loss_function.png  DONE')
-print('  圖8  原跑原7.jpg(上,含反光,0.76/0.48/0.64) / 消跑原7.jpg(下,SGA後,0.93/0.85/0.81)  DONE -- 方向已確認')
+print('  圖8  原跑原7_1~5.jpg(上排) / 消跑原7_1~5.jpg(下排), 各5張 (fig_row)  '
+      '第5組=0.76/0.48/0.64->0.93/0.85/0.81 (body已註明)  DONE')
