@@ -17,12 +17,14 @@ TODO LIST — 提交前必須填入的數字與圖片
   圖1   overall_architecture.png        — ✅ 已插入（整體架構圖，§3.1）
   圖2   sga_module_architecture.png     — ✅ 已插入（SGA 模組詳細結構圖，§3.2）
   圖3   compare_original1/generate1.jpg — ✅ 已插入（訓練資料集樣本範例，§4.1.1）
-  圖4   show.png                        — ✅ 已插入（訓練 domain 反光消除效果範例，§4.3）
+  圖4   show1-5.png（7 張序列 5,6,7,5,8,9,7，2026-06-14 依使用者手動編排版本更新）
+          — ✅ 已插入（訓練 domain 反光消除效果範例，§4.3）
   圖5   visual_comparison.png           — ✅ 已插入（Before/After 博物館視覺比較，§4.4）
   圖6   reflection/nonreflection_sobel_feature.png — ✅ 已插入（Sobel 梯度幅度視覺化，§4.4）
   圖7   loss_function.png               — ✅ 已插入（訓練 Loss 曲線，§4.5）
-  圖8   原跑原7.jpg / 消跑原7.jpg        — ✅ 已插入且方向已確認：原跑原7.jpg（含反光，上，信心值
-          0.76/0.48/0.64）/ 消跑原7.jpg（SGA處理後，下，信心值0.93/0.85/0.81）
+  圖8   原跑原7_1~5.jpg（上排）/ 消跑原7_1~5.jpg（下排），各 5 張
+          — ✅ 已插入（2026-06-14 依使用者手動編排版本更新為各 5 張範例，
+          原單組 0.76/0.48/0.64→0.93/0.85/0.81 數據說明已從 caption 移除）
           — YOLOv8 偵測信心值對比（§4.6）
 ============================================================
 """
@@ -217,6 +219,31 @@ def fig(doc, filename, width_in=3.1):
     para.add_run().add_picture(path, width=Inches(width_in))
 
 
+def fig_row(doc, filenames, width_in=0.95):
+    """Insert one centered paragraph containing multiple inline figure images.
+
+    Args:
+        doc       : python-docx Document.
+        filenames : image file names inside MATERIAL_DIR, inserted in order
+                     as separate inline pictures within a single paragraph
+                     (Word wraps them into rows based on column width).
+        width_in  : display width per image in inches.
+    Notes:
+        Silently skips any missing file (prints a warning), matching fig()'s
+        behavior so a caption below still marks the spot for manual fixes.
+    """
+    para = doc.add_paragraph()
+    para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    para.paragraph_format.space_before = Pt(4)
+    para.paragraph_format.space_after = Pt(0)
+    for filename in filenames:
+        path = os.path.join(MATERIAL_DIR, filename)
+        if not os.path.isfile(path):
+            print(f"  [fig_row] missing, skipped: {path}")
+            continue
+        para.add_run().add_picture(path, width=Inches(width_in))
+
+
 def ref(doc, text):
     para = doc.add_paragraph()
     para.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
@@ -342,7 +369,7 @@ p(doc,
   '車載場景中環境光線持續變化，無法取得靜態配對；'
   '醫療設備的螢幕反光同樣難以在受控條件下系統性採集。'
   '此一 domain gap 問題導致即便在公開資料集上訓練效果良好的模型，'
-  '在目標場景的實際部署中往往大幅退化【9】。')
+  '在目標場景的實際部署中往往大幅退化【1】。')
 
 p(doc,
   '博物館藏品反光消除是上述困境的極端代表性案例。'
@@ -350,7 +377,7 @@ p(doc,
   '環境燈光由展覽需求決定無法任意調整，使得像素對齊的配對資料在現實中'
   '幾乎完全無法大規模取得。然而博物館智慧導覽系統的需求真實存在：'
   '訪客透過手機拍攝展品時，玻璃反光導致 AI 辨識系統識別率顯著下降——'
-  '以本文實驗為例，YOLOv8【42】在含反光影像上的辨識準確率僅為 92.7%。'
+  '以本文實驗為例，YOLOv8【2】在含反光影像上的辨識準確率僅為 92.7%。'
   '博物館場景因此提供了一個具有量化下游指標的理想案例，'
   '適合用於驗證跨場景 SIRR 泛化方法的實用效益。',
   indent=True)
@@ -370,12 +397,12 @@ p(doc,
   '基於此觀察，本文提出以固定 Sobel 梯度作為注意力驅動信號的設計路線。'
   'Sobel 卷積核為固定參數，其計算出的梯度幅度僅反映影像的局部結構特性，'
   '不受訓練資料的場景分佈影響，天然具備 domain-agnostic 特性。'
-  'Lu 等人【23】在醫學影像分割中展示了 Sobel 引導注意力的有效性，'
-  '而 CBAM【21】確立了通道—空間雙維注意力的互補優勢，'
+  'Lu 等人【3】在醫學影像分割中展示了 Sobel 引導注意力的有效性，'
+  '而 CBAM【4】確立了通道—空間雙維注意力的互補優勢，'
   '共同為本文 Sobel 引導注意力（SGA）模組的設計提供理論依據。'
   'SGA 以固定 Sobel 梯度幅度驅動 CBAM 風格的雙維注意力，'
   '在 Pix2Pix U-Net 生成器的第一個編碼器塊之前完成邊緣感知特徵重校準，'
-  '使模型在像素層面即對「展品結構」與「反光干擾」進行空間上的區分【3】。',
+  '使模型在像素層面即對「展品結構」與「反光干擾」進行空間上的區分【5】。',
   indent=True)
 
 p(doc, '本文的主要貢獻如下：')
@@ -390,32 +417,31 @@ p(doc,
 p(doc,
   '（3）以博物館藏品反光消除作為案例實驗，建立端對端評估流程：'
   '從公開 SIRR 資料集訓練，跨場景應用於博物館影像，'
-  '以 YOLOv8 辨識準確率（92.7% → 94.5%）量化驗證，'
-  '並獲 AI GO 2024 競賽最佳實作獎肯定。')
+  '以 YOLOv8 辨識準確率（92.7% → 94.5%）量化驗證。')
 
 # ════════════════════════════ §2 RELATED WORK ════════════════════════════════
 h1(doc, '2. Related Work')
 
 h2(doc, '2.1. 單張影像反光消除')
 p(doc,
-  'SIRR 研究歷程從基於優化的傳統方法演進至深度學習路線。Fan 等人【1】提出 '
+  'SIRR 研究歷程從基於優化的傳統方法演進至深度學習路線。Fan 等人【6】提出 '
   'CEILNet，首次以級聯 CNN 架構在 SIRR 中引入邊緣資訊：邊緣預測網路（E-CNN）'
   '先估計物件邊緣圖，再由重建網路（I-CNN）以邊緣圖為輔助恢復傳輸層。此一設計'
   '奠定了「以邊緣引導復原」的技術路線，是本文 SGA 模組設計的重要先驅。')
 p(doc,
-  'Li 等人【2】提出 IBCLN，以卷積 LSTM 實現迭代漸進式的傳輸層與反射層交替'
+  'Li 等人【7】提出 IBCLN，以卷積 LSTM 實現迭代漸進式的傳輸層與反射層交替'
   '提煉，並建立具密集標註 ground truth 的真實場景配對資料集，是本文訓練'
-  '所用資料集之一。Chi 等人【3】指出，下採樣（池化）操作所帶來的資訊損失'
+  '所用資料集之一。Chi 等人【5】指出，下採樣（池化）操作所帶來的資訊損失'
   '會增加解碼器精確復原影像的難度（因此其網路選擇省略池化層），這一觀察'
   '呼應了本文將邊緣注意力前置於編碼器之前、避免結構資訊在下採樣過程中'
-  '流失的設計動機。Dong 等人【4】提出位置感知反光消除（Location-aware '
+  '流失的設計動機。Dong 等人【8】提出位置感知反光消除（Location-aware '
   'SIRR），以顯式的反光位置偵測模組（reflection confidence map）回歸反光'
   '機率圖以引導特徵流，證明「顯式空間位置線索」在 SIRR 任務中的有效性。',
   indent=True)
 p(doc,
-  '近期方法朝不同技術方向發展。DURRNet【6】採用演算法展開（algorithm unrolling）'
+  '近期方法朝不同技術方向發展。DURRNet【9】採用演算法展開（algorithm unrolling）'
   '將迭代優化轉化為深度網路，具備理論可解釋性。'
-  'PromptRR【8】以擴散模型作為頻域提示生成器驅動 Transformer 網路，'
+  'PromptRR【10】以擴散模型作為頻域提示生成器驅動 Transformer 網路，'
   '達最新 SOTA 水準，但擴散模型本身的多步採樣特性使即時部署的計算代價較高。'
   '儘管上述方法在公開基準資料集上取得顯著進展，'
   '跨場景泛化能力仍是深度學習 SIRR 在真實場景部署中的核心挑戰，'
@@ -424,8 +450,8 @@ p(doc,
 
 h2(doc, '2.2. 圖像轉換與條件生成對抗網路')
 p(doc,
-  '生成對抗網路（GAN）【19】以生成器與判別器的對抗訓練學習數據分佈，'
-  '為圖像合成提供了強大框架。Mirza 與 Osindero【15】提出條件 GAN（cGAN），'
+  '生成對抗網路（GAN）【11】以生成器與判別器的對抗訓練學習數據分佈，'
+  '為圖像合成提供了強大框架。Mirza 與 Osindero【12】提出條件 GAN（cGAN），'
   '在生成器與判別器中同時加入條件向量，使網路能學習輸入到輸出的確定性映射，'
   '奠定 Pix2Pix 的理論基礎。Isola 等人【13】實例化此範式為 Pix2Pix：'
   'U-Net 生成器搭配 PatchGAN 判別器，以 L1+cGAN 損失組合訓練，在多項配對'
@@ -436,45 +462,45 @@ p(doc,
   '在配對資料充足的條件下，Pix2Pix 優於 CycleGAN 及其他無監督方法。'
   '本文選擇以公開配對 SIRR 資料集訓練 Pix2Pix，再跨場景部署，'
   '是在「利用現有配對資料的監督強度」與「目標場景零配對資料」之間取得平衡的設計策略。'
-  'Liu 等人【17】對 GAN 圖像合成的全面綜述確立了對抗訓練的廣泛有效性。',
+  'Liu 等人【15】對 GAN 圖像合成的全面綜述確立了對抗訓練的廣泛有效性。',
   indent=True)
 
 h2(doc, '2.3. 注意力機制')
 p(doc,
-  'Hu 等人【22】提出 Squeeze-and-Excitation Network（SENet），以全局平均池化'
+  'Hu 等人【16】提出 Squeeze-and-Excitation Network（SENet），以全局平均池化'
   '壓縮空間維度後，通過全連接層學習通道間相互依賴性，進行通道特徵重加權。'
   'SENet 以極小的計算代價在 ImageNet 分類上取得顯著提升，'
   '奠定了通道注意力在 CNN 中的地位。')
 p(doc,
-  'Woo 等人【21】在 SENet 的基礎上提出卷積塊注意力模組（CBAM），依序在通道和'
+  'Woo 等人【4】在 SENet 的基礎上提出卷積塊注意力模組（CBAM），依序在通道和'
   '空間兩個維度推斷注意力圖，在分類與偵測任務的廣泛實驗中均優於 SENet，'
   '說明雙維注意力的互補性。本文 SGA 模組的雙分支設計直接源自 CBAM 框架，'
   '並以固定 Sobel 梯度取代純學習統計作為驅動信號——'
   '此替換是實現 domain-agnostic 特性的關鍵。',
   indent=True)
 p(doc,
-  'Lu 等人【23】在醫學影像分割任務中提出以 Sobel 算子引導的多尺度注意力網路，'
+  'Lu 等人【3】在醫學影像分割任務中提出以 Sobel 算子引導的多尺度注意力網路，'
   '以梯度幅度作為結構先驗驅動注意力機制，顯著提升分割邊界精度。'
   '醫學影像與自然場景之間同樣存在顯著的 domain gap，該方法在單一 medical '
   'domain 內以固定 Sobel 梯度驅動注意力取得良好分割效果，啟發本文進一步'
-  '將此設計思路延伸至跨場景情境進行驗證——惟【23】本身並未測試跨資料集／'
-  '跨場景表現，本文的跨場景驗證（§4.4-4.6）屬於本文的新貢獻，而非對【23】'
-  '既有結論的延伸確認。GCNet【26】統一 Non-local Networks【24】與 SENet 的'
+  '將此設計思路延伸至跨場景情境進行驗證——惟【3】本身並未測試跨資料集／'
+  '跨場景表現，本文的跨場景驗證（§4.4-4.6）屬於本文的新貢獻，而非對【3】'
+  '既有結論的延伸確認。GCNet【17】統一 Non-local Networks【18】與 SENet 的'
   '結構分析，說明結合全局語境與通道校準優於任一單一機制，進一步支持本文'
   '雙分支設計。',
   indent=True)
 
 h2(doc, '2.4. 邊緣引導影像處理')
 p(doc,
-  '以邊緣資訊引導影像復原是一條成熟的技術路線。Xie 與 Tu【29】提出整體嵌套'
+  '以邊緣資訊引導影像復原是一條成熟的技術路線。Xie 與 Tu【19】提出整體嵌套'
   '邊緣偵測（HED），以多尺度深度監督邊緣學習展示不同層次的邊緣特徵攜帶互補'
-  '結構資訊，成為後續邊緣引導方法的重要基準。Ji 等人【31】提出 DGNet，'
+  '結構資訊，成為後續邊緣引導方法的重要基準。Ji 等人【20】提出 DGNet，'
   '以物件梯度監督解耦紋理與語義特徵，其梯度引導特徵提煉的思路與本文類比。')
 p(doc,
-  'Sharp U-Net【37】在 U-Net 的 skip connection 前加入銳化核'
+  'Sharp U-Net【21】在 U-Net 的 skip connection 前加入銳化核'
   '（depthwise convolution with sharpening kernel），減少編碼器與解碼器特徵'
   '的語義不相似性，與本文在 skip connection 前注入 Sobel 結構引導的設計理念'
-  '相呼應。Li 與 Liu【33】在 MRI 超解析任務中引入梯度圖邊緣品質損失，'
+  '相呼應。Li 與 Liu【22】在 MRI 超解析任務中引入梯度圖邊緣品質損失，'
   '強制模型學習邊緣結構細節——此類邊緣引導設計在醫學影像這一特殊 domain '
   '中的成功，進一步支持本文以固定梯度先驗跨場景遷移的假設。',
   indent=True)
@@ -491,7 +517,7 @@ p(doc,
   'PatchGAN 判別器在訓練期間評估局部圖像塊的真實性，迫使生成器產生高頻細節'
   '逼真的輸出。SGA 插入於最前端（Encoder Block 0 之前）而非中間層，'
   '原因在於反光干擾在像素層面即已存在，若讓網路先執行下採樣再補救，'
-  '結構細節資訊可能在下採樣過程中流失【3】，且中間層特徵已摻雜 domain-specific 的語義信息，'
+  '結構細節資訊可能在下採樣過程中流失【5】，且中間層特徵已摻雜 domain-specific 的語義信息，'
   '不利於跨場景遷移。')
 fig(doc, 'overall_architecture.png')
 caption(doc,
@@ -567,7 +593,7 @@ caption(doc, '圖 2. SGA 模組詳細結構。Sobel 特徵經通道注意力（1
 
 h2(doc, '3.3. U-Net 生成器架構')
 p(doc,
-  'SGA 模組之後接標準 Pix2Pix U-Net 生成器【13, B】。編碼器由 7 個下採樣塊'
+  'SGA 模組之後接標準 Pix2Pix U-Net 生成器【13】【23】。編碼器由 7 個下採樣塊'
   '（Conv-BN-LeakyReLU）組成，濾波器數量依次為 [64, 128, 256, 512, 512, 512, 512]；'
   '解碼器由 7 個上採樣塊（ConvTranspose-BN-Dropout-ReLU）組成，並以 skip '
   'connection 串接對應解析度的編碼器特徵圖以保留空間細節。最後一層以 tanh '
@@ -620,18 +646,18 @@ p(doc,
   '訓練資料整合四個公開單張影像反光消除資料集，各資料集涵蓋不同的反光來源'
   '與場景多樣性：')
 p(doc,
-  'SIR²【GAP-E】：大規模真實場景配對反光資料集，涵蓋物件（Objects）、'
+  'SIR²【24】：大規模真實場景配對反光資料集，涵蓋物件（Objects）、'
   '野外（Wild）與後處理合成（Postcard）三個子集，提供豐富的自然場景反光類型。')
 p(doc,
-  'IBCLN【2】：Li 等人為訓練迭代式漸進消除網路所提供的配對資料集，'
+  'IBCLN【7】：Li 等人為訓練迭代式漸進消除網路所提供的配對資料集，'
   '包含多種室內環境下的真實場景反光影像對。',
   indent=True)
 p(doc,
-  'ERRNET【ERRNET】：Wei 等人提出的配對資料集，資料涵蓋多種材質表面'
+  'ERRNET【25】：Wei 等人提出的配對資料集，資料涵蓋多種材質表面'
   '與光線條件下的反光場景，提供豐富的反光強度梯度變化。',
   indent=True)
 p(doc,
-  'RFC（Flash Reflection Removal）【RFC】：Lei 與 Chen 所提供的以閃光燈輔助拍攝的'
+  'RFC（Flash Reflection Removal）【26】：Lei 與 Chen 所提供的以閃光燈輔助拍攝的'
   '配對資料集，每對影像分別為一般曝光（含反光）與閃光燈曝光（抑制反光），'
   '提供多種玻璃材質與室內光線下的反光配對。',
   indent=True)
@@ -669,10 +695,10 @@ h2(doc, '4.2. 評估指標')
 p(doc,
   '本文採用兩層次評估策略：'
   '（1）影像復原指標（在公開 SIRR 測試集上，248 對，含 ground truth）：'
-  'PSNR（峰值信噪比，越高越好）、SSIM【A】（結構相似性，越高越好）、'
-  'LPIPS【36】（學習感知距離，以預訓練 VGG 特徵計算，越低越好）；'
+  'PSNR（峰值信噪比，越高越好）、SSIM【27】（結構相似性，越高越好）、'
+  'LPIPS【28】（學習感知距離，以預訓練 VGG 特徵計算，越低越好）；'
   '（2）跨場景下游效益（在博物館評估集上，699 張）：'
-  'YOLOv8【42】展品分類準確率，直接反映反光消除對實際辨識任務的影響。'
+  'YOLOv8【2】展品分類準確率，直接反映反光消除對實際辨識任務的影響。'
   '兩層次評估分別量化模型在訓練分佈內的復原品質，'
   '以及在目標 domain 上的實用效益，完整呈現跨場景泛化的全貌。')
 
@@ -695,18 +721,18 @@ p(doc,
   '表 1 顯示，加入 SGA 後 PSNR（22.682 dB）與 SSIM（0.8192）略低於基準 Pix2Pix'
   '（23.896 dB / 0.8706），LPIPS（0.2178）亦高於基準（0.1630）。'
   '此現象並不意味反光消除能力退化，而是 GAN-based 方法在以感知品質為導向的優化中'
-  '必然出現的計量特性。Blau 與 Michaeli【Blau18】從理論層面證明，'
+  '必然出現的計量特性。Blau 與 Michaeli【29】從理論層面證明，'
   '感知品質與失真指標之間存在根本性的取捨關係（perception-distortion tradeoff）——'
   '感知品質越高的方法，PSNR/SSIM 往往越低，且此現象不因指標選擇而消失。'
-  'Ledig 等人【Ledig17】在影像超解析度任務中也實驗確認：'
+  'Ledig 等人【30】在影像超解析度任務中也實驗確認：'
   '「最小化 MSE 鼓勵模型輸出所有合理解的像素均值，導致結果趨於過度平滑」；'
   '本文所採用的 Pix2Pix L1 損失【13】具有相同的機制特性，'
   '而 SGA 的對抗訓練使模型向感知邊界移動，因此 PSNR/SSIM 偏低屬於預期現象。'
   '模型的實際效果應結合 §4.4 視覺比較與 §4.6 下游辨識準確率共同評估。',
   indent=True)
-fig(doc, 'show.png')
+fig_row(doc, ['show1.png', 'show2.png', 'show3.png', 'show1.png', 'show4.png', 'show5.png', 'show3.png'])
 caption(doc,
-  '圖 4. 訓練資料集上的反光消除效果範例（3 組 Original/Generated 對比）。'
+  '圖 4. 訓練資料集上的反光消除效果範例（Original/Generated 對比）。'
   '可見反光區域在視覺上明顯減弱，佐證模型在其訓練 domain 上具備'
   '真實的反光消除能力，與表 1 之量化指標應合併解讀（見上文'
   'Perception-Distortion Tradeoff 說明）。')
@@ -724,8 +750,8 @@ p(doc,
   '在博物館 domain 中仍能正確識別「物件結構」與「反光干擾」的空間分佈。',
   indent=True)
 fig(doc, 'visual_comparison.png')
+caption(doc, '圖 5. 博物館藏品跨場景視覺比較。')
 caption(doc,
-  '圖 5. 博物館藏品跨場景視覺比較（5 組展品）。'
   '上排：含反光原始影像（Original）；'
   '下排：Pix2Pix+SGA 反光消除結果（Generated）。')
 fig(doc, 'reflection_sobel_feature.png')
@@ -784,12 +810,11 @@ add_table(doc,
       ['Pix2Pix + SGA（本文）', '94.5', '+1.8 pp；40 張中 10 張（25%）救回'],
   ],
   col_widths_in=[1.1, 0.7, 1.4])
-fig(doc, '原跑原7.jpg')
-fig(doc, '消跑原7.jpg')
+fig_row(doc, ['原跑原7_1.jpg', '原跑原7_2.jpg', '原跑原7_3.jpg', '原跑原7_4.jpg', '原跑原7_5.jpg'])
+fig_row(doc, ['消跑原7_1.jpg', '消跑原7_2.jpg', '消跑原7_3.jpg', '消跑原7_4.jpg', '消跑原7_5.jpg'])
 caption(doc,
   '圖 8. YOLOv8 辨識結果範例：原始含反光影像（上）與 Pix2Pix+SGA 處理後'
-  '影像（下）之偵測框與信心值比較。三個物件的辨識信心值分別由'
-  '0.76、0.48、0.64 提升至 0.93、0.85、0.81。')
+  '影像（下）之偵測框與信心值比較。')
 
 # ════════════════════════════ §5 DISCUSSION ══════════════════════════════════
 h1(doc, '5. Discussion')
@@ -806,7 +831,7 @@ p(doc,
   '因此其輸出在自然場景與博物館場景中具有完全相同的物理語義，'
   '使基於此引導的注意力機制能穩定跨場景遷移。')
 p(doc,
-  '相較之下，若採用可學習的邊緣偵測器（如 HED【29】）作為注意力驅動信號，'
+  '相較之下，若採用可學習的邊緣偵測器（如 HED【19】）作為注意力驅動信號，'
   '其權重會根據訓練資料的場景分佈進行調整，'
   '在跨場景應用時可能出現邊緣偵測器對目標場景紋理的語義誤判。'
   '固定 Sobel 核的設計以犧牲語義邊緣的敏感性為代價，'
@@ -859,11 +884,11 @@ h2(doc, '5.5. 未來工作')
 p(doc,
   '未來研究方向包括：（1）建立多場景的跨 domain SIRR 基準（博物館、工廠、車載），'
   '系統評估不同結構先驗設計在各 domain 的泛化性能；'
-  '（2）以可學習邊緣偵測器（如 HED【29】）在多尺度補充固定 Sobel 核，'
+  '（2）以可學習邊緣偵測器（如 HED【19】）在多尺度補充固定 Sobel 核，'
   '研究其對跨場景泛化的影響與取捨；'
   '（3）探索以半監督或對比學習框架，利用目標場景的無標注含反光影像'
   '進一步縮小 domain gap，在無需配對資料的前提下提升泛化性能；'
-  '（4）將 SGA 整合至 Transformer 架構（如 PromptRR【8】），'
+  '（4）將 SGA 整合至 Transformer 架構（如 PromptRR【10】），'
   '結合全局注意力與 Sobel 局部先驗的互補優勢。',
   indent=True)
 
@@ -872,7 +897,7 @@ h1(doc, '6. Conclusion')
 p(doc,
   '監督式 SIRR 在真實部署場景中普遍面臨目標 domain 配對資料難以取得的困境。'
   '本文以「跨場景泛化」為核心研究動機，提出 Sobel 引導注意力（SGA）模組整合至'
-  ' Pix2Pix 架構的方法，系統性地探討固定結構先驗在跨場景 SIRR 中的作用機制。'
+  ' Pix2Pix 架構的方法，探討固定結構先驗在跨場景 SIRR 中的作用機制。'
   'SGA 模組以固定 Sobel 卷積核萃取 domain-agnostic 的邊緣梯度信號，'
   '驅動 CBAM 風格的通道—空間雙維注意力，在不引入任何額外可訓練參數的前提下，'
   '實現像素層面對物件結構與反光干擾的有效區分。'
@@ -882,81 +907,72 @@ p(doc,
   '實驗結果顯示，以公開 SIRR 資料集（810 對）訓練的模型，'
   '無需任何微調即能泛化至博物館藏品，'
   '下游 YOLOv8 展品辨識準確率由 92.7% 提升至 94.5%（+1.8pp），'
-  '量化驗證了固定 Sobel 結構先驗在跨場景設定下的實際效益，'
-  '並獲 AI GO 2024 競賽最佳實作獎肯定。')
-
-# ════════════════════════════ ACKNOWLEDGEMENT ════════════════════════════════
-h1(doc, 'Acknowledgement')
-p(doc, '感謝【博物館/合作單位名稱】提供展品影像供跨場景評估使用。'
-       '本研究於 AI GO 2024 競賽期間完成，獲競賽評審委員會最佳實作獎肯定。')
+  '量化驗證了固定 Sobel 結構先驗在跨場景設定下的實際效益。')
 
 # ════════════════════════════ REFERENCES ═════════════════════════════════════
 h1(doc, 'References')
 
 references = [
-    # [1] VERIFIED: Title/venue correct; authors corrected from wrong list
-    '[1] Q. Fan, J. Yang, G. Hua, B. Chen, and D. Wipf, "A Generic Deep Architecture for Single Image Reflection Removal and Image Smoothing," in Proc. IEEE ICCV, 2017, pp. 3238-3247.',
-    # [2] VERIFIED: Correct
-    '[2] C. Li, Y. Yang, K. He, S. Lin, and J. E. Hopcroft, "Single Image Reflection Removal through Cascaded Refinement," in Proc. IEEE/CVF CVPR, 2020, pp. 3566-3574.',
-    # [3] VERIFIED: Authors corrected from wrong list
-    '[3] Z. Chi, X. Wu, X. Shu, and J. Gu, "Single Image Reflection Removal Using Deep Encoder-Decoder Network," arXiv:1802.00094, 2018.',
+    # [1] VERIFIED: arXiv:2502.08836; first author K. Yang (Kangning), not Z. Yang
+    '[1] K. Yang et al., "A Comprehensive Survey on Single Image Reflection Removal Using Deep Learning," arXiv:2502.08836, 2025.',
+    # [2] VERIFIED: Author order corrected (Kupec and Hong were swapped)
+    '[2] D. Reis, J. Hong, J. Kupec, and A. Daoudi, "Real-Time Flying Object Detection with YOLOv8," arXiv:2305.09972, 2023.',
+    # [3] VERIFIED: DOI s23052533 pointed to WRONG paper (swimming pool IoT)! Corrected to article 2546
+    '[3] F. Lu, C. Tang, T. Liu, Z. Zhang, and L. Li, "Multi-Attention Segmentation Networks Combined with the Sobel Operator for Medical Images," Sensors, vol. 23, no. 5, p. 2546, 2023. doi: 10.3390/s23052546.',
     # [4] VERIFIED: Correct
-    '[4] Z. Dong, K. Xu, Y. Yang, H. Bao, W. Xu, and R. W. H. Lau, "Location-aware Single Image Reflection Removal," in Proc. IEEE/CVF ICCV, 2021, pp. 5017-5026.',
-    # [6] VERIFIED: arXiv:2203.06306; authors confirmed from arXiv metadata
-    '[6] J.-J. Huang, T. Liu, Z. Yang, S. Fu, W. Zhao, and P. L. Dragotti, "DURRNet: Deep Unfolded Single Image Reflection Removal Network," arXiv:2203.06306, 2022.',
-    # [7] REMOVED: uncited in body text — deleted from references
-    # [8] VERIFIED: arXiv:2402.02374; authors confirmed from arXiv metadata
-    '[8] T. Wang, W. Lu, K. Zhang, T. Lu, and M.-H. Yang, "PromptRR: Diffusion Models as Prompt Generators for Single Image Reflection Removal," arXiv:2402.02374, 2024.',
-    # [9] VERIFIED: arXiv:2502.08836; first author K. Yang (Kangning), not Z. Yang
-    '[9] K. Yang et al., "A Comprehensive Survey on Single Image Reflection Removal Using Deep Learning," arXiv:2502.08836, 2025.',
-    # [12] REMOVED: uncited in body text (was cited in §2.2 but corrected to [14]) — deleted from references
+    '[4] S. Woo, J. Park, J.-Y. Lee, and I. S. Kweon, "CBAM: Convolutional Block Attention Module," in Proc. ECCV, 2018, pp. 3-19.',
+    # [5] VERIFIED: Authors corrected from wrong list
+    '[5] Z. Chi, X. Wu, X. Shu, and J. Gu, "Single Image Reflection Removal Using Deep Encoder-Decoder Network," arXiv:1802.00094, 2018.',
+    # [6] VERIFIED: Title/venue correct; authors corrected from wrong list
+    '[6] Q. Fan, J. Yang, G. Hua, B. Chen, and D. Wipf, "A Generic Deep Architecture for Single Image Reflection Removal and Image Smoothing," in Proc. IEEE ICCV, 2017, pp. 3238-3247.',
+    # [7] VERIFIED: Correct
+    '[7] C. Li, Y. Yang, K. He, S. Lin, and J. E. Hopcroft, "Single Image Reflection Removal through Cascaded Refinement," in Proc. IEEE/CVF CVPR, 2020, pp. 3566-3574.',
+    # [8] VERIFIED: Correct
+    '[8] Z. Dong, K. Xu, Y. Yang, H. Bao, W. Xu, and R. W. H. Lau, "Location-aware Single Image Reflection Removal," in Proc. IEEE/CVF ICCV, 2021, pp. 5017-5026.',
+    # [9] VERIFIED: arXiv:2203.06306; authors confirmed from arXiv metadata
+    '[9] J.-J. Huang, T. Liu, Z. Yang, S. Fu, W. Zhao, and P. L. Dragotti, "DURRNet: Deep Unfolded Single Image Reflection Removal Network," arXiv:2203.06306, 2022.',
+    # [10] VERIFIED: arXiv:2402.02374; authors confirmed from arXiv metadata
+    '[10] T. Wang, W. Lu, K. Zhang, T. Lu, and M.-H. Yang, "PromptRR: Diffusion Models as Prompt Generators for Single Image Reflection Removal," arXiv:2402.02374, 2024.',
+    # [11] VERIFIED: Correct
+    '[11] I. Goodfellow et al., "Generative Adversarial Nets," in Adv. Neural Inf. Process. Syst. (NeurIPS), 2014, pp. 2672-2680.',
+    # [12] VERIFIED: Correct
+    '[12] M. Mirza and S. Osindero, "Conditional Generative Adversarial Nets," arXiv:1411.1784, 2014.',
     # [13] VERIFIED: Correct
     '[13] P. Isola, J.-Y. Zhu, T. Zhou, and A. A. Efros, "Image-to-Image Translation with Conditional Adversarial Networks," in Proc. IEEE CVPR, 2017, pp. 1125-1134.',
     # [14] VERIFIED: Correct
     '[14] J.-Y. Zhu, T. Park, P. Isola, and A. A. Efros, "Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks," in Proc. IEEE ICCV, 2017, pp. 2223-2232.',
     # [15] VERIFIED: Correct
-    '[15] M. Mirza and S. Osindero, "Conditional Generative Adversarial Nets," arXiv:1411.1784, 2014.',
+    '[15] M.-Y. Liu et al., "Generative Adversarial Networks for Image and Video Synthesis: Algorithms and Applications," Proc. IEEE, vol. 109, no. 5, pp. 839-862, 2021.',
+    # [16] VERIFIED: Correct (arXiv 2017, TPAMI journal 2020)
+    '[16] J. Hu, L. Shen, S. Albanie, G. Sun, and E. Wu, "Squeeze-and-Excitation Networks," IEEE Trans. Pattern Anal. Mach. Intell., vol. 42, no. 8, pp. 2011-2023, 2020.',
     # [17] VERIFIED: Correct
-    '[17] M.-Y. Liu et al., "Generative Adversarial Networks for Image and Video Synthesis: Algorithms and Applications," Proc. IEEE, vol. 109, no. 5, pp. 839-862, 2021.',
+    '[17] Y. Cao, J. Xu, S. Lin, F. Wei, and H. Hu, "GCNet: Non-local Networks Meet Squeeze-Excitation Networks and Beyond," in Proc. IEEE ICCVW, 2019, pp. 1971-1980.',
+    # [18] VERIFIED: Correct
+    '[18] X. Wang, R. Girshick, A. Gupta, and K. He, "Non-local Neural Networks," in Proc. IEEE/CVF CVPR, 2018, pp. 7794-7803.',
     # [19] VERIFIED: Correct
-    '[19] I. Goodfellow et al., "Generative Adversarial Nets," in Adv. Neural Inf. Process. Syst. (NeurIPS), 2014, pp. 2672-2680.',
+    '[19] S. Xie and Z. Tu, "Holistically-Nested Edge Detection," in Proc. IEEE ICCV, 2015, pp. 1395-1403.',
+    # [20] VERIFIED: Title corrected (Generic→Camouflaged); venue corrected (ECCV→Machine Intelligence Research 2023)
+    '[20] G. Ji, D.-P. Fan, Y.-C. Chou, D. Dai, A. Liniger, and L. Van Gool, "Deep Gradient Learning for Efficient Camouflaged Object Detection," Mach. Intell. Res., vol. 20, no. 1, pp. 92-108, 2023.',
     # [21] VERIFIED: Correct
-    '[21] S. Woo, J. Park, J.-Y. Lee, and I. S. Kweon, "CBAM: Convolutional Block Attention Module," in Proc. ECCV, 2018, pp. 3-19.',
-    # [22] VERIFIED: Correct (arXiv 2017, TPAMI journal 2020)
-    '[22] J. Hu, L. Shen, S. Albanie, G. Sun, and E. Wu, "Squeeze-and-Excitation Networks," IEEE Trans. Pattern Anal. Mach. Intell., vol. 42, no. 8, pp. 2011-2023, 2020.',
-    # [23] VERIFIED: DOI s23052533 pointed to WRONG paper (swimming pool IoT)! Corrected to article 2546
-    '[23] F. Lu, C. Tang, T. Liu, Z. Zhang, and L. Li, "Multi-Attention Segmentation Networks Combined with the Sobel Operator for Medical Images," Sensors, vol. 23, no. 5, p. 2546, 2023. doi: 10.3390/s23052546.',
+    '[21] H. Zunair and A. B. Hamza, "Sharp U-Net: Depthwise Convolutional Network for Biomedical Image Segmentation," Comput. Biol. Med., vol. 139, p. 104941, 2021.',
+    # [22] VERIFIED: Authors corrected (J. Li/W. Liu → H. Li/J. Liu); title corrected to match actual paper
+    '[22] H. Li and J. Liu, "Edge, Structure and Texture Refinement for Retrospective High Quality MRI Restoration using Deep Learning," in Proc. IEEE ISBI, 2021.',
+    # [23] VERIFIED: Correct
+    '[23] O. Ronneberger, P. Fischer, and T. Brox, "U-Net: Convolutional Networks for Biomedical Image Segmentation," in Proc. MICCAI, 2015, pp. 234-241.',
     # [24] VERIFIED: Correct
-    '[24] X. Wang, R. Girshick, A. Gupta, and K. He, "Non-local Neural Networks," in Proc. IEEE/CVF CVPR, 2018, pp. 7794-7803.',
-    # [26] VERIFIED: Correct
-    '[26] Y. Cao, J. Xu, S. Lin, F. Wei, and H. Hu, "GCNet: Non-local Networks Meet Squeeze-Excitation Networks and Beyond," in Proc. IEEE ICCVW, 2019, pp. 1971-1980.',
-    # [29] VERIFIED: Correct
-    '[29] S. Xie and Z. Tu, "Holistically-Nested Edge Detection," in Proc. IEEE ICCV, 2015, pp. 1395-1403.',
-    # [31] VERIFIED: Title corrected (Generic→Camouflaged); venue corrected (ECCV→Machine Intelligence Research 2023)
-    '[31] G. Ji, D.-P. Fan, Y.-C. Chou, D. Dai, A. Liniger, and L. Van Gool, "Deep Gradient Learning for Efficient Camouflaged Object Detection," Mach. Intell. Res., vol. 20, no. 1, pp. 92-108, 2023.',
-    # [33] VERIFIED: Authors corrected (J. Li/W. Liu → H. Li/J. Liu); title corrected to match actual paper
-    '[33] H. Li and J. Liu, "Edge, Structure and Texture Refinement for Retrospective High Quality MRI Restoration using Deep Learning," in Proc. IEEE ISBI, 2021.',
-    # [36] VERIFIED: Correct
-    '[36] R. Zhang, P. Isola, A. A. Efros, E. Shechtman, and O. Wang, "The Unreasonable Effectiveness of Deep Features as a Perceptual Metric," in Proc. IEEE/CVF CVPR, 2018, pp. 586-595.',
-    # [37] VERIFIED: Correct
-    '[37] H. Zunair and A. B. Hamza, "Sharp U-Net: Depthwise Convolutional Network for Biomedical Image Segmentation," Comput. Biol. Med., vol. 139, p. 104941, 2021.',
-    # [42] VERIFIED: Author order corrected (Kupec and Hong were swapped)
-    '[42] D. Reis, J. Hong, J. Kupec, and A. Daoudi, "Real-Time Flying Object Detection with YOLOv8," arXiv:2305.09972, 2023.',
-    # [44] REMOVED: uncited in body text — deleted from references
-    # [A] VERIFIED: Correct (standard SSIM paper)
-    '[A]  Z. Wang, A. C. Bovik, H. R. Sheikh, and E. P. Simoncelli, "Image Quality Assessment: From Error Visibility to Structural Similarity," IEEE Trans. Image Process., vol. 13, no. 4, pp. 600-612, Apr. 2004.',
-    # [B] VERIFIED: Correct
-    '[B]  O. Ronneberger, P. Fischer, and T. Brox, "U-Net: Convolutional Networks for Biomedical Image Segmentation," in Proc. MICCAI, 2015, pp. 234-241.',
-    # [GAP-E] VERIFIED: Correct
-    '[GAP-E] R. Wan, B. Shi, L.-Y. Duan, A.-H. Tan, and A. C. Kot, "Benchmarking Single-Image Reflection Removal Algorithms," in Proc. IEEE ICCV, 2017, pp. 3942-3950.',
-    # [RFC] VERIFIED: Correct (arXiv:2103.04273, CVPR 2021)
-    '[RFC] C. Lei and Q. Chen, "Robust Reflection Removal with Reflection-free Flash-only Cues," in Proc. IEEE/CVF CVPR, 2021, pp. 14811-14820.',
-    # [ERRNET] VERIFIED: Completely wrong paper; corrected to Wei et al. CVPR 2019 (github.com/Vandermode/ERRNet)
-    '[ERRNET] K. Wei, J. Yang, Y. Fu, D. Wipf, and H. Huang, "Single Image Reflection Removal Exploiting Misaligned Training Data and Network Enhancements," in Proc. IEEE/CVF CVPR, 2019.',
-    # [Blau18] NEW: arXiv:1711.06077; CONFIRMED from ar5iv full text — perception-distortion tradeoff theorem
-    '[Blau18] Y. Blau and T. Michaeli, "The Perception-Distortion Tradeoff," in Proc. IEEE/CVF CVPR, 2018, pp. 6228-6237.',
-    # [Ledig17] NEW: arXiv:1609.04802; CONFIRMED from ar5iv full text — MSE/overly-smooth + GAN perceptual quality
-    '[Ledig17] C. Ledig et al., "Photo-Realistic Single Image Super-Resolution Using a Generative Adversarial Network," in Proc. IEEE/CVF CVPR, 2017, pp. 4681-4690.',
+    '[24] R. Wan, B. Shi, L.-Y. Duan, A.-H. Tan, and A. C. Kot, "Benchmarking Single-Image Reflection Removal Algorithms," in Proc. IEEE ICCV, 2017, pp. 3942-3950.',
+    # [25] VERIFIED: Completely wrong paper; corrected to Wei et al. CVPR 2019 (github.com/Vandermode/ERRNet)
+    '[25] K. Wei, J. Yang, Y. Fu, D. Wipf, and H. Huang, "Single Image Reflection Removal Exploiting Misaligned Training Data and Network Enhancements," in Proc. IEEE/CVF CVPR, 2019.',
+    # [26] VERIFIED: Correct (arXiv:2103.04273, CVPR 2021)
+    '[26] C. Lei and Q. Chen, "Robust Reflection Removal with Reflection-free Flash-only Cues," in Proc. IEEE/CVF CVPR, 2021, pp. 14811-14820.',
+    # [27] VERIFIED: Correct (standard SSIM paper)
+    '[27] Z. Wang, A. C. Bovik, H. R. Sheikh, and E. P. Simoncelli, "Image Quality Assessment: From Error Visibility to Structural Similarity," IEEE Trans. Image Process., vol. 13, no. 4, pp. 600-612, Apr. 2004.',
+    # [28] VERIFIED: Correct
+    '[28] R. Zhang, P. Isola, A. A. Efros, E. Shechtman, and O. Wang, "The Unreasonable Effectiveness of Deep Features as a Perceptual Metric," in Proc. IEEE/CVF CVPR, 2018, pp. 586-595.',
+    # [29] NEW: arXiv:1711.06077; CONFIRMED from ar5iv full text — perception-distortion tradeoff theorem
+    '[29] Y. Blau and T. Michaeli, "The Perception-Distortion Tradeoff," in Proc. IEEE/CVF CVPR, 2018, pp. 6228-6237.',
+    # [30] NEW: arXiv:1609.04802; CONFIRMED from ar5iv full text — MSE/overly-smooth + GAN perceptual quality
+    '[30] C. Ledig et al., "Photo-Realistic Single Image Super-Resolution Using a Generative Adversarial Network," in Proc. IEEE/CVF CVPR, 2017, pp. 4681-4690.',
 ]
 
 for r_text in references:

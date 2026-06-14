@@ -1,8 +1,8 @@
 # PAPER_STATUS.md — AI GO CVGIP 論文狀態追蹤
 
-Last updated: 2026-06-14（依官方 CVGIP-2026 Word 範本完成全面格式重排：雙 section 版面、
-set_two_col() 欄間距 bug 修正、真實作者/單位/Email 資訊、新增 h3() 子標題樣式，
-PDF 10 頁逐頁視覺驗證通過，詳見本文件最新章節）
+Last updated: 2026-06-14（整合使用者手動編輯版本 `(4).docx` 之 6 處差異（Fig.4/5/8 圖片與
+caption、AI GO 2024 獎項提及全面移除、Acknowledgement 刪除）+ 引用全面重新編號
+[1]-[42]+命名引用 → 連續 [1]-[30]，PDF 由 10 頁變為 9 頁，逐頁視覺驗證通過，詳見本文件最新章節）
 
 ---
 
@@ -20,8 +20,8 @@ PDF 10 頁逐頁視覺驗證通過，詳見本文件最新章節）
 
 | 檔案 | 說明 | 狀態 |
 |------|------|------|
-| `cvgip2025_chinese.py` | 中文版 docx 生成腳本（主線） | ✅ v4 官方範本格式重排（2026-06-14） |
-| `cvgip2025_SGA_chinese.docx` | 上述腳本生成的 docx | ✅ 已生成，10 頁，符合官方範本版面規格 |
+| `cvgip2025_chinese.py` | 中文版 docx 生成腳本（主線） | ✅ v5 整合使用者編輯 + 引用重新編號[1]-[30]（2026-06-14） |
+| `cvgip2025_SGA_chinese.docx` | 上述腳本生成的 docx | ✅ 已生成，9 頁，符合官方範本版面規格 |
 | `cvgip2025_reflection_removal.py` | 英文版腳本 | ⚠️ 舊版，尚未同步 v2 修改 |
 | `cvgip2025_SGA_reflection_removal.docx` | 英文版 docx | ⚠️ 舊版 |
 
@@ -516,3 +516,81 @@ Engineering」「National University of Tainan」為翻譯推斷，非官方英�
   獨立 section 佔用空間 + 欄間距修正為正確的 8.01mm 後文字重排；第10頁僅為 References 溢頁）
 - PDF 10 頁逐頁視覺確認：標題頁（單欄置中）、作者/單位/Email 區塊、Abstract 起雙欄、
   Keywords 半角冒號+Times 字體、H1/H2/H3 三層標題樣式、表1/表2三線表、圖1-8 全部正確渲染
+
+---
+
+## 2026-06-14 整合使用者手動編輯 + 引用全面重新編號 — 已完成
+
+使用者下載 `cvgip2025_SGA_chinese.docx` 後手動編輯，產生 `D:\Download\cvgip2025_SGA_chinese (4).docx`，
+透過 `diff_docx_edits.py` 比對出與腳本產出版本的 6 處差異，使用者回覆「1.是刻意 3.重新編號」——
+即 Fig.4 圖片重複序列為**刻意設計**，且引用全面重新編號採用完整 [1]-[30] 方案（非僅命名引用）。
+全部 6 處差異 + 重新編號已整合回 `cvgip2025_chinese.py`。
+
+### A. AI GO 2024 競賽獎項提及 — 全面移除（3 處）
+- Abstract 第（3）項：刪除「並獲 AI GO 2024 競賽最佳實作獎肯定」子句
+- Conclusion：刪除「系統性地」一詞 + 刪除「並獲 AI GO 2024 競賽最佳實作獎肯定」子句
+- **Acknowledgement 整節刪除**（原內容感謝「【博物館/合作單位名稱】」並提及競賽評審委員會最佳實作獎）
+
+### B. 新增 `fig_row()` helper（插入於 `fig()` 之後、`ref()` 之前）
+於單一置中段落中插入多張行內圖片，由 Word 依雙欄欄寬自動換行排版成網格；缺檔處理與 `fig()`
+一致（`print(f"  [fig_row] missing, skipped: {path}")`）。簽名：
+`fig_row(doc, filenames: list[str], width_in: float = 0.95)`。
+
+### C. 圖4（§4.3）— 改為 7 圖序列（**使用者確認為刻意設計**）
+- 舊：`fig(doc, 'show.png')` 單圖，caption 含「3 組 Original/Generated 對比」
+- 新：`fig_row(doc, ['show1.png','show2.png','show3.png','show1.png','show4.png','show5.png','show3.png'])`
+  （即 image5,6,7,5,8,9,7 序列，show1/show3 刻意各重複出現一次）
+- caption 移除「3 組」字樣
+- 新增素材：`matherial/show1.png`~`show5.png`（取自使用者編輯版 docx 的 `word/media/image5~9.png`）
+
+### D. 圖5（§4.4）— caption 拆段
+- 舊：單段 caption，含「（5 組展品）」
+- 新：拆為兩段——「圖 5. 博物館藏品跨場景視覺比較。」/「上排：含反光原始影像（Original）；
+  下排：Pix2Pix+SGA 反光消除結果（Generated）。」；圖片本身（`visual_comparison.png`）未變更
+
+### E. 圖8（§4.6）— 改為每排 5 圖（原為每排 1 圖）
+- 舊：`fig(doc, '原跑原7.jpg')` + `fig(doc, '消跑原7.jpg')`，caption 含「三個物件的辨識信心值分別由
+  0.76、0.48、0.64 提升至 0.93、0.85、0.81」
+- 新：`fig_row(doc, ['原跑原7_1.jpg'..'原跑原7_5.jpg'])`（上排）+
+  `fig_row(doc, ['消跑原7_1.jpg'..'消跑原7_5.jpg'])`（下排）；caption 移除信心值數字句
+- 新增素材：`matherial/原跑原7_1~5.jpg`、`消跑原7_1~5.jpg`（取自使用者編輯版 docx 的
+  `word/media/image14-23.jpeg`；`_5` 兩檔與舊版 `原跑原7.jpg`/`消跑原7.jpg` byte-identical）
+
+### F. 引用全面重新編號：[1]-[42]+7個命名引用（共 30 條，混合編號含跳號）→ 連續 [1]-[30]
+透過一次性腳本 `renumber_citations.py` 執行：
+- 依「正文首次出現順序」建立 30 條 `MAP`（舊 key → 新 1-30）
+- 正文 `【...】` 標記：46 處全部重寫成功（含多引用 `【13, B】`→`【13】【23】` 拆分為相鄰兩個方括號）
+- references 區塊：30 條 entry 全部依新編號重排；3 條 `# [N] REMOVED: ...` 純註解行
+  （舊 [7]/[12]/[44]，原本就未被正文引用，僅為歷史跳號記錄）**直接刪除**
+
+**新→舊→論文對照**：[1]=K.Yang SIRR Survey([9])｜[2]=YOLOv8([42])｜[3]=Lu SMA-Net([23])｜
+[4]=CBAM([21])｜[5]=Chi2018([3])｜[6]=CEILNet([1])｜[7]=IBCLN([2])｜[8]=Location-aware SIRR([4])｜
+[9]=DURRNet([6])｜[10]=PromptRR([8])｜[11]=GAN([19])｜[12]=cGAN([15])｜[13]=Pix2Pix([13])｜
+[14]=CycleGAN([14])｜[15]=GAN Survey([17])｜[16]=SENet([22])｜[17]=GCNet([26])｜
+[18]=Non-local NN([24])｜[19]=HED([29])｜[20]=DGNet([31])｜[21]=Sharp U-Net([37])｜
+[22]=Li&Liu MRI([33])｜[23]=U-Net([B])｜[24]=SIR²/GAP-E([GAP-E])｜[25]=ERRNet([ERRNET])｜
+[26]=RFC Flash Reflection([RFC])｜[27]=SSIM([A])｜[28]=LPIPS([36])｜
+[29]=Perception-Distortion Tradeoff([Blau18])｜[30]=SRGAN([Ledig17])
+
+`citation_verification_record.md`：於檔頭（`## 使用說明` 之前）新增「## 〇、引用編號對照表
+（2026-06-14 全面重新編號）」，完整新→舊對照表。**檔案其餘 ~800 行（各 `### [KEY]` 小節、
+bibkey 欄位、§6 討論）維持舊編號不變**——任務「edge=high-gradient 補引用」與「§6 過度推論修正」
+範圍未受影響，仍待後續處理。
+
+### 重新產出 + 視覺驗證
+- 執行 `cvgip2025_chinese.py` → `cvgip2025_SGA_chinese.docx`（無 `[fig]`/`[fig_row] missing` 警告）
+- 執行 `docx_to_pdf.py` → `cvgip2025_SGA_chinese.pdf`，**由 10 頁變為 9 頁**（Acknowledgement
+  刪除 + 文字精簡 + 圖版面變化所致）
+- `Read(pdf, pages="1-10")` 逐頁視覺確認 9 頁全部正確：A-F 全部變更均正確渲染，圖1-8 完整
+
+### ⚠️ 發現但未修改（超出本次「僅整合使用者編輯」範圍，flag 待決）
+§4.6 body 文字仍寫：「三個物件的辨識信心值分別由 0.76、0.48、0.64 提升至 0.93、0.85、0.81」。
+此句在原 1+1 圖版面下對應單一範例；圖8 現已改為每排 5 張範例（`原跑原7_1~5.jpg`/`消跑原7_1~5.jpg`），
+`_5` 兩檔與舊版 byte-identical（最可能是該數字的原始來源），但 body 文字未指明對應哪一組。
+caption 本身已移除該數字句（見上 E），僅 body 段落殘留此句。**建議**：若保留此句，可加註
+「以下方第 5 組範例為例」；本次未動，因不在使用者本次 docx 編輯範圍內，需使用者後續核准。
+
+### 待辦
+- `renumber_citations.py` + `cvgip2025_chinese.py.bak_before_renumber`：一次性腳本/備份，
+  確認無誤後可刪除
+- 推送至 GitHub（`github/paper/`）並回連結

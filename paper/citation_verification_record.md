@@ -4,6 +4,48 @@
 
 ---
 
+## 〇、引用編號對照表（2026-06-14 全面重新編號）
+
+`cvgip2025_chinese.py` 已於 2026-06-14 將所有引用由「混合編號（[1]-[42] 含跳號）+
+命名引用（[A][B][GAP-E][RFC][ERRNET][Blau18][Ledig17]）」全面改為依文件首次出現順序
+連續編號 [1]-[30]。**本記錄檔下方各小節標題與 bibkey 欄位仍使用「舊編號」**（記錄建立
+時的編號），下表為舊編號 → 新編號對照，供交叉查核：
+
+| 新編號 | 舊編號（本記錄使用） | 論文 |
+|---|---|---|
+| [1] | [9] | SIRR Survey 2025 |
+| [2] | [42] | YOLOv8 |
+| [3] | [23] | Lu et al. — Sobel + Multi-Attention for Medical Images |
+| [4] | [21] | CBAM |
+| [5] | [3] | Chi 2018 — Deep Encoder-Decoder for SIRR |
+| [6] | [1] | CEILNet |
+| [7] | [2] | IBCLN |
+| [8] | [4] | Location-aware SIRR |
+| [9] | [6] | DURRNet |
+| [10] | [8] | PromptRR |
+| [11] | [19] | GAN (Goodfellow 2014) |
+| [12] | [15] | cGAN |
+| [13] | [13] | Pix2Pix |
+| [14] | [14] | CycleGAN |
+| [15] | [17] | GAN Survey (Image/Video Synthesis) |
+| [16] | [22] | SENet |
+| [17] | [26] | GCNet |
+| [18] | [24] | Non-local Neural Networks |
+| [19] | [29] | HED |
+| [20] | [31] | DGNet |
+| [21] | [37] | Sharp U-Net |
+| [22] | [33] | Li & Liu — MRI Restoration with Edge Loss |
+| [23] | [B] | U-Net |
+| [24] | [GAP-E] | SIR² |
+| [25] | [ERRNET] | ERRNet |
+| [26] | [RFC] | Flash Reflection Removal (RFC) |
+| [27] | [A] | SSIM |
+| [28] | [36] | LPIPS |
+| [29] | [Blau18] | Perception-Distortion Tradeoff |
+| [30] | [Ledig17] | SRGAN |
+
+---
+
 ## 使用說明
 - ✅ CONFIRMED：原文已讀，引述可直接用於論文
 - ⚠️ PARTIAL：arXiv 摘要已讀，方向正確，未讀 PDF 全文
@@ -775,3 +817,95 @@ GAN-based 方法在感知品質（perceptual quality）較好時，PSNR/SSIM 往
 - SGA-256 在 ep400 後幾乎收斂（ep500 僅微幅改善）
 - SGA-512 ep360 PSNR/SSIM 均優於 SGA-256 全部 epoch，但 LPIPS 反而比 SGA-256 ep400/500 差（高頻細節上 512px 訓練不足）
 - Baseline 在三項指標均高於所有 SGA checkpoint → 需用 [Blau18]/[Ledig17] 解釋此現象
+
+---
+
+## 六、§1 / §3.2.1 核心物理基礎宣稱 — 引用驗證 (2026-06-14)
+
+**待驗證宣稱（原文，出現於兩處）：**
+> 「反光因光線擴散呈現低頻、低梯度特性，物件邊緣因材質突變呈現高頻、高梯度響應；
+> 這兩項區別特性是物理性質，與場景 domain 無關。」
+
+出現位置：
+- §1 Introduction，cvgip2025_chinese.py 第 364-366 行
+- §3.2.1 Sobel 特徵萃取，cvgip2025_chinese.py 第 528-532 行
+
+此宣稱是整個 SGA 模組「為何能跨場景泛化」的核心物理論證依據。
+
+---
+
+### A. 反光 = 低頻/低梯度 半句 — 既有引用 [1] CEILNet
+
+| 欄位 | 內容 |
+|------|------|
+| **bibkey** | [1]（已在本文 bib 中） |
+| **PDF** | `matherial/papers/01_ceilnet_fan2017.pdf`，已讀 pp.1-3 |
+| **驗證狀態** | ⚠️ PARTIAL |
+
+**驗證原文（直接引述）：**
+> "However, one exploitable property in the reflection removal problem is that the gradients or perceptual structures of the two layers exhibit different distributions, since reflections often display a greater degree of blurring." (p.1-2)
+
+**關鍵反例／但書（CRITICAL CAVEAT，p.2 Related Work）：**
+> "...assumes the reflected layer is relatively blurry compared to the background scene, thus large gradients in it are strongly penalized... However, we observe that the reflection in many real-world photographs, although indeed sometimes out of focus or blurry, is nonetheless produced by bright lights and often comprises the brightest portion of an image. **The regional gradients associated with these reflections can therefore be quite large, violating the assumption** in [their ref]."
+
+**結論：** [1] 支持「反光**往往**呈現較低梯度／較模糊」的**一般趨勢**，但明確指出**強光反光可產生大梯度**，違反該假設的絕對版本。CEILNet 自己用詞是 "mild reflection smoothness assumption"（溫和假設），不是絕對物理定律。
+
+---
+
+### B. 反光 = 低頻/低梯度 半句 — 既有引用 [4] Location-aware SIRR
+
+| 欄位 | 內容 |
+|------|------|
+| **bibkey** | [4]（已在本文 bib 中） |
+| **PDF** | `matherial/papers/04_location_aware_dong2020.pdf`，已讀 pp.1-3 |
+| **驗證狀態** | ⚠️ PARTIAL |
+
+**驗證原文（直接引述，p.2）：**
+> "Observing that reflection layers are usually out of focus and appear to be more blurry than transmission layers, Li et al. [24] introduced a relative smoothness prior to distinguish the gradients of the two layers with different probability distributions."
+
+> "...priors are necessary to constrain the solution space, such as natural image gradient sparsity [21, 22], ghosting cues for thick glasses [34], and relative smoothness that assumes the reflection layer is smoother than the transmission layer [24, 52]."
+
+**結論：** [4] 將「反光較平滑/低梯度」明確定位為一個**先驗假設（prior）**，且歸功於第三方論文 Li et al.（其 [24]，即下方 C 項），[4] 自身的方法貢獻正是處理**違反此簡單先驗的強反光**情況。同樣是 ⚠️ PARTIAL——支持「先驗/趨勢」框架，不支持絕對物理定律框架。
+
+---
+
+### C. 反光 = 低頻/低梯度 半句 — 新文獻 Li & Brown 2014（relative smoothness prior 原始出處，**尚未在本文 bib 中**）
+
+| 欄位 | 內容 |
+|------|------|
+| **作者** | Yu Li, Michael S. Brown |
+| **標題** | Single Image Layer Separation using Relative Smoothness |
+| **發表** | Proc. IEEE CVPR, 2014 |
+| **arXiv** | 無（CVF Open Access：cv-foundation.org/openaccess/content_cvpr_2014/papers/Li_Single_Image_Layer_2014_CVPR_paper.pdf） |
+| **驗證狀態** | ✅ CONFIRMED（已讀 pp.1-2 全文） |
+
+**驗證原文（直接引述）：**
+> Abstract: "This paper addresses extracting two layers from an image where one layer is smoother than the other... We introduce a novel strategy that regularizes the gradients of the two layers such that one has a long tail distribution and the other a short tail distribution."
+
+> Fig.1 caption (p.1): "In both of these problems one layer has fewer large gradients than the other layer."
+
+> §1 (p.1), 反光模糊的物理機制描述: "...modified version based on Schechner et al.'s [14] proposition of using focus such that the desired layer is more in focus while the reflection is blurred. This can be expressed as: I = L_B + L_R * h, where the reflection layer is convolved with the depth of field kernel h modelled as a Gaussian blur."
+
+**結論：** 這是「relative smoothness prior」的**原始出處**——[1]、[4] 都是引用/沿用這個先驗。它本身也是把「反光層梯度分布與背景層不同（短尾 vs. 長尾分布）」當作一個**用於正則化病態反問題的建模假設（prior）**，而非經驗證的跨場景物理定律；其物理機制描述為**鏡頭景深造成的失焦模糊（defocus / Gaussian blur kernel）**，與本文「光線擴散」用詞不完全相同（但屬於相關的、會降低反光層空間頻率的光學成因）。**未明確討論「domain-independent」**。
+
+**注意：** 此論文目前不在本文 30 篇參考文獻中，若採用需新增 bib entry。
+
+---
+
+### D. 物件邊緣 = 高頻/高梯度 半句 — 結論
+
+物件邊緣因材質/反射率不連續而產生強梯度響應，是梯度型邊緣偵測（Sobel/Canny 等）的**教科書級基礎事實**——本文 §3.2.1 自己定義的 Sobel 核 Kx/Ky 即是直接利用此原理。依 CLAUDE.md §5.0b「眾所周知的數學/技術事實」例外條款，此半句**不需外部文獻佐證**。本次未額外搜尋此半句的獨立引用。
+
+---
+
+### 總結 — 三個來源的共同模式
+
+| 來源 | 是否支持「反光=低梯度」 | 框架 | 是否支持「絕對物理定律、與domain無關」 |
+|------|----------------------|------|--------------------------------|
+| [1] CEILNet | ✅ 一般趨勢 | "mild assumption"，**有強光反光大梯度的反例** | ❌ |
+| [4] Location-aware | ✅ 一般趨勢 | "prior"，歸功第三方，整篇論文在處理違反此 prior 的案例 | ❌ |
+| Li & Brown 2014 | ✅ 原始來源 | "prior"／regularization assumption，物理機制=景深失焦模糊 | ❌（未討論 domain-independence） |
+
+**核心發現：** 三個來源一致將「反光較平滑/低梯度」描述為 SIRR 文獻中廣泛使用的**先驗假設／一般趨勢**，但**沒有一篇**將其陳述為無條件成立、與場景 domain 無關的絕對物理定律——[1] 甚至明確給出反例（強光反光梯度可以很大）。因此 cvgip2025_chinese.py 第 364-366 / 528-532 行目前的**絕對化措辭**（「這兩項區別特性是物理性質，與場景 domain 無關」當作既定事實陳述）超出了現有文獻（含三篇已核實來源）所能直接支持的範圍。
+
+**建議：** 改為「先驗/趨勢」型措辭（如「往往」、「在 SIRR 文獻中已被廣泛作為先驗假設」），並引用 [1][4]（已在 bib 中，零成本）；若要更扎實，可額外新增 Li & Brown 2014 作為原始出處引用。詳細措辭提案見對話紀錄（待使用者核可後寫入 .py）。
