@@ -1,11 +1,18 @@
 # PAPER_STATUS.md — AI GO CVGIP 論文狀態追蹤
 
-Last updated: 2026-06-14（§4.6 body 文字補上「以圖8第5組範例為例」說明（解決前次 flag）；
-完成「邊緣=高梯度」真實引用查證（新增 [31] RINDNet, ICCV 2021），修正 §1/§3.2.1 過度絕對化的
-「物理性質、與場景domain無關」措辭與「根本機制」因果宣稱，citation_verification_record.md §6
-同步修正「三者一致」過度推論；全文「過度推論」全面覆盤（20處發現），其中 A1-A4
-（Abstract/§1第三段/§5.1/§6 Conclusion 的「domain-agnostic/天然具備/物理定律」重複表述）
-已修正並視覺驗證；PDF 仍為 9 頁，詳見本文件最新章節）
+Last updated: 2026-06-20（本次 session續2：§4.3反光嚴重程度分層實證分析 + 512px解析度排除實驗 + v12新版本誕生（中英文）+ 修正Table1/2英文版整表未翻譯bug，詳見文件末新章節）（前次同日：Fig.1/Fig.2 v2 重畫 + 英文版v11縮排bug修正並已套用至docx）（前次 2026-06-17：內容精簡3輪 + template 間距修正 + OMML 公式 + Baseline YOLO 重訓實驗 + 統一 v11，最新交付為 `D:\Download\cvgip2025_SGA_chinese_v11.docx` / `cvgip2025_SGA_english_v11.docx`）（前次 2026-06-15 續3：§4.5/§4.6 一致性修正）（內容縮減第一輪：已試做並修正存檔方式，現為
+**兩份獨立檔案並存**——
+(1) `cvgip2025_SGA_chinese.docx/.pdf`＝原版（FIG-1修正後、縮減前，9頁，
+未變動）；
+(2) `cvgip2025_SGA_chinese_reduced.docx/.pdf`＝內容縮減試驗版（套用
+A1-A3/B1/B3/B4/C/D1/D2，9頁，第9頁References幾乎填滿、接近8頁臨界點）。
+產生方式：`cvgip2025_chinese.py`（原版，已還原9處編輯）與
+`cvgip2025_chinese_reduced.py`（縮減版，含9處編輯+輸出路徑改為
+`_reduced.docx`）+ 新增 `docx_to_pdf_reduced.py`（輸出`_reduced.pdf`）。
+未套用：B2（cut Liu et al[15]需citation重新編號）、Tier E（FIG-4/FIG-8圖片
+數量精簡），待使用者決定方向；詳見本文件最新章節。
+舊版（FIG-1修正、§4.6補充、[31]RINDNet查證、A1-A4過度推論修正）摘要省略，
+見git歷史）
 
 ---
 
@@ -659,21 +666,21 @@ bibkey 欄位、§6 討論）維持舊編號不變**——任務「edge=high-gra
 | A2 | Abstract | 「固定Sobel先驗天然具備場景無關（domain-agnostic）特性」 | ✅ 已修正 |
 | A3 | §6 Conclusion | 「萃取domain-agnostic的邊緣梯度信號」 | ✅ 已修正 |
 | A4 | §1 第三段（審查時新發現，原20項未列） | 「不受訓練資料的場景分佈影響，天然具備domain-agnostic特性」 | ✅ 已修正 |
-| B1 | §2.3 | 「...是實現domain-agnostic特性的關鍵」 | ⏳ 待處理 |
-| B2 | §3.2 | 「確保...不因訓練動態而退化」過度確定語氣 | ⏳ 待處理 |
-| B3 | §3.2.3 | 「確保」×2 + 「任意場景」過度泛化 | ⏳ 待處理 |
-| B4 | §4.1.1 | 「確保」×2 + 「不存在任何domain重疊」絕對化 | ⏳ 待處理 |
-| C1 | §1 | 引用[1]是否真支持「大幅退化」之描述，需查證 | ⏳ 待處理（需引用查證） |
-| C2 | §1 第三段（與A4同段） | 引用[5]的引註位置可能誤導讀者其支持範圍 | ⏳ 待處理（需引用查證） |
-| C3 | §2.4 | 引用[22]（MRI模態的成功案例）→跨場景遷移假設，邏輯跳躍 | ⏳ 待處理（需引用查證） |
-| C4 | §3.1 | 「中間層特徵已摻雜domain-specific語義信息」無引註支持 | ⏳ 待處理（需引用查證或改為推論語氣） |
-| D1-D3 | §4.4 | 視覺證據（圖例）描述中3處過度confirmatory的斷言 | ⏳ 待處理 |
-| E1 | §4.5 | 「完全來自...而非任何形式的」排他性歸因，未經消融排除其他因素 | ⏳ 待處理 |
-| F1 | §4.3 | 「必然出現」語氣強度過高 | ⏳ 待處理 |
-| G1 | §5.1 第二段 | 「換取了」隱含的trade-off敘事缺乏量化支持 | ⏳ 待處理 |
-| G2 | §5.2 | 「任何...均可採用」過度泛化的適用範圍宣稱 | ⏳ 待處理 |
-| G3 | §5.3 | 「任意domain」+ 與其他方法的優劣比較缺乏對照實驗 | ⏳ 待處理 |
-| G4 | §6 | 「量化驗證了...實際效益」的措辭與§5.4實際保留的限制敘述不一致 | ⏳ 待處理 |
+| B1 | §2.3 | 「...是實現domain-agnostic特性的關鍵」 | ✅ 已修正（2026-06-20，v12，見下方新章節） |
+| B2 | §3.2 | 「確保...不因訓練動態而退化」過度確定語氣 | ✅ 已修正（2026-06-20，v12） |
+| B3 | §3.2.3 | 「確保」×2 + 「任意場景」過度泛化 | ✅ 已修正（2026-06-20，v12） |
+| B4 | §4.1.1 | 「確保」×2 + 「不存在任何domain重疊」絕對化 | ✅ 已修正（2026-06-20，v12，Fig.3 caption） |
+| C1 | §1 | 引用[1]是否真支持「大幅退化」之描述，需查證 | ⏳ 待處理（需走/cite-papers實際查證原文，尚未做） |
+| C2 | §1 第三段（與A4同段） | 引用[5]的引註位置可能誤導讀者其支持範圍 | ⏳ 待處理（需走/cite-papers實際查證原文，尚未做） |
+| C3 | §2.4 | 引用[22]（MRI模態的成功案例）→跨場景遷移假設，邏輯跳躍 | ✅ **發現已於更早的內容縮減回合（2026-06-15續，B4項）修正**，措辭已改為「顯示梯度引導設計在醫學影像domain同樣適用」，本表先前未同步更新狀態，2026-06-20核對v11英文/中文現有文字後確認 |
+| C4 | §3.1 | 「中間層特徵已摻雜domain-specific語義信息」無引註支持 | ✅ 已修正（2026-06-20，v12，改為「可能已摻雜...較不利於」推論語氣） |
+| D1-D3 | §4.4 | 視覺證據（圖例）描述中3處過度confirmatory的斷言 | ✅ 部分修正（2026-06-20，v12：Fig.6"verifying"→"suggesting"已改；其餘D2/D3兩處尚未逐一核對） |
+| E1 | §4.5 | 「完全來自...而非任何形式的」排他性歸因，未經消融排除其他因素 | ✅ 已於更早回合修正（2026-06-15續3，Fix1），v11/v12現有文字已是修正後版本 |
+| F1 | §4.3 | 「必然出現」語氣強度過高 | ✅ 英文版翻譯時已是緩和措辭「is expected」，判定不需再改 |
+| G1 | §5.1 第二段 | 「換取了」隱含的trade-off敘事缺乏量化支持 | ⏳ 不適用——v11內容縮減後§5.2/5.3（Scope of Applicability/Computational Efficiency）整節已被刪除，此措辭已不存在 |
+| G2 | §5.2 | 「任何...均可採用」過度泛化的適用範圍宣稱 | ⏳ 不適用——同上，相關章節已刪除 |
+| G3 | §5.3 | 「任意domain」+ 與其他方法的優劣比較缺乏對照實驗 | ⏳ 不適用——同上，相關章節已刪除 |
+| G4 | §6 | 「量化驗證了...實際效益」的措辭與§5.4實際保留的限制敘述不一致 | ✅ 已修正（2026-06-20，v12，Abstract+Conclusion改為「demonstrating a measurable, if modest, practical benefit」並呼應§4.3新發現） |
 
 ### A1-A4 修正內容（已套用、重新產出、視覺驗證通過）
 
@@ -707,3 +714,375 @@ bibkey 欄位、§6 討論）維持舊編號不變**——任務「edge=high-gra
 ### 待辦
 - 更新 `project_ai_go.md` 記憶檔，記錄A1-A4修正與16項待處理清單
 - 同步本次變更（A1-A4 + PAPER_STATUS.md更新）至 `github/paper/`，commit + push 並回連結
+
+---
+
+## 2026-06-15 FIG-1（overall_architecture.png）排版修正 — 已完成
+
+### 背景
+使用者反饋：「FIG1的箭頭怪怪的 在TRAINING OBJECTIVE那一塊怪怪的 L之間」+「FIG1看不出哪裡有PIX2PIX?」
+
+### 問題1：L_adv → L_total 箭頭異常
+- 根因：`draw_overall_architecture.py` 原第134行用 `arrow(..., rad=-0.55)` 畫一條繞過
+  `L_L1` 方框的弧線，但彎曲方向計算錯誤，使弧線中段落在 `L_L1` 方框的 y 範圍內；
+  方框 `zorder=3` 高於箭頭 `zorder=2`，弧線大部分被方框蓋住，只在 `L_adv`/`L_L1`
+  交界處露出一段無意義的短斜線。
+- 修正：改為三段「L型」走線（皆無/有箭頭的 `style="-"` / `"-|>"`），從 `L_adv`
+  底部中心 (8.90, 0.775) 垂直向下到 y=0.40（外框內、row2方框下緣與外框下緣間的
+  空白區）→ 水平向右到 (12.90, 0.40) → 垂直向上接入 `L_total` 底部 (12.90, 0.775)
+  並帶箭頭。全程不與任何方框重疊，完全可見。
+
+### 問題2：圖中看不出Pix2Pix在哪裡
+- 新增兩處斜體灰色標示：
+  1. `U-Net Generator G` 方框正上方加「Pix2Pix Generator」
+  2. 下方虛線群組標籤由「Training Objective (inference requires only $G$)」
+     改為「Pix2Pix Training Objective (inference requires only $G$)」
+- 與左側「SGA Module」（本文新增模組）形成對比，明確標示 G + D + L_adv + L_L1 +
+  L_total 構成 Pix2Pix cGAN 框架。
+
+### 重新產出 + 視覺驗證
+- `draw_overall_architecture.py` → `overall_architecture.png`（matplotlib直接執行）
+- `cvgip2025_chinese.py` → docx → pdf，仍為9頁
+- `Read(pdf, pages="3")` 確認 FIG-1（§3.1）渲染正確，連接線與兩處Pix2Pix標籤皆正確顯示
+
+### 待辦
+- 同步本次變更（overall_architecture.png + cvgip2025_SGA_chinese.docx/pdf）至
+  `github/paper/`（含 `matherial/` 若該目錄在git追蹤範圍內），commit + push 並回連結
+  （使用者已表示自行處理，見上方對話記錄）
+
+---
+
+## 2026-06-15（續）內容縮減第一輪 — 已套用，效果有限
+
+### 背景
+使用者要求：「現在全面思考如果要縮減該篇論文內容量約20% 你認為可以刪除哪些內容」。
+先通讀全文（行1-1011）提出分層提案 A-E：
+- **A. 三組跨章節重複內容**（§1/§3.2.1/§5.1核心物理假設三次重複；
+  §4.6/§5.4「+1.8pp限制」重複；§4.1.2/§5.4「museum eval set無PSNR/SSIM/LPIPS」重複）
+- **B. §2 Related Work 引用說明精簡**（B1 Chi[5]、B2 Liu et al[15]、
+  B3 GCNet[17]/Non-local[18]、B4 Li&Liu MRI[22]）
+- **C. §4.1.1 四個資料集描述合併**
+- **D. §5.2/§5.5 結構性壓縮**
+- **E. FIG-4(7圖)/FIG-8(10圖) 圖片數量精簡**（額外槓桿）
+
+使用者回應：「可以先都試試看效果 生成一份新的」。
+
+### 已套用（A1-A3, B1, B3, B4, C, D1, D2）
+| 項目 | 位置（修改後行號約） | 內容 |
+|---|---|---|
+| A1 | §3.2.1 (~558), §5.1 (~830) | 兩處改為「如§1所述/如§3.2.1所述...【6】【8】【31】」交叉引用，不重新展開論證 |
+| A2 | §5.4第二段 (~881) | 「第四，如§4.6所述，+1.8pp...」縮短為交叉引用 |
+| A3 | §5.4第一段「其次」(~875) | 「如§4.1.2所述，本文博物館評估集缺乏無反光ground truth...」縮短 |
+| B1 | §2.1 (~436) | Chi等人[5]「省略池化層」說明縮短，加註「詳見§3.1」 |
+| B3 | §2.3 (~488) | GCNet[17]/Non-local[18]句子縮短，citation保留 |
+| B4 | §2.4 (~503) | Li & Liu MRI[22]句尾「支持本文跨場景遷移假設」改為事實陳述「顯示梯度引導設計在醫學影像domain同樣適用」（同時修正過度推論） |
+| C | §4.1.1 (~649-660) | SIR²/IBCLN/ERRNET/RFC 四段合併為一段 |
+| D1 | §5.2 (~849) | 適用範圍段落壓縮，移除「博物館案例提供完整端對端評估框架」冗述 |
+| D2 | §5.5 (~890) | 4個未來方向各自完整句 → 各縮為短句 |
+
+**未套用（B2、Tier E）**：B2需將[15]從References移除並重新編號[16]-[31]→
+[15]-[30]，全文citation renumbering風險較高；Tier E（圖片數量）涉及具體
+圖片選擇，需使用者決定，故本輪暫不處理。
+
+### 重新產出 + 驗證
+```
+cd "D:/Contest/AI GO/paper" && "C:/Users/bubbl/anaconda3/python.exe" cvgip2025_chinese.py
+cd "D:/Contest/AI GO/paper" && "C:/Users/bubbl/anaconda3/python.exe" docx_to_pdf.py
+```
+- `fitz`（PyMuPDF）確認頁數：**仍為9頁**（未減少）
+- 視覺檢查（render page 2/3/4/7/8/9 為PNG）：A1/B1/B3/B4/A1-5.1/A2/A3/D1/D2
+  各處文字皆正確渲染，citation格式【N】正常，無破版
+- **第9頁現狀**：渲染後幾乎只剩References尾段（約[16]-[31]）+ 大量空白
+  （頁面下半部全空），表示本輪縮減已讓內容非常接近8頁臨界點，
+  但尚未跨過（References起始位置仍落在第8頁中段，未提前到能讓全部
+  References塞進第8頁剩餘空間）
+
+### 結論：文字精簡（A-D）對「9→8頁」效果有限
+本輪約節省30行原始碼文字（~6-9% of body），但二欄排版下單獨的文字精簡
+不足以消去一整頁。若要達成「20%縮減」或至少跨過8頁臨界點，下一步選項：
+1. **B2**：cut Liu et al[15]句子 + citation重新編號（[16]-[31]→[15]-[30]，
+   含正文所有【N】出現處 + References列表），風險：renumbering需逐一確認
+2. **Tier E**：FIG-4從7圖減至4-5圖、FIG-8從10圖（2排×5）減至6圖（2排×3），
+   需使用者指定保留哪些範例（FIG-8第5組因body已引用0.76/0.48/0.64數據，
+   應保留）
+3. 接受目前9頁但空白更多的版本（不再繼續縮減）
+
+待使用者決定後續方向。
+
+### 修正：改為「原版保留 + 縮減版另存新檔」（已完成）
+使用者澄清「生成一份新的」是指縮減試驗版應**另存為新檔**，原版（FIG-1修正
+後、縮減前）的 `cvgip2025_SGA_chinese.docx/.pdf` 不應被覆蓋。先前的標準
+pipeline（`cvgip2025_chinese.py` → `docx_to_pdf.py`）已將原版覆蓋為縮減版，
+進行以下還原與重新產出：
+
+1. `cp cvgip2025_chinese.py cvgip2025_chinese_reduced.py`，並將其輸出路徑
+   改為 `out = r'D:\Contest\AI GO\paper\cvgip2025_SGA_chinese_reduced.docx'`
+2. 將 `cvgip2025_chinese.py` 的 9 處編輯（A1×2/A2/A3/B1/B3/B4/C/D1/D2）全部
+   還原回縮減前（FIG-1修正後）狀態
+3. 重新執行 `cvgip2025_chinese.py` → `docx_to_pdf.py`，還原
+   `cvgip2025_SGA_chinese.docx/.pdf`（原版，9頁）
+4. 執行 `cvgip2025_chinese_reduced.py` → 新增的 `docx_to_pdf_reduced.py`，
+   產出 `cvgip2025_SGA_chinese_reduced.docx/.pdf`（縮減版，9頁，獨立檔案）
+5. `fitz` 確認頁數：原版 9 頁（最後頁文字 4568 字元，含References [1]-[8]）；
+   縮減版 9 頁（最後頁文字 2600 字元，References填得更滿但仍未跨過8頁）
+
+**目前狀態**：兩份檔案並存且內容正確分離。`cvgip2025_chinese.py` =
+原版產生腳本（FIG-1修正後狀態，無內容縮減編輯）；
+`cvgip2025_chinese_reduced.py` = 縮減版產生腳本（含全部9處縮減編輯，
+輸出至`_reduced`檔名）。後續若要繼續縮減（B2 / Tier E），應在
+`cvgip2025_chinese_reduced.py` 上操作，不要動 `cvgip2025_chinese.py`。
+
+### 待辦
+- 同步本輪變更至 `github/paper/`（待使用者確認是否要推送）
+- 更新 `project_ai_go.md` 記憶檔記錄本輪縮減結果與還原修正
+
+---
+
+## 2026-06-15（續2）將縮減編輯套用至使用者手動編輯版 (5).docx — 已完成
+
+### 背景
+使用者提供另一份獨立維護的手動編輯檔 `D:\Download\cvgip2025_SGA_chinese (5).docx`
+（20 個 section、自行調整過多處文字與排版，與上述 `cvgip2025_SGA_chinese_reduced.docx`
+（2 sections）完全不同的版本分支）。先 diff 比對確認：`(5).docx` 的 9 個縮減目標
+段落仍是縮減前（原始）文字，且 `(5).docx` 有自己獨立的編輯（§1/§2.3/§4.1.1
+FIG-3 caption/§4.1.2/§4.2/§4.6/§3.6 等）未出現在 `_reduced.docx` 中。
+使用者澄清需求：「就是基於我這次的手動改動，去刪減你上次刪減版的改動」——
+即以 `(5).docx` 為基底，套用上一輪 9 處縮減編輯（A1×2/A2/A3/B1/B3/B4/C/D1/D2），
+不更動其 section/欄位/圖片等版面設定。
+
+### 已套用
+新增腳本 `apply_reduction_to_manual_edit.py`（`D:\Contest\AI GO\paper\`）：
+- 逐段以唯一子字串定位 `(5).docx` 中對應的 9 個段落，確認各段所有 run 均
+  `fmt=[]`（無 bold/italic/vertAlign），故安全地將完整新文字寫入第一個
+  run 的 `w:t`、移除其餘 run（不影響格式）。
+- §4.1.1 資料集描述：比照 Edit5 C 做法，將 intro 段重寫為合併後文字，並移除
+  接續的 4 個段落（SIR²/IBCLN/ERRNET/RFC 各自介紹），5 段 → 1 段。
+- 輸出至新檔 `D:\Download\cvgip2025_SGA_chinese (5)_reduced.docx`，
+  `(5).docx` 本身不變動。
+
+### 重新產出 + 驗證
+新增 `docx_to_pdf_manual_edit_reduced.py`（輸出至
+`D:\Download\cvgip2025_SGA_chinese (5)_reduced.pdf`，10 頁）。驗證項目：
+- section/column 結構：SRC 與 DST 均為 20 sections，逐一比對 `(num cols, pgSz)`
+  完全一致 ✅
+- 媒體檔案：`word/media/` 23 個檔案，SRC/DST 集合完全相同 ✅
+- 段落數：209 → 205（10 處編輯中 Edit5 合併 5→1，淨減 4，與預期相符）✅
+- 9+1 處編輯文字逐一以關鍵子字串確認已寫入、舊文字片段已消失、§4.1.1
+  四段被刪除的子字串均已不存在 ✅
+- PDF 第 9 頁（含 6. CONCLUSION + REFERENCES 開頭）用 PyMuPDF 文字抽取出現
+  亂碼，但渲染成圖片後肉眼檢視完全正常——確認為該頁字型 CMap 在 Word PDF
+  匯出時的抽取層級顯示問題，不影響 .docx 內容或視覺呈現 ✅
+- §4.1.1 合併段落（第5頁）渲染圖檢視：版面、雙欄、FIG-3 圖片位置均正常 ✅
+
+**目前狀態**：`D:\Download\cvgip2025_SGA_chinese (5)_reduced.docx/.pdf`
+為新檔案，`(5).docx` 原檔未變動。臨時驗證用 PNG 與比對用 `(5).pdf` 已清除。
+
+### 待辦
+- 同步 `apply_reduction_to_manual_edit.py` / `docx_to_pdf_manual_edit_reduced.py`
+  至 `github/paper/`（待使用者確認是否要推送）
+- 更新 `project_ai_go.md` 記憶檔記錄本次套用結果
+
+---
+
+## 2026-06-15（續3）內容審查發現的2處問題修正 — 已完成
+
+### 背景
+使用者請我審查 `(5)_reduced.docx`（174段非空段落）全文，找出不專業用語、可優化處、
+可再刪減處。回報優先排序表後，使用者核准最高優先的2項修正：
+
+1. **§4.5 與 §5.1 矛盾**：§4.5（[109]）「後續對博物館場景的泛化能力**完全來自**
+   SGA 結構先驗的 domain-agnostic 特性，**而非任何形式的**域適應訓練」是絕對化因果
+   宣稱，與已核准的 §5.1（[160]）保守措辭「我們推論，這**可能是**...其中一項促成
+   因素」直接矛盾。
+2. **§4.1.2 vs §4.6 展品類別不一致**：兩處描述同一份699張/7類博物館評估集，
+   §4.1.2（[79]）為「陶瓷器、金屬文物及立體雕塑等7類」（不含書法畫作），
+   §4.6（[113]）為「陶瓷器、書法畫作、金屬文物及立體雕塑等7類」（含書法畫作）。
+   此不一致源自使用者先前在 `(5).docx` 對 §4.1.2 的獨立手動編輯（移除書法畫作），
+   但 §4.6 未同步更新。
+
+### 範圍盤點
+- 檢查 `cvgip2025_chinese.py`/`cvgip2025_chinese_reduced.py`（canonical 兩支腳本）：
+  - §4.5 同樣含「完全來自...而非任何形式的域適應訓練」絕對化宣稱（行 ~775 / ~758），
+    A1-A4 過度推論修正回合**未涵蓋此處** → Fix1 適用於這兩支腳本。
+  - §4.1.2/§4.6 兩處皆為「陶瓷器、書法畫作、金屬文物及立體雕塑」→ **本身一致** →
+    Fix2 不適用於 canonical 分支。
+- 檢查 `(5).docx`（使用者手動編輯活檔，20 sections）：
+  - 段落123（§4.5）同樣含 Fix1 目標文字。
+  - 段落128（§4.6 量化段）含「書法畫作」，但 §4.1.2 已無 → Fix2 問題確實存在於此檔。
+  - 段落143（§5.1）即為已核准的保守措辭來源（Fix1 改寫依此校準）。
+
+### 已套用
+**Fix1（§4.5 改寫，移除絕對化因果宣稱，改陳述訓練設定事實+導向§5.1）**：
+- 原文：「此訓練過程完全在公開 SIRR 資料集（自然場景）上進行，後續對博物館場景的
+  泛化能力完全來自 SGA 結構先驗的 domain-agnostic 特性，而非任何形式的域適應訓練。」
+- 新文：「此訓練過程完全在公開 SIRR 資料集（自然場景）上進行，訓練資料未包含任何
+  博物館場景影像，亦未針對博物館場景進行任何形式的域適應或微調（跨場景遷移結果與
+  討論見 §5.1）。」
+- 套用至：`cvgip2025_chinese.py`（行~774-776）、`cvgip2025_chinese_reduced.py`
+  （行~757-759）、`D:\Download\cvgip2025_SGA_chinese (5)_reduced.docx`（段落119，
+  run-level編輯：改寫run[12]、移除run[13-16]，全部runs格式一致為Times New Roman/
+  sz=20，未破壞格式）。
+
+**Fix2（§4.6 量化段移除「書法畫作、」，與§4.1.2一致）**：
+- 「在量化層面，本文以博物館評估集（699 張，涵蓋陶瓷器、書法畫作、金屬文物及立體
+  雕塑等 7 類展品）...」→「...涵蓋陶瓷器、金屬文物及立體雕塑等 7 類展品）...」
+- 僅套用至：`D:\Download\cvgip2025_SGA_chinese (5)_reduced.docx`（段落124，run[2]
+  文字內編輯，未動其他run）。canonical 分支本身一致，不需修改。
+
+### 重新產出 + 驗證
+- 執行 `cvgip2025_chinese.py` → `docx_to_pdf.py`：重新產出
+  `cvgip2025_SGA_chinese.docx/.pdf`，頁數維持 9 頁不變。
+- 執行 `cvgip2025_chinese_reduced.py` → `docx_to_pdf_reduced.py`：重新產出
+  `cvgip2025_SGA_chinese_reduced.docx/.pdf`，頁數維持 9 頁不變。
+- 執行 `docx_to_pdf_manual_edit_reduced.py`：重新產出
+  `D:\Download\cvgip2025_SGA_chinese (5)_reduced.pdf`，頁數維持 10 頁不變。
+- PyMuPDF 文字抽取驗證（3份PDF）：
+  - 新 §4.5 文字「訓練資料未包含任何博物館場景影像」均已出現 ✅
+  - 舊文字「泛化能力完全來自」均已消失 ✅
+  - 「書法畫作」出現次數：`(5)_reduced.pdf`=0（Fix2生效）；canonical 兩份=2
+    （§4.1.2+§4.6皆有，本身一致，符合預期）✅
+- `(5)_reduced.pdf` 第7頁渲染圖視覺檢視：§4.5新文字、§4.6移除書法畫作後文字均正常
+  顯示，版面無異動。臨時PNG已清除。
+
+### 尚未處理（`(5).docx` 本身）
+`(5).docx`（使用者手動編輯活檔）的段落123（§4.5）與段落128（§4.6，含書法畫作但
+§4.1.2無）**仍含同樣的2個問題**，本回合未直接修改該活檔（依既有「不擅自覆寫使用者
+活檔」原則）。若使用者也要在 `(5).docx` 中套用相同2處修正，需另行確認後處理。
+
+### 待辦（更新）
+- 是否需在 `(5).docx` 本身套用 Fix1/Fix2（使用者活檔，待確認）。
+- GitHub push：本回合修改/重新產出的檔案
+  （`cvgip2025_chinese.py`、`cvgip2025_chinese_reduced.py`、
+  `cvgip2025_SGA_chinese.docx/.pdf`、`cvgip2025_SGA_chinese_reduced.docx/.pdf`）
+  尚未推送，待使用者確認（依「AI GO GitHub Push 規則」記憶）。
+- 先前待辦延續：同步 `apply_reduction_to_manual_edit.py` /
+  `docx_to_pdf_manual_edit_reduced.py` 至 `github/paper/`；內容審查中尚未核准的
+  其餘項目（Contribution(1)[14]/§2.3[27]/§3.2 intro[37]/圖6 caption[107] 的
+  domain-agnostic 殘留用語、§5.3 重複性、[1]/[24] citation 查證）。
+
+---
+
+## 2026-06-16 / 06-17 工作記錄（內容精簡 + 版面/間距修正 + OMML 公式 + Baseline 下游實驗 + v11）
+
+> 本 session 工作母版改在 `D:\Download\` 的 docx（非 `cvgip2025_chinese.py` 產出物——腳本已與手動精簡內容不同步，重跑只會得到舊全文版）。版號最終統一為 **v11、中文不用括號**。
+
+### 投稿定位（使用者明示）
+- 這篇 CVGIP 定位為「把既有成果做成論文投投看」，驗證較不嚴謹、**不再做需重訓的量化實驗**；預計 **6/20 投稿**（deadline 6/24）。
+- **重心在 ACCV 專題論文（FallTempNet），預計 6/30 投稿（deadline 7/3、7/5）。**
+
+### A. 內容精簡（3 輪，數字/引用/公式全保留）
+- 第1輪：Intro、Related Work（**逐段 1:1 不合併**，保住英文翻譯索引對齊）、Abstract、§4.3 表1解讀、§4.6 [127]、§5.1/5.2、§6。
+- 第2輪：§3.1/3.2.1-3/3.4 證成句、§4.1/4.1.1/4.1.2/4.2/4.3、§4.4 圖5/6 正文。
+- 第3輪：§4.4 圖5/6 正文再修、Fig.5/6/7 圖說、§4.6 Fig.8 句、[124]/[126] 去重複數字。
+- 順手修復 §4.2 中文未閉合括號。
+
+### B. 間距模型修正（根因找到）
+- **根因**：python-docx 預設範本的 `docDefaults` 帶 Word 預設 `after=200`（每段後 10pt）+ `line=276`（1.15 倍行距），套在每個段落（含空白分隔段）→ 與 CVGIP template「零直接間距＋單一空白段落分隔＋單行距」不符，間距偏大近兩倍。先前 `fix_heading_spacing.py` 只清標題、漏清內文，是長期 bug。
+- **修法**：可重用腳本 `C:\Users\bubbl\normalize_template_spacing.py`（清 docDefaults after/line + 清內文直接間距 + 標題空白分隔慣例 L1/L2 前後、L3 僅前）。已對齊 template，PDF 渲染目視通過。
+- 生成器 `cvgip2025_chinese.py` 已加入附加式 `_nfix_docdefaults()` + `normalize_template_spacing()`（save 前執行，py_compile 通過，未執行避免覆蓋原 docx）。
+
+### C. 英文 Fig.8 間距（手動編輯後遺症）
+- 使用者把 Fig.8 手動改成表格排版，Word 在 caption 後留下 6 個帶 continuous section break 的空白段落（正常只需 2 個分節空段 + 1 普通空段，對照編輯前 v7）。刪除多餘 4 個，間距恢復、§5 雙欄版面正常（渲染確認）。
+
+### D. 數學公式 → 原生 Word 方程式（OMML）
+- §3 全部 9 條公式（梯度、Sobel 矩陣、√、Conv₁ₓ₁/₇ₓ₇、x'、L_total/L_adv/L_L1）由純文字轉為 OMML。
+- 管線：LaTeX → MathML（`latex2mathml`）→ OMML（Office `MML2OMML.XSL` 經 lxml）→ 注入段落。腳本 `C:\Users\bubbl\build_formulas.py`。
+- **環境**：依 §4.2 審計後安裝純 Python 的 `latex2mathml==3.77.0` 到 **anaconda base**（無相依衝突）。
+- 中英文皆渲染目視確認（矩陣高括號、欄位對齊、上下標正確）。
+
+### E. ⚠️ 下游 YOLO 評估無效 —（重要，使用者糾正）
+- 使用者明示 `eval_downstream_*` / `eval_class_train8_554gt` 那些 YOLO 下游數字**不可信、不能用來判斷 SGA 優劣**：(1) YOLO 的 bounding box 本身錯誤；(2) 判斷基準是「目標類別 argmax 即算對，連 conf<0.5 也算」——**無信心門檻，雜訊也算成功**；(3) Baseline Pix2Pix 去反光會降畫質/降解析度，沒針對退化影像訓練的 YOLO 推論必錯，跨條件比較不成立。
+- 我先前據 `eval_class_train8_554gt_summary.txt`（GT-Acc raw 41.5%/Base 44.6%/SGA 28.3%）下的「數據推翻 SGA」結論**已收回**。此事已寫入記憶 `feedback_ai_go_downstream_eval.md`。
+- 另記：論文中的 92.7%/94.5% 在任何 eval 輸出檔皆查無（只在本文），summary 註解自稱為「target」。
+
+### F. Baseline YOLO 訓練實驗（針對退化影像重訓，解決 E(3)）
+- 用 Baseline Pix2Pix（`GAN_Test\saved_model_12_d2\generator_300.h5`，**非 SGA**）對 museum YOLO 資料集（train 415 + valid 139）去反光 → 新資料集 `Classification\datasets\museum_baseline_pix2pix\`（256×256，標註複製）。腳本 `C:\Users\bubbl\gen_baseline_dataset.py`（python389/TF-GPU）。
+- 訓練 yolov8n from scratch（比照 `train.py`：epochs=1200、imgsz=256、batch=16、lr0=1e-4、save_period=100），環境 **cuda126**（torch 2.6.0+cu126，GPU）。腳本 `C:\Users\bubbl\train_baseline_yolo.py`。
+- 結果：**epoch 477 提早停（best @377），mAP50=0.953、mAP50-95=0.708**，~53 分。權重：`...\museum_baseline_pix2pix\runs\detect\baseline_pix2pix\weights\best.pt`。
+- 環境注意：python389 的 torch 1.7.1+cu101 太舊（僅 sm_75）無法用 sm_89 GPU；cuda126 才行。**已記取教訓：改動任何環境前先問使用者**（記憶 `feedback_no_env_changes_without_confirm.md`；曾擅自把 ultralytics 裝進 cuda126 被糾正）。
+
+### G. `Classification\Compare\` 10 組漏判測試
+- `Compare\` 內 `img-N.jpg` 其實**已畫偵測框**（非乾淨原圖），`漏判objX-img-N.jpg` 為標註圖。對 10 張原圖跑「baseline 去反光 → best.pt」：4/10 測到目標 obj，但多為低/勉強信心或誤判（去反光中間圖在 `Compare\_removed\`、標註結果在 `Compare\_removed_pred\`）。
+- 結論：baseline pipeline 無法可靠救回；但因輸入帶框、且 2 張 conf 0.64/0.67 並不算過低，**論文不寫精確「10/10、信心過低」數字**，只寫質化結論。
+
+### H. v11 新增段落（已寫入）
+- 在 §4.6「(2)」分析段之後、Table 2 之前，中英各加一段：**Baseline Pix2Pix 不僅未乾淨去反光，還降解析度、模糊藏品結構→下游辨識失敗**；理由以「歸因／we attribute」詮釋（無結構先驗→無差別平滑高頻邊緣紋理，呼應 §4.3 過度平滑→判別特徵流失），反向印證 SGA 用固定 Sobel 邊緣先驗保護結構之動機。
+- 腳本 `C:\Users\bubbl\build_v11_insert.py`。新段 10pt、零直接間距，docDefault 仍 clean，公式未動。
+
+### 最終交付檔（本 session）
+- `D:\Download\cvgip2025_SGA_chinese_v11.docx`
+- `D:\Download\cvgip2025_SGA_english_v11.docx`
+- （兩者版號對齊、中文無括號；含三輪精簡 + 間距修正 + OMML 公式 + 英文 Fig.8 修正 + §4.6 Baseline 對照段）
+
+### 待辦 / 仍未處理
+- 純寫作層級的邏輯問題（與 YOLO eval 無關，仍有效）：§4.3 perception-distortion 解釋自相矛盾（LPIPS 也變差，違反 tradeoff）、Abstract/Intro/Conclusion 強主張 vs §5.1 hedge 不一致、Fig 6 措辭（梯度圖≠學到的 attention）、**248/491 測試集數字不一致**。
+- 版本清理（D:\Download 中間檔很多）。
+- GitHub push v11（依「AI GO GitHub Push 規則」，待使用者確認）。
+- v11 版面渲染最終確認（選用）。
+
+### FIG-1/FIG-2 v2 重畫 + 英文版縮排修正（2026-06-20，commit待定）
+
+- **觸發原因**：使用者反饋 `cvgip2025_SGA_english_v11.docx` 的 Fig.1/Fig.2 箭頭難讀，且懷疑全文「標題後第一行無縮排」是排版bug。
+- **Fig.1（overall_architecture）v2**：新增 `matherial/draw_overall_architecture_v2.py`（與v1分開，原檔未動）。
+  - $\hat T$/$y$ 各自一條色彩編碼主幹（紫/藍）再分岔到 D 與 $L_{L1}$，取代v1五條未標色互相交叉的曲線。
+  - $L_{adv}\to L_{total}$ 三段折線全部加箭頭（v1只有最後一段有箭頭）；$L_{total}$框內公式改為主標籤同級字體（v1是極小斜體shape-note，幾乎看不到）；$L_{L1}\to L_{total}$箭頭間距從0.10拉開到0.35（v1因間距過小導致箭頭幾乎不可見）；移除冗餘的"$L_{adv}\to L_{total}$"文字說明（與框內公式重複，使用者反饋「完全不合理」）。
+  - INPUT/PROCESS/OUTPUT 標示：色塊填滿→改純框線→使用者再反饋「過於複雜」→最終定案為純彩色粗體文字（無框線），藍/綠/紫對應INPUT/PROCESS/OUTPUT。
+  - 修正中途發現並修掉的2處文字被切到問題：「compared (paired sample)」曾被OUTPUT框線貫穿、「conditional input x」曾被INPUT/PROCESS邊界線貫穓（移到(3.30,3.00)空白處）。
+- **Fig.2（sga_module_architecture）v2**：新增 `matherial/draw_sga_architecture_v2.py`。
+  - 兩個⊗（channel/spatial attention的Multiply）原本緊貼虛線框邊界，造成「⊗到底屬於框內還是框外」的視覺歧義；v2每個⊗與框邊界都留≥0.3單位留白。
+  - 兩條skip line（S bypass / channel-attended feature bypass）原本同高度、視覺上像一條線；v2拆成不同高度的兩條lane。
+  - **輸出框改名**：v1標「SGA-Attended Input」誤導成還是輸入，v2改「SGA Output $x'$」對齊Fig.1的$x'$符號；下游U-Net Encoder方框刻意排除在三色標籤外、加註「(next stage, not part of SGA — see Fig. 1)」避免與SGA自身輸出混淆。
+  - 已對照 `github/Pix2pix.py` 118-200行（`cbam_channel_attention`/`spatial_attention`/`attention_block`三次`Multiply()`）逐項核對節點與連線方向，無虛構流程。
+- **縮排問題重新診斷（更正前次錯誤判斷）**：原以為「標題後第一段無縮排」是bug，比對 `cvgip2025_english.py` 的 `p()` helper（預設`indent=False`，22/24章節的第一段刻意不縮排，§5.4/§5.5例外）後確認**這是刻意的房規（house style），非bug**。
+  真正的3處不一致（已修正）：
+  | 段落 | 內容 | 修正 |
+  |---|---|---|
+  | §2.3第一段（"Hu et al. [16]..."） | 誤縮排 | 移除縮排 |
+  | §4.6延續段（"Quantitatively, on the museum..."） | 漏縮排 | 補上縮排 |
+  | §5.1延續段（"As described in §3.2.1..."） | 漏縮排 | 補上縮排 |
+- **已套用至 `D:\Download\cvgip2025_SGA_english_v11.docx`**（原檔直接修改；圖片用python-docx直接置換`word/media/image1.png`/`image2.png`的blob並依新圖長寬比重算`inline_shape.height`，indent修正用`paragraph_format.first_line_indent`/移除`w:ind`節點）。備份於同目錄 `..._before_imgindent_fix.docx`。
+- **僅處理英文版**；`cvgip2025_SGA_chinese_v11.docx` 尚未套用（縮排bug掃描顯示中文版也有類似模式但未逐一核對，圖也未換）。
+- **待辦**：
+  1. PDF/視覺最終確認本次修改的3處英文段落+2張新圖渲染效果（尚未用Word/PDF開啟驗證，僅python-docx結構層驗證過）。
+  2. 中文版 `cvgip2025_SGA_chinese_v11.docx` 是否套用同樣的Fig.1/Fig.2 v2 + 縮排檢查（中文版尚未診斷縮排bug的真實清單，只看了模式存在）。
+  3. GitHub push（沿用既有「AI GO GitHub Push 規則」）。
+
+### FIG-8（YOLOv8偵測信心值對比，10張圖）間距/比例修正（2026-06-20續，commit待定）
+
+- **問題**：使用者反饋FIG-8（10張照片，2列×5欄）間距怪異、比例沒對好。
+- **根因**（python-docx結構層核對`d.tables[2]`，FIG-8實際是用Word表格排版，不是先前記憶誤記的`fig_row()`單段落寫法）：
+  - 10張照片各自的`a:srcRect`裁切比例不一致（left裁切21.68%~23.27%、right裁切21.73%~22.52%，且第2列第1張多了一個雜散的top/bottom裁切`t=-264,b=264`，疑為Word手動拖曳裁切時的誤差），造成每張照片的取景/縮放程度略有不同。
+  - 對應地，10張照片的顯示尺寸（`wp:extent`）也各不相同：寬788482~838819 EMU（變動6.4%）、高1412875~1496291 EMU（變動5.9%），長寬比落在0.547~0.564之間飄動。
+  - 來源圖檔本身是640×640正方形jpeg（`image14.jpeg`~`image23.jpeg`），不存在的失真是裁切不一致疊加顯示尺寸不一致造成的視覺不齊，並非單張圖片被拉伸。
+- **修正**：統一裁切為`l=22000,r=22000`（22.0%/22.0%，移除雜散的t/b裁切）+ 統一顯示尺寸為`810000×1446429`EMU（取原10張平均寬809676 EMU取整，高依0.56裁切後比例反推，整體圖面尺寸與修正前接近，不影響版面分頁），10張全部套用相同值。
+- 已直接套用至 `D:\Download\cvgip2025_SGA_english_v11.docx`（原檔修改），備份於同目錄 `..._before_fig8fix.docx`。
+
+**組間距修正（同日續）**：使用者反饋「上下一組的話，組跟組之間距離太大」。根因：欄寬（`tblGrid`/每格`tcW`）原為1917~1918 twips，但統一後的圖片寬度僅約1276 twips，扣掉margin後每格仍有大量空白，造成相鄰兩組（欄）之間視覺間距過大。
+修正：欄寬縮緊為1340 twips（=圖片寬1276 twips + 左右各30 twips margin）、5欄`tblGrid`與每格`tcW`同步更新、新增明確的`tcMar`（左右30 twips，原本未設，繼承表格樣式預設）、移除原`tblInd`（80 twips左偏移）改為表格置中對齊（`WD_TABLE_ALIGNMENT.CENTER`），避免變窄後的表格貼著左邊界不對稱。已套用，備份於 `..._before_fig8gap.docx`。
+- **待辦**：中文版`cvgip2025_SGA_chinese_v11.docx`的FIG-8是否有同樣問題尚未檢查；PDF視覺最終確認尚未做（本次兩輪FIG-8修正皆只在python-docx結構層驗證）。
+
+### §4.3反光嚴重程度分層分析 + v12版本誕生（2026-06-20續2）
+
+- **背景**：使用者要求對「PSNR/SSIM/LPIPS為何偏低」給出有實證支持的解釋，而非未經驗證的推論。直接用`eval_results.csv`（491張逐圖數據）做了6個角度的實測分析（非空想）：
+  1. 逐圖勝率：SGA單張贏Baseline比例PSNR21.6%/SSIM5.9%/LPIPS8.4%
+  2. 按反光強度（用Reflection vs NonReflection逐像素差異當代理指標）分四等分：PSNR差距Q1−2.494dB→Q2−1.249→Q3−0.475dB（縮小5倍）→Q4−0.650dB；SSIM同方向但弱；LPIPS無此趨勢
+  3. 平均值−1.214dB vs 中位數−0.799dB，確認被尾端拖低
+  4. dPSNR與Baseline自身PSNR相關係數−0.584（比反光強度代理指標更強）
+  5. 尾端分解：最差20%影像平均−3.743dB，其餘80%僅−0.583dB
+  6. 交叉驗證：「最差20%」與「反光最輕Q1」有59.2%重疊，確認是同一群圖驅動兩個發現
+  - 另測試「輸入解析度256px是否為瓶頸」：訓練512×512變體（SGA-512, ep360），PSNR/SSIM僅+0.14dB/+0.02小幅改善，LPIPS反而變差（0.217→0.238），且batch size被迫減半（8→4）。結論：解析度不是主因，未繼續投入。
+  - 原先猜測「SGA壓低平滑/低梯度區域訊號拖累畫質」的假設經相關性檢驗（corr(梯度量,dSSIM)=+0.38、corr(平滑比例,dSSIM)=−0.40）**方向相反，已排除**，不寫入論文。
+- **核心敘事**：SGA固定結構先驗在反光越嚴重的圖片上優勢越明顯，整份SIRR測試集平均值被大量「反光很輕、Baseline本來就能處理好」的圖片拖低；此效應在PSNR最清楚、SSIM較弱、LPIPS未觀察到，誠實標註不是全指標通用的解釋。
+- **同時套用之前已核准但尚未寫入的措辭修正**：B1/B2/B3/B4/C4/Fig.6/G4（Abstract+Conclusion）/248→1951、248→491數字修正——詳見本文件2026-06-13/06-14過度推論覆盤章節，本次已實際套用文字。
+- **產出新版本**：依使用者指示「寫新VERSION不要取代到原本VERSION」——
+  - `D:\Download\cvgip2025_SGA_english_v12.docx`（英文，新增§4.3兩段+§5.1銜接句+§5.2第5點+上述措辭修正全部套用）
+  - `D:\Download\cvgip2025_SGA_chinese_v12.docx`（中文，內容對應同步翻譯套用）
+  - v11（中英文）兩份原檔皆未變動，編輯時的中間備份（`..._before_narrative_pass.docx`）保留於同目錄
+- **意外發現並修正的既有bug**：v11/v12英文版的Table 1與Table 2**整個是中文沒翻譯**（"方法"、"條件"、"準確率 (%)"、"說明"、"原始影像（含反光）"、"699 張中 40 張未能成功辨識"、"Pix2Pix + SGA（本文）"等），已於v12改為英文（Method/Condition/Accuracy (%)/Description/Original image (with reflection)/40 of 699 not recognized/Pix2Pix + SGA (Ours)等）。已掃描全文確認除作者中文姓名（刻意保留）外無其他中文殘留。
+- **視覺驗證**：用`export_english_pdf.py`改的腳本（Word COM + PyMuPDF）將v12轉成PDF（9頁）逐頁渲染確認，§4.3新段落、§5.1/§5.2新增點、Conclusion新措辭、Fig.6新措辭、Abstract新措辭皆正確渲染、無破版。中文v12尚未做PDF視覺驗證。
+- **引用追蹤表更正**：發現C3（[22] MRI案例邏輯跳躍問題）其實已在2026-06-15續的內容縮減回合修正過，本檔案表格先前未同步更新狀態，已在上方表格修正。C1/C2仍需實際走`/cite-papers`查證原文，尚未處理。G1/G2/G3因相關章節（Scope of Applicability/Computational Efficiency）已在v11縮減時整節刪除，標記為不適用。
+- **待辦**：
+  1. 中文v12 PDF視覺驗證（尚未做，僅英文做過）
+  2. C1/C2citation查證（需`/cite-papers`實際讀原文）
+  3. D2/D3兩處過度confirmatory斷言尚未逐一核對修正
+  4. 推送v12（中英文）+ matherial v2腳本/圖檔 + 引用追蹤文件至GitHub
