@@ -1,6 +1,6 @@
 # PAPER_STATUS.md — AI GO CVGIP 論文狀態追蹤
 
-Last updated: 2026-06-20（本次 session續2：§4.3反光嚴重程度分層實證分析 + 512px解析度排除實驗 + v12新版本誕生（中英文）+ 修正Table1/2英文版整表未翻譯bug，詳見文件末新章節）（前次同日：Fig.1/Fig.2 v2 重畫 + 英文版v11縮排bug修正並已套用至docx）（前次 2026-06-17：內容精簡3輪 + template 間距修正 + OMML 公式 + Baseline YOLO 重訓實驗 + 統一 v11，最新交付為 `D:\Download\cvgip2025_SGA_chinese_v11.docx` / `cvgip2025_SGA_english_v11.docx`）（前次 2026-06-15 續3：§4.5/§4.6 一致性修正）（內容縮減第一輪：已試做並修正存檔方式，現為
+Last updated: 2026-06-20（本次 session續3：C1/C2引用查證+修正、D2/D3過度confirmatory斷言修正、全文可讀性重寫（拆長句+精簡保留語氣）、v13新版本誕生，詳見文件末新章節）（前次同日續2：§4.3反光嚴重程度分層實證分析 + 512px解析度排除實驗 + v12新版本誕生（中英文）+ 修正Table1/2英文版整表未翻譯bug）（前次同日：Fig.1/Fig.2 v2 重畫 + 英文版v11縮排bug修正並已套用至docx）（前次 2026-06-17：內容精簡3輪 + template 間距修正 + OMML 公式 + Baseline YOLO 重訓實驗 + 統一 v11，最新交付為 `D:\Download\cvgip2025_SGA_chinese_v11.docx` / `cvgip2025_SGA_english_v11.docx`）（前次 2026-06-15 續3：§4.5/§4.6 一致性修正）（內容縮減第一輪：已試做並修正存檔方式，現為
 **兩份獨立檔案並存**——
 (1) `cvgip2025_SGA_chinese.docx/.pdf`＝原版（FIG-1修正後、縮減前，9頁，
 未變動）；
@@ -1083,6 +1083,22 @@ FIG-3 caption/§4.1.2/§4.2/§4.6/§3.6 等）未出現在 `_reduced.docx` 中�
 - **引用追蹤表更正**：發現C3（[22] MRI案例邏輯跳躍問題）其實已在2026-06-15續的內容縮減回合修正過，本檔案表格先前未同步更新狀態，已在上方表格修正。C1/C2仍需實際走`/cite-papers`查證原文，尚未處理。G1/G2/G3因相關章節（Scope of Applicability/Computational Efficiency）已在v11縮減時整節刪除，標記為不適用。
 - **待辦**：
   1. 中文v12 PDF視覺驗證（尚未做，僅英文做過）
-  2. C1/C2citation查證（需`/cite-papers`實際讀原文）
-  3. D2/D3兩處過度confirmatory斷言尚未逐一核對修正
-  4. 推送v12（中英文）+ matherial v2腳本/圖檔 + 引用追蹤文件至GitHub
+  2. ~~C1/C2citation查證~~ ✅ 已完成（見下方新章節）
+  3. ~~D2/D3兩處過度confirmatory斷言~~ ✅ 已完成（見下方新章節）
+  4. ~~推送v12（中英文）+ matherial v2腳本/圖檔 + 引用追蹤文件至GitHub~~ ✅ 已完成（commit 4a71452）
+
+### C1/C2/D2/D3查證與修正 + 全文可讀性重寫 + v13誕生（2026-06-20續3）
+
+- **C1查證**：實際讀`09_survey_yang2025.pdf`（K. Yang et al. SIRR Survey）§6.1全文，原句「even models that perform well on public datasets to degrade substantially in target-scene deployment [1]」對應原文實為「Without such comprehensive datasets, model evaluation remains limited and often unreliable when deploying into the real world」——原文講的是「資料集不足→評估不可靠」，不是「已驗證的大幅退化」，**確認過度引申**。已改為「This is a recognized limitation in current SIRR research: without datasets that comprehensively cover diverse real-world reflective surfaces and lighting conditions, model evaluation remains unreliable when deployed to new scenes [1]」，貼合原文語意。
+- **C2查證**：實際讀`03_encoder_decoder_chi2018.pdf`（Chi et al. 2018）§4.1，確認「downsampling前處理risks losing structural detail」（段48用法）**有確實支撐**（原文明確用skip connection解決detail loss問題，不需改）；但段16句尾「enabling pixel-level distinction...[5]」是本文自己對SGA的描述，掛引用會誤導讀者以為Chi et al.驗證過此能力，**確認屬引用位置誤導**，已將句尾「[5]」移除。
+- **D2/D3修正**：
+  - D2（Fig.5討論）：「the most direct...evidence that the Sobel prior **lets**...transfer」→「providing qualitative evidence **consistent with** the Sobel prior's...attention transferring」，confirmatory語氣下修為描述性語氣。
+  - D3（§5.1，Fig.7訓練動態）：「**indicating that** adding SGA **does not affect** the stability」→「**suggesting that** incorporating SGA **does not visibly destabilize**...**in this run**」，避免僅憑單一模型自身loss曲線就下「不影響穩定性」的比較性結論。
+- **全文可讀性重寫**：使用者反饋「整個主文版措辭都好生硬、看不是很懂」。診斷根因：(1) 翻譯腔——中文學術寫作習慣把多個子句用冒號/分號塞進一句，逐句直譯成英文後句子過長過密；(2) 本次session陸續疊加的保留語氣詞（we conjecture/may/suggests/consistent with等）在已經很長的句子裡進一步增加負擔。修正做法：逐段拆解長句（多數從1句拆成2-4句）、精簡堆疊的保留語氣（每句最多保留一個）、確保「主張先講、證據再講」順序清楚。**全文約40個段落**逐一重寫，技術內容、數字、引用、claim方向**完全不變**，純粹改善句子結構與長度。
+- **產出新版本**：`D:\Download\cvgip2025_SGA_english_v13.docx`（依使用者要求「記得改出新版本」，v12原檔未變動）。
+- **視覺驗證**：`export_v13_pdf.py`（Word COM+PyMuPDF）轉PDF，**仍9頁**（重寫後長度大致持平，未變成10頁），逐頁確認C1/C2/D2/D3四處修正與全文重寫內容皆正確渲染、無破版、無遺漏citation。
+- **待辦**：
+  1. 同樣的可讀性重寫尚未套用至中文版（v12中文版本身未受影響，使用者未要求中文也重寫，待確認是否需要）
+  2. 中文v12 PDF視覺驗證仍未做
+  3. v13尚未推送GitHub（待使用者確認）
+  4. v11/v12/v13三個版本並存，需使用者最終決定哪個是投稿版本
