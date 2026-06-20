@@ -1,6 +1,6 @@
 # PAPER_STATUS.md — AI GO CVGIP 論文狀態追蹤
 
-Last updated: 2026-06-20（本次 session續3：C1/C2引用查證+修正、D2/D3過度confirmatory斷言修正、全文可讀性重寫（拆長句+精簡保留語氣）、v13新版本誕生，詳見文件末新章節）（前次同日續2：§4.3反光嚴重程度分層實證分析 + 512px解析度排除實驗 + v12新版本誕生（中英文）+ 修正Table1/2英文版整表未翻譯bug）（前次同日：Fig.1/Fig.2 v2 重畫 + 英文版v11縮排bug修正並已套用至docx）（前次 2026-06-17：內容精簡3輪 + template 間距修正 + OMML 公式 + Baseline YOLO 重訓實驗 + 統一 v11，最新交付為 `D:\Download\cvgip2025_SGA_chinese_v11.docx` / `cvgip2025_SGA_english_v11.docx`）（前次 2026-06-15 續3：§4.5/§4.6 一致性修正）（內容縮減第一輪：已試做並修正存檔方式，現為
+Last updated: 2026-06-20（本次 session續6：Fig.5換成Original/Baseline/SGA三排對比圖、縮排房規廢除全文統一、v14新版本誕生，詳見文件末新章節）（前次同日續3：C1/C2引用查證+修正、D2/D3過度confirmatory斷言修正、全文可讀性重寫、v13新版本誕生）（前次同日續2：§4.3反光嚴重程度分層實證分析 + 512px解析度排除實驗 + v12新版本誕生（中英文）+ 修正Table1/2英文版整表未翻譯bug）（前次同日：Fig.1/Fig.2 v2 重畫 + 英文版v11縮排bug修正並已套用至docx）（前次 2026-06-17：內容精簡3輪 + template 間距修正 + OMML 公式 + Baseline YOLO 重訓實驗 + 統一 v11，最新交付為 `D:\Download\cvgip2025_SGA_chinese_v11.docx` / `cvgip2025_SGA_english_v11.docx`）（前次 2026-06-15 續3：§4.5/§4.6 一致性修正）（內容縮減第一輪：已試做並修正存檔方式，現為
 **兩份獨立檔案並存**——
 (1) `cvgip2025_SGA_chinese.docx/.pdf`＝原版（FIG-1修正後、縮減前，9頁，
 未變動）；
@@ -1109,5 +1109,22 @@ FIG-3 caption/§4.1.2/§4.2/§4.6/§3.6 等）未出現在 `_reduced.docx` 中�
 - 已對英文v13（24處）與中文v13（23處）標題後第一段全部補上`firstLine=360`縮排，排除標題本身、References條目、標題頁author/email區塊（維持原有特殊縮排）。
 - **視覺驗證**：兩份PDF重新轉出，頁數不變（英文9頁、中文8頁），Abstract與每個章節首段均確認已套用縮排。
 - **待辦**：
-  1. v13（中英文，含本次縮排統一）尚未推送GitHub（待使用者確認）
+  1. ~~v13（中英文，含本次縮排統一）尚未推送GitHub~~ ✅ 已完成（commit 9750f0d）
   2. v11/v12/v13三個版本並存，需使用者最終決定哪個是投稿版本
+
+### Fig.5換成Baseline/SGA/Original三排對比圖 + v14誕生（2026-06-20續6）
+
+- 使用者指定8張博物館測試圖（IMG_8093/8281/8395/8531/8533/8469/8537/8587，其中8281取代了原本誤點的8280），要求整理成「上排Original／中排Baseline／下排SGA(Ours)」三排對比格，白底。
+- 圖片來源：
+  - Original：`GAN_Test\Dataset\Test\jpg\IMG_xxxx.jpg`
+  - Baseline：`paper\_downstream_temp\baseline_jpg\IMG_xxxx.png`
+  - SGA：`paper\_downstream_temp\sga_jpg\IMG_xxxx.png`
+  （此三個資料夾即前次session確認過「Baseline Pix2Pix確實跑過博物館去反光」的651張產出之一部分）
+- **發現並修正一個構圖bug**：原圖（如IMG_8281，3024×4032直幅）若用「置中裁切成正方形」會跟Baseline/SGA輸出（GAN前處理用`data_loader.py`的`resize()`直接整張壓扁成正方形、不裁切）框出不同的畫面範圍，導致Original跟Baseline/SGA看起來像不同張照片。修正為Original也用「直接壓扁resize」取代「置中裁切」，與GAN實際看到的畫面範圍一致。
+- 使用者確認此對比圖滿意後，指示「用這張圖換目前圖五」——已將此圖換入英文+中文v14的Fig.5位置（原圖：`image10.png`/`visual_comparison.png`，僅2排Original/SGA），同步將圖說從「Top/bottom 2排」改為「Top/middle/bottom 3排」說明加入Baseline。長寬比依新圖（1990×760, ratio 2.618）重新計算display extent，保持原有寬度、按比例調整高度，避免變形。
+- 產出新版本：`cvgip2025_SGA_english_v14.docx`、`cvgip2025_SGA_chinese_v14.docx`（v13未變動）。
+- **視覺驗證**：兩份PDF重新轉出，頁數不變（英文9頁、中文8頁），Fig.5（第6頁）新圖+新圖說皆正確渲染。
+- **待辦**：
+  1. v14（中英文）尚未推送GitHub
+  2. §4.4正文討論段（"Fig. 5 shows..."）目前未提及Baseline，僅圖說提及——是否要在正文也補充Baseline對比的文字討論，待使用者決定
+  3. v11/v12/v13/v14四個版本並存，需使用者最終決定哪個是投稿版本
